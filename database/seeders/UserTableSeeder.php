@@ -19,30 +19,30 @@ class UserTableSeeder extends Seeder
             [
                 'name' => 'Admin',
                 'username' => 'admin',
-                'email' => 'admin@gamil.com',
+                'email' => 'admin@gmail.com',
                 'password' => Hash::make(123123123),
                 'role' => 'admin',
-                'status' => 1,
+                'status' => '1',
             ],
 
             //Instructor
             [
                 'name' => 'Instructor',
                 'username' => 'instructor',
-                'email' => 'instructor@gamil.com',
+                'email' => 'instructor@gmail.com',
                 'password' => Hash::make(123123123),
                 'role' => 'instructor',
-                'status' => 1,
+                'status' => '1',
             ],
 
             //User
             [
                 'name' => 'User',
                 'username' => 'user',
-                'email' => 'user@gamil.com',
+                'email' => 'user@gmail.com',
                 'password' => Hash::make(123123123),
                 'role' => 'user',
-                'status' => 1,
+                'status' => '1',
             ],
         ]);
     }
