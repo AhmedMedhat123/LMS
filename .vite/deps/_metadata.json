@@ -1,0 +1,70 @@
+{
+  "hash": "4015fb0c",
+  "configHash": "be97a53b",
+  "lockfileHash": "8b85fe97",
+  "browserHash": "982170ce",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "ae980094",
+      "needsInterop": true
+    },
+    "@coreui/react": {
+      "src": "../../node_modules/@coreui/react/dist/esm/index.js",
+      "file": "@coreui_react.js",
+      "fileHash": "e2a4f348",
+      "needsInterop": false
+    },
+    "@coreui/icons": {
+      "src": "../../node_modules/@coreui/icons/dist/esm/index.js",
+      "file": "@coreui_icons.js",
+      "fileHash": "758e0b09",
+      "needsInterop": false
+    },
+    "@inertiajs/react": {
+      "src": "../../node_modules/@inertiajs/react/dist/index.esm.js",
+      "file": "@inertiajs_react.js",
+      "fileHash": "36ddd915",
+      "needsInterop": false
+    },
+    "laravel-vite-plugin/inertia-helpers": {
+      "src": "../../node_modules/laravel-vite-plugin/inertia-helpers/index.js",
+      "file": "laravel-vite-plugin_inertia-helpers.js",
+      "fileHash": "d822b38d",
+      "needsInterop": false
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "2043ff7f",
+      "needsInterop": true
+    },
+    "axios": {
+      "src": "../../node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "d16f8bc6",
+      "needsInterop": false
+    },
+    "@coreui/icons-react": {
+      "src": "../../node_modules/@coreui/icons-react/dist/index.esm.js",
+      "file": "@coreui_icons-react.js",
+      "fileHash": "5e62e655",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-ZGTSSUN3": {
+      "file": "chunk-ZGTSSUN3.js"
+    },
+    "chunk-V2X5ZORR": {
+      "file": "chunk-V2X5ZORR.js"
+    },
+    "chunk-32E4H3EV": {
+      "file": "chunk-32E4H3EV.js"
+    },
+    "chunk-G3PMV62Z": {
+      "file": "chunk-G3PMV62Z.js"
+    }
+  }
+}
