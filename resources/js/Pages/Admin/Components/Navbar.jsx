@@ -29,7 +29,7 @@ export const Navbar = () => {
                 <CCollapse className="navbar-collapse d-flex justify-content-between px-3" visible={visible}>
                     <CForm className="d-flex me-auto">
                         <CFormInput type="search" className="me-2" placeholder="Search" />
-                        <CButton type="submit" color="success" variant="outline">
+                        <CButton type="submit" color="primary" variant="outline">
                             Search
                         </CButton>
                     </CForm>
@@ -42,13 +42,13 @@ export const Navbar = () => {
                         <CNavItem>
                             <CNavLink href="#">Dashboard</CNavLink>
                         </CNavItem>
-                        <CDropdown variant="nav-item" popper={false}>
-                            <CDropdownToggle className='mr-20' color="secondary">
+                        <CDropdown variant="nav-item">
+                            <CDropdownToggle color="secondary">
                                 <CAvatar color="primary" textColor="white">
                                     A
                                 </CAvatar>
                             </CDropdownToggle>
-                            <CDropdownMenu className="mr-10">
+                            <CDropdownMenu placement="bottom-end">
                                 <CDropdownItem href="#">Profile</CDropdownItem>
                                 <CDropdownItem href="#">Settings</CDropdownItem>
                                 <CDropdownDivider />
