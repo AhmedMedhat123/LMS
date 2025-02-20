@@ -18,10 +18,17 @@ import {
     CNavLink,
     CAvatar,
 } from '@coreui/react'
+import { Link, useForm } from '@inertiajs/react'
 
 export const Navbar = () => {
     const [visible, setVisible] = useState(false)
 
+    const { post } = useForm();
+
+    const handleLogout = (e) => {
+        e.preventDefault();
+        post(route('admin.logout'));
+    }
     return (
         <CNavbar expand="lg" className="navbar">
             <CContainer fluid>
@@ -52,7 +59,7 @@ export const Navbar = () => {
                                 <CDropdownItem href="#">Profile</CDropdownItem>
                                 <CDropdownItem href="#">Settings</CDropdownItem>
                                 <CDropdownDivider />
-                                <CDropdownItem href="#">Logout</CDropdownItem>
+                                <CDropdownItem onClick={handleLogout}>Logout</CDropdownItem>
                             </CDropdownMenu>
                         </CDropdown>
                     </CNavbarNav>
