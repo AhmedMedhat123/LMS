@@ -17,7 +17,7 @@ export default function Sidebar() {
     return (
         <CSidebar className="border-end" colorScheme="dark" position="fixed">
             <CSidebarHeader className="border-bottom">
-                <CSidebarBrand>Admin Dashboard</CSidebarBrand>
+                <p className='text-2xl font-bold'>Admin Dashboard</p>
             </CSidebarHeader>
             <CSidebarNav>
                 <CNavTitle>Nav Title</CNavTitle>

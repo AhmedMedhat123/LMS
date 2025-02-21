@@ -25,6 +25,7 @@
         "@coreui/icons": "^3.0.1",
         "@coreui/icons-react": "^2.3.0",
         "@coreui/react": "^5.5.0",
-        "react-helmet-async": "^2.0.5"
+        "react-helmet-async": "^2.0.5",
+        "react-hot-toast": "^2.5.2"
     }
 }
