@@ -34,6 +34,11 @@ export const Navbar = ({ admin }) => {
         get(route('admin.dashboard'));
     };
 
+    const handleChangePassword = (e) => {
+        e.preventDefault();
+        get(route('admin.change-password'));
+    };
+
     return (
         <CNavbar expand="lg" className="navbar">
             <CContainer fluid className="d-flex justify-content-between align-items-center">
@@ -60,6 +65,7 @@ export const Navbar = ({ admin }) => {
                         </CDropdownToggle>
                         <CDropdownMenu placement="bottom-end">
                             <CDropdownItem className='cursor-pointer' onClick={handleProfile}>Profile</CDropdownItem>
+                            <CDropdownItem className='cursor-pointer' onClick={handleChangePassword}>Change Password</CDropdownItem>
                             <CDropdownItem href="#">Settings</CDropdownItem>
                             <CDropdownDivider />
                             <CDropdownItem className='cursor-pointer' onClick={handleLogout}>Logout</CDropdownItem>

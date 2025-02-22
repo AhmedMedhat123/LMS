@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminChangePasswordRequest;
 use App\Http\Requests\AdminProfileUpdateRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -38,6 +39,30 @@ class AdminController extends Controller
         $id = Auth::user()->id;
         $admin = User::find($id);
         return inertia('Admin/AdminProfile', ['admin' => $admin]);
+    }
+
+    public function AdminChangePassword()
+    {
+        $id = Auth::user()->id;
+        $admin = User::find($id);
+        return inertia('Admin/AdminChangePassword', ['admin' => $admin]);
+    }
+
+    public function AdminChangePasswordStore(AdminChangePasswordRequest $request)
+    {
+        if (!Hash::check($request->old_password, Auth::user()->password)) {
+            return redirect()->back()->with([
+                'message' => 'Old Password is Incorrect',
+                'alertType' => 'error'
+            ]);
+        }
+
+        User::whereId(Auth::user()->id)->update(['password' => Hash::make($request->new_password)]);
+
+        return redirect()->back()->with([
+            'message' => 'Password Changed Successfully',
+            'alertType' => 'success'
+        ]);
     }
 
     public function AdminProfileStore(AdminProfileUpdateRequest $request)
