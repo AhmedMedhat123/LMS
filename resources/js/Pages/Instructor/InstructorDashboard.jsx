@@ -1,7 +1,35 @@
-export default function InstructorDashboard() {
+import { useEffect, useState } from "react";
+import Sidebar from "./Components/Sidebar";
+import { Navbar } from "./Components/Navbar";
+import { Head, usePage } from "@inertiajs/react";
+import { Toaster, toast } from "react-hot-toast";
+
+export default function InsturctorDashboard({ title, children }) {
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(window.innerWidth < 1024);
+    const { flash } = usePage().props;
+    const { instructor } = usePage().props;
+    useEffect(() => {
+        if (flash?.message) {
+            const type = flash.alertType || "success";
+            toast[type](flash.message);
+        }
+    }, [flash]);
+
     return (
-        <div>
-            <h1>Instructor Dashboard</h1>
-        </div>
+        <>
+            <Head title="Instructor Dashboard" />
+            <Toaster position="top-right" reverseOrder={false} />
+            <div className="dashboard-container">
+                <Sidebar isCollapsed={isSidebarCollapsed} toggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)} />
+                <div className={`dashboard-content ${isSidebarCollapsed ? "collapsed" : ""}`}>
+                    <Navbar instructor={instructor} />
+                    {title && <p className="dashboard-title">{title}</p>}
+                    <main className="content-area">
+                        {children}
+                    </main>
+                </div>
+            </div>
+        </>
     );
 }
+

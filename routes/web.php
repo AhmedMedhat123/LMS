@@ -41,6 +41,9 @@ Route::get('admin/login', [AdminController::class, 'AdminLogin'])->name('admin.l
 //Instructor Route
 Route::middleware(['auth', 'role:instructor'])->group(function () {
     Route::get('instructor/dashboard', [InstructorController::class, 'InstructorDashboard'])->name('instructor.dashboard');
+    Route::post('instructor/logout', [InstructorController::class, 'InstructorLogout'])->name('instructor.logout');
 });
+
+Route::get('instructor/login', [InstructorController::class, 'InstructorLogin'])->name('instructor.login');
 
 require __DIR__ . '/auth.php';
