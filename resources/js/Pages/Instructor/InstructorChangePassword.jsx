@@ -1,4 +1,4 @@
-import AdminDashboard from "./AdminDashboard";
+import InstructorDashboard from "./InstructorDashboard";
 import { useForm } from "@inertiajs/react";
 import {
     CButton,
@@ -13,7 +13,7 @@ import {
     CAlert
 } from '@coreui/react';
 
-export default function AdminChangePassword({ admin }) {
+export default function InstructorChangePassword({ instructor }) {
     const { data, setData, post, processing, errors } = useForm({
         old_password: "",
         new_password: "",
@@ -22,22 +22,22 @@ export default function AdminChangePassword({ admin }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route("admin.change-password.store"));
+        post(route("instructor.change-password.store"));
     };
 
     return (
-        <AdminDashboard title='Change Password'>
+        <InstructorDashboard title='Change Password'>
             <div className="flex flex-col md:flex-row justify-center gap-8">
 
                 <CCard className="w-full md:w-1/3 shadow-lg rounded-lg">
                     <CCardBody className="flex flex-col items-center text-center mt-0">
                         <img
-                            src={admin.photo ? `/upload/admin_images/${admin.photo}` : "/images/user_placeholder.png"}
+                            src={instructor.photo ? `/upload/instructor_images/${instructor.photo}` : "/images/user_placeholder.png"}
                             alt="User Image"
                             className="w-52 h-52 rounded-full object-cover border-4 border-primary mb-3"
                         />
-                        <CCardTitle className="text-xl font-semibold">{admin.name}</CCardTitle>
-                        <p className="text-gray-600 mb-3">{admin.email}</p>
+                        <CCardTitle className="text-xl font-semibold">{instructor.name}</CCardTitle>
+                        <p className="text-gray-600 mb-3">{instructor.email}</p>
                         <div>
                             <CButton color="primary" className="mr-2">Follow</CButton>
                             <CButton color="secondary">Message</CButton>
@@ -100,6 +100,6 @@ export default function AdminChangePassword({ admin }) {
                     </CCardBody>
                 </CCard>
             </div>
-        </AdminDashboard>
+        </InstructorDashboard>
     );
 }

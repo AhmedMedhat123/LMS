@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InstructorChangePasswordRequest;
 use App\Http\Requests\InstructorProfileUpdate;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class InstructorController extends Controller
 {
@@ -62,6 +64,30 @@ class InstructorController extends Controller
 
         return redirect()->back()->with([
             'message' => 'Instructor Profile Updated Successfully',
+            'alertType' => 'success'
+        ]);
+    }
+
+    public function InstructorChangePassword()
+    {
+        $id = Auth::user()->id;
+        $instructor = User::find($id);
+        return inertia('Instructor/InstructorChangePassword', ['instructor' => $instructor]);
+    }
+
+    public function InstructorChangePasswordStore(InstructorChangePasswordRequest $request)
+    {
+        if (!Hash::check($request->old_password, Auth::user()->password)) {
+            return redirect()->back()->with([
+                'message' => 'Old Password is Incorrect',
+                'alertType' => 'error'
+            ]);
+        }
+
+        User::whereId(Auth::user()->id)->update(['password' => Hash::make($request->new_password)]);
+
+        return redirect()->back()->with([
+            'message' => 'Password Changed Successfully',
             'alertType' => 'success'
         ]);
     }
