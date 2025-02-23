@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Admin;
+namespace Tests\Feature\Instructor;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -8,16 +8,16 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
-class AdminProfileTest extends TestCase
+class InstructorProfileTest extends TestCase
 {
     use RefreshDatabase;
 
-    private User $admin;
+    private User $instructor;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->admin = $this->createUser(role: 'admin');
+        $this->instructor = $this->createUser(role: 'instructor');
     }
 
     private function createUser(string $role = 'user'): User
@@ -27,11 +27,11 @@ class AdminProfileTest extends TestCase
         ]);
     }
 
-    public function test_admin_can_update_profile()
+    public function test_instructor_can_update_profile()
     {
         // Storage::fake('public');
 
-        $response = $this->actingAs($this->admin)->post(route('admin.profile.store'), [
+        $response = $this->actingAs($this->instructor)->post(route('instructor.profile.store'), [
             'name' => 'New Name',
             'username' => 'newusername',
             'email' => 'newemail@example.com',
@@ -42,23 +42,23 @@ class AdminProfileTest extends TestCase
 
         $response->assertRedirect();
 
-        $response->assertSessionHas('message', 'Admin Profile Updated Successfully');
+        $response->assertSessionHas('message', 'Instructor Profile Updated Successfully');
 
-        $this->admin->refresh();
+        $this->instructor->refresh();
 
-        $this->assertEquals('New Name', $this->admin->name);
-        $this->assertEquals('newusername', $this->admin->username);
-        $this->assertEquals('newemail@example.com', $this->admin->email);
-        $this->assertEquals('0987654321', $this->admin->phone);
-        $this->assertEquals('New Address', $this->admin->address);
+        $this->assertEquals('New Name', $this->instructor->name);
+        $this->assertEquals('newusername', $this->instructor->username);
+        $this->assertEquals('newemail@example.com', $this->instructor->email);
+        $this->assertEquals('0987654321', $this->instructor->phone);
+        $this->assertEquals('New Address', $this->instructor->address);
 
-        // Storage::disk('public')->assertExists('upload/admin_images/' . $this->admin->photo);
+        // Storage::disk('public')->assertExists('upload/instructor_images/' . $this->instructor->photo);
     }
 
     public function test_validation_errors_on_invalid_input()
     {
 
-        $response = $this->actingAs($this->admin)->post(route('admin.profile.store'), [
+        $response = $this->actingAs($this->instructor)->post(route('instructor.profile.store'), [
             'name' => '',
             'username' => '',
             'email' => 'invalid-email',

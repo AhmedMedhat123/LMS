@@ -60,7 +60,7 @@ export const Navbar = ({ instructor }) => {
                     </CNavItem>
                     <CDropdown variant="nav-item">
                         <CDropdownToggle color="secondary" className="d-flex align-items-center gap-2">
-                            <CAvatar src={instructor?.photo ? `/upload/admin_images/${admin.photo}` : "/images/user_placeholder.png"} />
+                            <CAvatar src={instructor?.photo ? `/upload/instructor_images/${instructor.photo}` : "/images/user_placeholder.png"} />
                             <span>{instructor?.name || "Instructor"}</span>
                         </CDropdownToggle>
                         <CDropdownMenu placement="bottom-end">
