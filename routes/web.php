@@ -50,4 +50,9 @@ Route::middleware(['auth', 'role:instructor'])->group(function () {
 
 Route::get('instructor/login', [InstructorController::class, 'InstructorLogin'])->name('instructor.login');
 
+//Frontend Route
+Route::get('home', function () {
+    return Inertia::render('Frontend/Home');
+})->name('home');
+
 require __DIR__ . '/auth.php';
