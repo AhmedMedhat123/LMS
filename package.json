@@ -25,7 +25,10 @@
         "@coreui/icons": "^3.0.1",
         "@coreui/icons-react": "^2.3.0",
         "@coreui/react": "^5.5.0",
+        "framer-motion": "^12.4.7",
+        "hero-slider": "^3.2.1",
         "react-helmet-async": "^2.0.5",
-        "react-hot-toast": "^2.5.2"
+        "react-hot-toast": "^2.5.2",
+        "swiper": "^11.2.4"
     }
 }

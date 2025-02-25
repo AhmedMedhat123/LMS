@@ -25,7 +25,7 @@ const MainLayout = ({ children }) => {
                 />
 
                 {/* Favicon */}
-                <link rel="icon" sizes="16x16" href="/images/favicon.png" />
+                <link rel="icon" sizes="16x16" href="assets/images/favicon.png" />
 
                 {/* CSS Files */}
                 <link rel="stylesheet" href="assets/css/bootstrap.min.css" />

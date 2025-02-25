@@ -1,12 +1,30 @@
 import MainLayout from "@/Layouts/MainLayout";
-import HeroArea from "./Components/HeroArea";
+import HeroArea from "./Components/HeroSlider/HeroArea";
+import FeatureArea from "./Components/FeatureArea";
+import CategoriesArea from "./Components/CategoriesArea";
+import CoursesArea from "./Components/CoursesArea";
+import CoursesArea2 from "./Components/CoursesArea2";
+import FunfactArea from "./Components/FunfactArea";
+import GetStartArea from "./Components/GetStartArea";
+import TestimonialArea from "./Components/TestimonialArea";
+import AboutUsArea from "./Components/AboutUsArea";
+import StartLearningArea from "./Components/StartLearningArea";
 
 
 const Home = () => {
     return (
         <MainLayout>
-
-
+            <HeroArea />
+            <FeatureArea />
+            <CategoriesArea />
+            <CoursesArea />
+            {/* <CoursesArea2 /> */}
+            <FunfactArea />
+            <GetStartArea />
+            {/* <TestimonialArea /> */}
+            <div className="section-block"></div>
+            <AboutUsArea />
+            <StartLearningArea />
         </MainLayout>
     );
 };
