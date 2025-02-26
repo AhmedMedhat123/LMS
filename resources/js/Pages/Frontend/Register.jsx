@@ -1,34 +1,27 @@
 import InputError from "@/Components/InputError";
 import MainLayout from "@/Layouts/MainLayout"
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from "@inertiajs/react";
 
-
-export default function Login({ status, canResetPassword }) {
+export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
+        name: '',
         email: '',
         password: '',
-        remember: false,
+        password_confirmation: '',
     });
 
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('login'), {
-            onFinish: () => reset('password'),
+        post(route('register'), {
+            onFinish: () => reset('password', 'password_confirmation'),
         });
     };
     return (
         <>
             <MainLayout>
-                <Head title="Log in" />
-
-                {status && (
-                    <div className="mb-4 text-sm font-medium text-green-600">
-                        {status}
-                    </div>
-                )}
+                <Head title="Register" />
                 <div>
-
 
                     <section className="contact-area section--padding position-relative">
                         <span className="ring-shape ring-shape-1" />
@@ -43,7 +36,7 @@ export default function Login({ status, canResetPassword }) {
                                 <div className="col-lg-7 mx-auto">
                                     <div className="card card-item">
                                         <div className="card-body">
-                                            <h3 className="card-title text-center fs-24 lh-35 pb-4">Login to Your Account!</h3>
+                                            <h3 className="card-title text-center fs-24 lh-35 pb-4">Create an Account and <br /> Start Learning!</h3>
                                             <div className="section-block" />
                                             <form onSubmit={submit} className="pt-4">
                                                 <div className="d-flex flex-wrap align-items-center pb-4">
@@ -55,21 +48,43 @@ export default function Login({ status, canResetPassword }) {
                                                     <div className="icon-element icon-element-md fs-25 shadow-sm">Or</div>
                                                 </div>
                                                 <div className="input-box">
-                                                    <label className="label-text">Email</label>
+                                                    <label className="label-text">Name</label>
                                                     <div className="form-group">
                                                         <input
                                                             className="form-control form--control"
-                                                            type="email"
+                                                            type="text"
+                                                            placeholder="name"
+                                                            id="name"
                                                             name="name"
-                                                            id="email"
-                                                            placeholder="Email"
-                                                            autoComplete="username"
-                                                            value={data.email}
-                                                            onChange={(e) => setData('email', e.target.value)}
-
+                                                            value={data.name}
+                                                            autoComplete="name"
+                                                            onChange={(e) => setData('name', e.target.value)}
+                                                            required
                                                         />
                                                         <span className="la la-user input-icon" />
+                                                        <InputError message={errors.name} className="mt-2" />
+
+                                                    </div>
+                                                </div>{/* end input-box */}
+
+                                                <div className="input-box">
+                                                    <label className="label-text">Email Address</label>
+                                                    <div className="form-group">
+                                                        <input
+                                                            className="form-control form--control"
+                                                            placeholder="Enter email address"
+
+                                                            id="email"
+                                                            type="email"
+                                                            name="email"
+                                                            value={data.email}
+                                                            autoComplete="username"
+                                                            onChange={(e) => setData('email', e.target.value)}
+                                                            required
+                                                        />
+                                                        <span className="la la-envelope input-icon" />
                                                         <InputError message={errors.email} className="mt-2" />
+
                                                     </div>
                                                 </div>{/* end input-box */}
                                                 <div className="input-box">
@@ -78,50 +93,62 @@ export default function Login({ status, canResetPassword }) {
                                                         <span className="la la-lock input-icon" />
                                                         <input
                                                             className="form-control form--control password-field"
+                                                            placeholder="Password"
                                                             id="password"
                                                             type="password"
                                                             name="password"
                                                             value={data.password}
-                                                            autoComplete="current-password"
+                                                            autoComplete="new-password"
                                                             onChange={(e) => setData('password', e.target.value)}
-                                                            placeholder="Password"
+                                                            required
                                                         />
 
 
                                                     </div>
                                                     <InputError message={errors.password} className="mt-2" />
                                                 </div>{/* end input-box */}
-                                                <div className="btn-box">
-                                                    <div className="d-flex align-items-center justify-content-between pb-4">
-                                                        <div className="custom-control custom-checkbox fs-15">
-                                                            <input
-                                                                className="custom-control-input"
-                                                                name="remember"
-                                                                checked={data.remember}
-                                                                onChange={(e) =>
-                                                                    setData('remember', e.target.checked)
-                                                                }
-                                                            />
-                                                            <label className="custom-control-label custom--control-label" htmlFor="rememberMeCheckbox">Remember Me</label>
-                                                        </div>{/* end custom-control */}
-                                                        <a href="recover.html" className="btn-text">Forgot my password?</a>
+
+                                                <div className="input-box">
+                                                    <label className="label-text">Confirm Password</label>
+                                                    <div className="input-group mb-3">
+                                                        <span className="la la-lock input-icon" />
+                                                        <input
+                                                            className="form-control form--control password-field"
+                                                            placeholder="Confirm Password"
+                                                            id="password_confirmation"
+                                                            type="password"
+                                                            name="password_confirmation"
+                                                            value={data.password_confirmation}
+                                                            autoComplete="new-password"
+                                                            onChange={(e) =>
+                                                                setData('password_confirmation', e.target.value)
+                                                            }
+                                                            required
+                                                        />
+
+
                                                     </div>
-                                                    <button disabled={processing} className="btn theme-btn" type="submit">Login Account <i className="la la-arrow-right icon ml-1" /></button>
-                                                    <p className="fs-14 pt-2">Don't have an account? <Link href={route('register')} className="text-color hover-underline">Register</Link></p>
+                                                    <InputError message={errors.password} className="my-2" />
+                                                </div>{/* end input-box */}
+
+                                                <div className="btn-box">
+
+                                                    <button className="btn theme-btn" type="submit">Register Account <i className="la la-arrow-right icon ml-1" /></button>
+                                                    <p className="fs-14 pt-2">Already have an account? <Link href={route('login')} className="text-color hover-underline">Log in</Link></p>
                                                 </div>{/* end btn-box */}
+
+
                                             </form>
                                         </div>{/* end card-body */}
                                     </div>{/* end card */}
                                 </div>{/* end col-lg-7 */}
                             </div>{/* end row */}
                         </div>{/* end container */}
-                    </section>{/* end contact-area */}
+                    </section > {/* end contact-area */}
 
-                </div>
-
-            </MainLayout>
+                </div >
+            </MainLayout >
         </>
     )
 }
-
 

@@ -11,9 +11,4 @@ class UserController extends Controller
     {
         return Inertia::render('Frontend/Home');
     }
-
-    public function Login()
-    {
-        return Inertia::redner('Fontend/Login');
-    }
 }

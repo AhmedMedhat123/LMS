@@ -1,3 +1,4 @@
+import { Link } from '@inertiajs/react'
 import React from 'react'
 
 const Header = () => {
@@ -38,8 +39,8 @@ const Header = () => {
                                         </button>
                                     </div>
                                     <ul className="generic-list-item d-flex flex-wrap align-items-center fs-14 border-left border-left-gray pl-3 ml-3">
-                                        <li className="d-flex align-items-center pr-3 mr-3 border-right border-right-gray"><i className="la la-sign-in mr-1" /><a href="login.html"> Login</a></li>
-                                        <li className="d-flex align-items-center"><i className="la la-user mr-1" /><a href="sign-up.html"> Register</a></li>
+                                        <li className="d-flex align-items-center pr-3 mr-3 border-right border-right-gray"><i className="la la-sign-in mr-1" /><Link href="login"> Login</Link></li>
+                                        <li className="d-flex align-items-center"><i className="la la-user mr-1" /><Link href="register"> Register</Link></li>
                                     </ul>
                                 </div>{/* end header-widget */}
                             </div>{/* end col-lg-6 */}
