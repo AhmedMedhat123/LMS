@@ -3,18 +3,19 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -51,8 +52,6 @@ Route::middleware(['auth', 'role:instructor'])->group(function () {
 Route::get('instructor/login', [InstructorController::class, 'InstructorLogin'])->name('instructor.login');
 
 //Frontend Route
-Route::get('home', function () {
-    return Inertia::render('Frontend/Home');
-})->name('home');
+Route::get('/', [UserController::class, 'Index'])->name('index');
 
 require __DIR__ . '/auth.php';

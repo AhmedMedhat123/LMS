@@ -1,10 +1,20 @@
+import { useEffect, useState } from "react";
 import Footer from "@/Pages/Frontend/Components/Footer";
 import Header from "@/Pages/Frontend/Components/Header";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 
-
-
 const MainLayout = ({ children }) => {
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Simulate content loading
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 1000); // Adjust timing as needed
+
+        return () => clearTimeout(timer); // Cleanup
+    }, []);
+
     return (
         <HelmetProvider>
             <Helmet>
@@ -15,7 +25,7 @@ const MainLayout = ({ children }) => {
                 <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
 
                 {/* Title */}
-                <title>Aduca - Education HTML Template</title>
+                <title>LMS</title>
 
                 {/* Google Fonts */}
                 <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -39,12 +49,25 @@ const MainLayout = ({ children }) => {
                 <link rel="stylesheet" href="assets/css/style.css" />
             </Helmet>
 
-            <Header />
+            {/* Preloader */}
+            {loading && (
+                <div className="preloader">
+                    <div className="loader">
+                        <svg className="spinner" viewBox="0 0 50 50">
+                            <circle className="path" cx={25} cy={25} r={20} fill="none" strokeWidth={5} />
+                        </svg>
+                    </div>
+                </div>
+            )}
 
             {/* Page Content */}
-            <div>{children}</div>
-
-            <Footer />
+            {!loading && (
+                <>
+                    <Header />
+                    <div>{children}</div>
+                    <Footer />
+                </>
+            )}
 
             {/* JavaScript Files */}
             <script src="assets/js/jquery-3.4.1.min.js"></script>

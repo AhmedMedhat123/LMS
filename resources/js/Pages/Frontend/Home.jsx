@@ -6,7 +6,7 @@ import CoursesArea from "./Components/CoursesArea";
 import CoursesArea2 from "./Components/CoursesArea2";
 import FunfactArea from "./Components/FunfactArea";
 import GetStartArea from "./Components/GetStartArea";
-import TestimonialArea from "./Components/TestimonialArea";
+import TestimonialArea from "./Components/TestimonialArea/TestimonialArea";
 import AboutUsArea from "./Components/AboutUsArea";
 import StartLearningArea from "./Components/StartLearningArea";
 
@@ -21,7 +21,7 @@ const Home = () => {
             {/* <CoursesArea2 /> */}
             <FunfactArea />
             <GetStartArea />
-            {/* <TestimonialArea /> */}
+            <TestimonialArea />
             <div className="section-block"></div>
             <AboutUsArea />
             <StartLearningArea />

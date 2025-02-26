@@ -1,0 +1,67 @@
+.feedback-slider {
+    width: 90%;
+    margin: auto;
+}
+
+.feedback-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.feedback-card:hover {
+    transform: scale(1.05);
+}
+
+.student-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.feedback-text {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.student-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Swiper Pagination Styles */
+.swiper-pagination-bullet {
+    background-color: #ec5252 !important;
+    opacity: 0.6;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: #ff0000 !important;
+    opacity: 1;
+}
+
+.swiper-pagination {
+    position: relative !important;
+    top: 0.5rem !important;
+}
+
+.stars {
+    color: #FFD700;
+}
+
+.star {
+    font-size: 18px;
+    color: #ccc;
+    transition: color 0.3s ease-in-out;
+}
+
+.star.filled {
+    color: #FFD700;
+}
