@@ -15,6 +15,10 @@ const MainLayout = ({ children }) => {
         return () => clearTimeout(timer); // Cleanup
     }, []);
 
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
     return (
         <HelmetProvider>
             <Helmet>
@@ -66,17 +70,11 @@ const MainLayout = ({ children }) => {
                     <Header />
                     <div>{children}</div>
                     <Footer />
+                    <div onClick={scrollToTop} id="scroll-top">
+                        <i className="la la-arrow-up" title="Go top" />
+                    </div>
                 </>
             )}
-
-            {/* JavaScript Files */}
-            <script src="assets/js/jquery-3.4.1.min.js"></script>
-            <script src="assets/js/bootstrap.bundle.min.js"></script>
-            <script src="assets/js/bootstrap-select.min.js"></script>
-            <script src="assets/js/owl.carousel.min.js"></script>
-            <script src="assets/js/waypoint.min.js"></script>
-            <script src="assets/js/jquery.counterup.min.js"></script>
-            <script src="assets/js/main.js"></script>
         </HelmetProvider>
     );
 };

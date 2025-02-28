@@ -18,7 +18,7 @@ const Header = () => {
                             </div>{/* end col-lg-6 */}
                             <div className="col-lg-6">
                                 <div className="header-widget d-flex flex-wrap align-items-center justify-content-end">
-                                    <div className="theme-picker d-flex align-items-center">
+                                    {/* <div className="theme-picker d-flex align-items-center">
                                         <button className="theme-picker-btn dark-mode-btn" title="Dark mode">
                                             <svg id="moon" viewBox="0 0 24 24" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                                                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
@@ -37,7 +37,7 @@ const Header = () => {
                                                 <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
                                             </svg>
                                         </button>
-                                    </div>
+                                    </div> */}
                                     <ul className="generic-list-item d-flex flex-wrap align-items-center fs-14 border-left border-left-gray pl-3 ml-3">
                                         <li className="d-flex align-items-center pr-3 mr-3 border-right border-right-gray"><i className="la la-sign-in mr-1" /><Link href="login"> Login</Link></li>
                                         <li className="d-flex align-items-center"><i className="la la-user mr-1" /><Link href="register"> Register</Link></li>
@@ -50,21 +50,19 @@ const Header = () => {
                 <div className="header-menu-content pr-150px pl-150px bg-white">
                     <div className="container-fluid">
                         <div className="main-menu-content">
-                            <a href="#" className="down-button"><i className="la la-angle-down" /></a>
+                            {/* <a href="#" className="down-button"><i className="la la-angle-down" /></a> */}
                             <div className="row align-items-center">
                                 <div className="col-lg-2">
                                     <div className="logo-box">
                                         <a href="index.html" className="logo"><img src="assets/images/logo.png" alt="logo" /></a>
                                         <div className="user-btn-action">
-                                            <div className="search-menu-toggle icon-element icon-element-sm shadow-sm mr-2" data-toggle="tooltip" data-placement="top" title="Search">
-                                                <i className="la la-search" />
-                                            </div>
-                                            <div className="off-canvas-menu-toggle cat-menu-toggle icon-element icon-element-sm shadow-sm mr-2" data-toggle="tooltip" data-placement="top" title="Category menu">
-                                                <i className="la la-th-large" />
-                                            </div>
-                                            <div className="off-canvas-menu-toggle main-menu-toggle icon-element icon-element-sm shadow-sm" data-toggle="tooltip" data-placement="top" title="Main menu">
-                                                <i className="la la-bars" />
-                                            </div>
+                                            <form method="post">
+                                                <div className="search-toggle form-group mb-0">
+                                                    <input className="form-control form--control pl-3" type="text" name="search" placeholder="Search for anything" />
+                                                    <span className="la la-search search-icon p-1" />
+                                                </div>
+                                            </form>
+
                                         </div>
                                     </div>
                                 </div>{/* end col-lg-2 */}

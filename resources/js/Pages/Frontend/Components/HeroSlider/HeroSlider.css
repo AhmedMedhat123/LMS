@@ -1,20 +1,26 @@
+/* Base Styles (for larger screens) */
 .slide {
     height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
 .overlay {
     color: white;
-    padding-left: 15rem;
-    padding-right: 5rem;
+    padding: 5rem 10rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
     min-width: 40%;
     min-height: 200px;
-    background-color: 000000e3 !important;
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Fixed background color issue */
 }
 
+/* Title and Content */
 .hero-title {
     color: white;
     font-size: 4rem;
@@ -29,18 +35,18 @@
     margin-bottom: 1rem;
 }
 
+/* Button */
 .hero-button {
     background-color: #ea3434;
     color: white;
     font-weight: 600;
     padding: 10px 20px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 15px;
 }
 
+/* Navigation Arrows */
 .swiper-button-next,
 .swiper-button-prev {
     color: #ec5252 !important;
@@ -49,5 +55,78 @@
 .swiper-button-next:hover,
 .swiper-button-prev:hover {
     color: #ff0000;
+}
 
+/* ======= Responsive Adjustments ======= */
+
+/* Tablets (Max Width: 1024px) */
+@media (max-width: 1024px) {
+    .overlay {
+        padding: 3rem 6rem;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    .hero-content {
+        font-size: 1.2rem;
+    }
+
+    .hero-button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+}
+
+/* Mobile Screens (Max Width: 768px) */
+@media (max-width: 768px) {
+    .slide {
+        height: 80vh;
+    }
+
+    .overlay {
+        padding: 2rem 3rem;
+        min-width: 100%;
+        text-align: center;
+        align-items: center;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+        line-height: 1.2;
+    }
+
+    .hero-content {
+        font-size: 1rem;
+    }
+
+    .hero-button {
+        font-size: 13px;
+        padding: 8px 14px;
+    }
+}
+
+/* Small Mobile Screens (Max Width: 480px) */
+@media (max-width: 480px) {
+    .slide {
+        height: 70vh;
+    }
+
+    .overlay {
+        padding: 1.5rem;
+    }
+
+    .hero-title {
+        font-size: 1.8rem;
+    }
+
+    .hero-content {
+        font-size: 0.9rem;
+    }
+
+    .hero-button {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
 }
