@@ -69,7 +69,7 @@ class MultiAuthTest extends TestCase
 
         $response->assertInertia(
             fn($page) => $page
-                ->component('Dashboard')
+                ->component('Frontend/Dashboard/index')
                 ->has('auth.user')
                 ->where('auth.user.name', $this->user->name)
                 ->where('auth.user.role', 'user')
