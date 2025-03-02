@@ -5,10 +5,13 @@ import Header from "./Components/Header";
 import Footer from "./Components/Footer";
 import Sidebar from "./Components/Sidebar";
 import { SidebarProvider } from "./Components/SidebarContext";
-
+import { usePage } from "@inertiajs/react";
+import { Toaster, toast } from "react-hot-toast";
 
 const DashboardLayout = ({ children }) => {
     const [loading, setLoading] = useState(true);
+    const { flash } = usePage().props;
+    const { user } = usePage().props;
 
     useEffect(() => {
         // Simulate content loading
@@ -19,10 +22,16 @@ const DashboardLayout = ({ children }) => {
         return () => clearTimeout(timer); // Cleanup
     }, []);
 
+    useEffect(() => {
+        if (flash?.message) {
+            const type = flash.alertType || "success";
+            toast[type](flash.message);
+        }
+    }, [flash]);
+
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
-
 
     // useEffect(() => {
     //     const loadScript = (src) => {
@@ -62,29 +71,45 @@ const DashboardLayout = ({ children }) => {
     //     };
     // }, []);
 
-
     return (
         <HelmetProvider>
             <Helmet>
-                <meta httpEquiv="content-type" content="text/html; charset=utf-8" />
+                <meta
+                    httpEquiv="content-type"
+                    content="text/html; charset=utf-8"
+                />
                 <meta name="author" content="TechyDevs" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1.0"
+                />
                 <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
-                <title>Aduca -  Education HTML Template</title>
+                <title>Aduca - Education HTML Template</title>
                 {/* Google fonts */}
                 <link rel="preconnect" href="https://fonts.gstatic.com" />
-                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet" />
+                <link
+                    href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800&display=swap"
+                    rel="stylesheet"
+                />
                 {/* Favicon */}
-                <link rel="icon" sizes="16x16" href="images/favicon.png" />
+                <link rel="icon" sizes="16x16" href="/images/favicon.png" />
                 {/* inject:css */}
-                <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-                <link rel="stylesheet" href="assets/css/line-awesome.css" />
-                <link rel="stylesheet" href="assets/css/owl.carousel.min.css" />
-                <link rel="stylesheet" href="assets/css/owl.theme.default.min.css" />
-                <link rel="stylesheet" href="assets/css/bootstrap-select.min.css" />
-                <link rel="stylesheet" href="assets/css/fancybox.css" />
-                <link rel="stylesheet" href="assets/css/style.css" />
-
+                <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
+                <link rel="stylesheet" href="/assets/css/line-awesome.css" />
+                <link
+                    rel="stylesheet"
+                    href="/assets/css/owl.carousel.min.css"
+                />
+                <link
+                    rel="stylesheet"
+                    href="/assets/css/owl.theme.default.min.css"
+                />
+                <link
+                    rel="stylesheet"
+                    href="/assets/css/bootstrap-select.min.css"
+                />
+                <link rel="stylesheet" href="/assets/css/fancybox.css" />
+                <link rel="stylesheet" href="/assets/css/style.css" />
             </Helmet>
 
             {/* Preloader */}
@@ -92,7 +117,14 @@ const DashboardLayout = ({ children }) => {
                 <div className="preloader">
                     <div className="loader">
                         <svg className="spinner" viewBox="0 0 50 50">
-                            <circle className="path" cx={25} cy={25} r={20} fill="none" strokeWidth={5} />
+                            <circle
+                                className="path"
+                                cx={25}
+                                cy={25}
+                                r={20}
+                                fill="none"
+                                strokeWidth={5}
+                            />
                         </svg>
                     </div>
                 </div>
@@ -102,14 +134,18 @@ const DashboardLayout = ({ children }) => {
             {!loading && (
                 <>
                     <SidebarProvider>
-
-                        <Header />
+                        <Header user={user} />
+                        <Toaster position="top-right" reverseOrder={false} />
 
                         <section className="dashboard-area">
                             <Sidebar />
-                            <div>{children}</div>
-                        </section>
 
+                            <div className="dashboard-content-wrap">
+                                <div className="container-fluid">
+                                    <div>{children}</div>
+                                </div>
+                            </div>
+                        </section>
                     </SidebarProvider>
 
                     <div onClick={scrollToTop} id="scroll-top">

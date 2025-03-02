@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
     CButton,
     CContainer,
@@ -13,37 +13,44 @@ import {
     CNavItem,
     CNavLink,
     CAvatar,
-} from '@coreui/react';
-import { useForm } from '@inertiajs/react';
+} from "@coreui/react";
+import { useForm } from "@inertiajs/react";
 
 export const Navbar = ({ admin }) => {
     const { post, get } = useForm();
 
     const handleLogout = (e) => {
         e.preventDefault();
-        post(route('admin.logout'));
+        post(route("admin.logout"));
     };
 
     const handleProfile = (e) => {
         e.preventDefault();
-        get(route('admin.profile'));
+        get(route("admin.profile"));
     };
 
     const handleDashboard = (e) => {
         e.preventDefault();
-        get(route('admin.dashboard'));
+        get(route("admin.dashboard"));
     };
 
     const handleChangePassword = (e) => {
         e.preventDefault();
-        get(route('admin.change-password'));
+        get(route("admin.change-password"));
     };
 
     return (
         <CNavbar expand="lg" className="navbar">
-            <CContainer fluid className="d-flex justify-content-between align-items-center">
+            <CContainer
+                fluid
+                className="d-flex justify-content-between align-items-center"
+            >
                 <CForm className="d-flex">
-                    <CFormInput type="search" className="me-2" placeholder="Search" />
+                    <CFormInput
+                        type="search"
+                        className="me-2"
+                        placeholder="Search"
+                    />
                     <CButton type="submit" color="primary" variant="outline">
                         Search
                     </CButton>
@@ -56,19 +63,48 @@ export const Navbar = ({ admin }) => {
                         </CNavLink>
                     </CNavItem>
                     <CNavItem>
-                        <CNavLink className='cursor-pointer' onClick={handleDashboard}>Dashboard</CNavLink>
+                        <CNavLink
+                            className="cursor-pointer"
+                            onClick={handleDashboard}
+                        >
+                            Dashboard
+                        </CNavLink>
                     </CNavItem>
                     <CDropdown variant="nav-item">
-                        <CDropdownToggle color="secondary" className="d-flex align-items-center gap-2">
-                            <CAvatar src={admin?.photo ? `/upload/admin_images/${admin.photo}` : "/images/user_placeholder.png"} />
+                        <CDropdownToggle
+                            color="secondary"
+                            className="d-flex align-items-center gap-2"
+                        >
+                            <CAvatar
+                                src={
+                                    admin?.photo
+                                        ? `/upload/admin_images/${admin.photo}`
+                                        : "/images/user_placeholder.png"
+                                }
+                            />
                             <span>{admin?.name || "Admin"}</span>
                         </CDropdownToggle>
                         <CDropdownMenu placement="bottom-end">
-                            <CDropdownItem className='cursor-pointer' onClick={handleProfile}>Profile</CDropdownItem>
-                            <CDropdownItem className='cursor-pointer' onClick={handleChangePassword}>Change Password</CDropdownItem>
+                            <CDropdownItem
+                                className="cursor-pointer"
+                                onClick={handleProfile}
+                            >
+                                Profile
+                            </CDropdownItem>
+                            <CDropdownItem
+                                className="cursor-pointer"
+                                onClick={handleChangePassword}
+                            >
+                                Change Password
+                            </CDropdownItem>
                             <CDropdownItem href="#">Settings</CDropdownItem>
                             <CDropdownDivider />
-                            <CDropdownItem className='cursor-pointer' onClick={handleLogout}>Logout</CDropdownItem>
+                            <CDropdownItem
+                                className="cursor-pointer"
+                                onClick={handleLogout}
+                            >
+                                Logout
+                            </CDropdownItem>
                         </CDropdownMenu>
                     </CDropdown>
                 </div>

@@ -4,7 +4,9 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -18,7 +20,9 @@ use Inertia\Inertia;
 // });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Frontend/Dashboard/index');
+        $id = Auth::user()->id;
+        $user = User::find($id);
+    return Inertia::render('Frontend/Dashboard/index',['user'=>$user]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -53,5 +57,12 @@ Route::get('instructor/login', [InstructorController::class, 'InstructorLogin'])
 
 //Frontend Route
 Route::get('/', [UserController::class, 'Index'])->name('index');
+
+Route::middleware('auth')->prefix('dashboard')->group(function () {
+    Route::get('profile',[UserController::class , 'UserProfile'])->name('user.profile');
+    Route::get('profile/edit',[UserController::class , 'UserProfileEdit'])->name('user.profile.edit');
+    Route::post('profile/edit/store',[UserController::class , 'UserProfileEditStore'])->name('user.profile.edit.store');
+    Route::post('logout',[UserController::class, 'UserLogout'])->name('user.logout');
+});
 
 require __DIR__ . '/auth.php';

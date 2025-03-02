@@ -10,7 +10,6 @@ import TestimonialArea from "./Components/TestimonialArea/TestimonialArea";
 import AboutUsArea from "./Components/AboutUsArea";
 import StartLearningArea from "./Components/StartLearningArea";
 
-
 const Home = () => {
     return (
         <MainLayout>
