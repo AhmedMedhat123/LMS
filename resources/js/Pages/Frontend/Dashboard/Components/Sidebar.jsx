@@ -28,9 +28,9 @@ const Sidebar = () => {
                 </div>
                 {/* end off-canvas-menu-close */}
                 <div className="logo-box px-4">
-                    <a href="index.html" className="logo">
+                    <Link href={route("index")} className="logo">
                         <img src="/assets/images/logo.png" alt="logo" />
-                    </a>
+                    </Link>
                 </div>
                 <ul className="generic-list-item off-canvas-menu-list off--canvas-menu-list pt-35px">
                     <li className="page-active">
