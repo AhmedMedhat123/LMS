@@ -4,7 +4,7 @@ namespace Tests\Feature\User;
 
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
-
+use Inertia\Testing\AssertableInertia as Assert;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -26,6 +26,36 @@ class UserUpdateProfileTest extends TestCase
         return User::factory()->create([
             'role' => $role
         ]);
+    }
+
+    public function test_displays_the_user_profile_page()
+    {
+        $response = $this->actingAs($this->user)->get('/dashboard/profile');
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn (Assert $page) =>
+            $page->component('Frontend/Dashboard/Profile')
+                 ->has('user', fn (Assert $pageUser) =>
+                     $pageUser->where('id', $this->user->id)
+                              ->where('name', $this->user->name)
+                              ->etc()
+                 )
+        );
+    }
+
+    public function test_displays_the_user_profile_edit_page()
+    {
+        $response = $this->actingAs($this->user)->get('/dashboard/profile/edit');
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn (Assert $page) =>
+            $page->component('Frontend/Dashboard/ProfileEdit')
+                 ->has('user', fn (Assert $pageUser) =>
+                     $pageUser->where('id', $this->user->id)
+                              ->where('name', $this->user->name)
+                              ->etc()
+                 )
+        );
     }
 
     public function test_user_can_update_profile()
@@ -70,5 +100,12 @@ class UserUpdateProfileTest extends TestCase
 
         $response->assertRedirect();
         $response->assertSessionHasErrors(['name', 'username', 'email', 'phone', 'photo']);
+    }
+    public function test_logs_out_the_user()
+    {
+        $response = $this->actingAs($this->user)->post('/logout');
+
+        $this->assertGuest();
+        $response->assertRedirect(route('login'));
     }
 }
