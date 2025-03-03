@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminChangePasswordRequest;
 use App\Http\Requests\AdminProfileUpdateRequest;
 use App\Http\Requests\UserUpdateProfileRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -64,5 +66,27 @@ class UserController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
+    }
+
+    public function UserChangePassword()
+    {
+        return inertia('Frontend/Dashboard/changePassword');
+    }
+
+    public function UserChangePasswordStore(AdminChangePasswordRequest $request)
+    {
+        if (!Hash::check($request->old_password, Auth::user()->password)) {
+            return redirect()->back()->with([
+                'message' => 'Old Password is Incorrect',
+                'alertType' => 'error'
+            ]);
+        }
+
+        User::whereId(Auth::user()->id)->update(['password' => Hash::make($request->new_password)]);
+
+        return redirect()->back()->with([
+            'message' => 'Password Changed Successfully',
+            'alertType' => 'success'
+        ]);
     }
 }

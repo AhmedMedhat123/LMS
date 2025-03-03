@@ -63,6 +63,8 @@ Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('profile/edit',[UserController::class , 'UserProfileEdit'])->name('user.profile.edit');
     Route::post('profile/edit/store',[UserController::class , 'UserProfileEditStore'])->name('user.profile.edit.store');
     Route::post('logout',[UserController::class, 'UserLogout'])->name('user.logout');
+    Route::get('change-password',[UserController::class, 'UserChangePassword'])->name('user.change-password');
+    Route::post('change-password/store',[UserController::class, 'UserChangePasswordStore'])->name('user.change-password.store');
 });
 
 require __DIR__ . '/auth.php';
