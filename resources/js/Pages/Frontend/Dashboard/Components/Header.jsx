@@ -22,7 +22,10 @@ const Header = ({ user }) => {
                             <div className="row align-items-center">
                                 <div className="col-lg-12">
                                     <div className="logo-box logo--box">
-                                        <a href="index.html" className="logo">
+                                        <a
+                                            href={route("index")}
+                                            className="logo"
+                                        >
                                             <img
                                                 src="/assets/images/logo.png"
                                                 alt="logo"

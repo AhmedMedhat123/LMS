@@ -1,9 +1,15 @@
-import { Link } from "@inertiajs/react";
+import { Link, useForm, usePage } from "@inertiajs/react";
 import React, { useState } from "react";
 
 const Header = () => {
     const [sidebarActive, setSidebarActive] = useState(false);
     const [searchBarActive, setSearchBarActive] = useState(false);
+    const { auth } = usePage().props;
+    const { post } = useForm();
+    const handleLogout = (e) => {
+        e.preventDefault();
+        post(route("user.logout"));
+    };
     return (
         <>
             <header className="header-menu-area bg-white">
@@ -55,17 +61,47 @@ const Header = () => {
                                         </button>
                                     </div> */}
                                     <ul className="generic-list-item d-flex flex-wrap align-items-center fs-14 border-left border-left-gray pl-3 ml-3">
-                                        <li className="d-flex align-items-center pr-3 mr-3 border-right border-right-gray">
-                                            <i className="la la-sign-in mr-1" />
-                                            <Link href="login"> Login</Link>
-                                        </li>
-                                        <li className="d-flex align-items-center">
-                                            <i className="la la-user mr-1" />
-                                            <Link href="register">
-                                                {" "}
-                                                Register
-                                            </Link>
-                                        </li>
+                                        {auth.user ? (
+                                            <>
+                                                <li className="d-flex align-items-center pr-3 mr-3 border-right border-right-gray">
+                                                    <i className="la la-sign-in mr-1" />
+                                                    <Link
+                                                        href={route(
+                                                            "dashboard"
+                                                        )}
+                                                    >
+                                                        {" "}
+                                                        Dashboard
+                                                    </Link>
+                                                </li>
+                                                <li className="d-flex align-items-center">
+                                                    <i className="la la-user mr-1" />
+                                                    <Link
+                                                        onClick={handleLogout}
+                                                    >
+                                                        {" "}
+                                                        Logout
+                                                    </Link>
+                                                </li>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <li className="d-flex align-items-center pr-3 mr-3 border-right border-right-gray">
+                                                    <i className="la la-sign-in mr-1" />
+                                                    <Link href="login">
+                                                        {" "}
+                                                        Login
+                                                    </Link>
+                                                </li>
+                                                <li className="d-flex align-items-center">
+                                                    <i className="la la-user mr-1" />
+                                                    <Link href="register">
+                                                        {" "}
+                                                        Register
+                                                    </Link>
+                                                </li>
+                                            </>
+                                        )}
                                     </ul>
                                 </div>
                                 {/* end header-widget */}
@@ -84,7 +120,10 @@ const Header = () => {
                             <div className="row align-items-center">
                                 <div className="col-lg-2">
                                     <div className="logo-box">
-                                        <a href="index.html" className="logo">
+                                        <a
+                                            href={route("index")}
+                                            className="logo"
+                                        >
                                             <img
                                                 src="assets/images/logo.png"
                                                 alt="logo"
@@ -1005,7 +1044,7 @@ const Header = () => {
                                                                 className="media-img"
                                                             >
                                                                 <img
-                                                                    src="images/small-img.jpg"
+                                                                    src="assets/images/small-img.jpg"
                                                                     alt="Cart image"
                                                                 />
                                                             </a>
