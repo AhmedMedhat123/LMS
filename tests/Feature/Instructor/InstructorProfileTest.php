@@ -27,6 +27,10 @@ class InstructorProfileTest extends TestCase
         ]);
     }
 
+    public function test_instructor_update_profile_render(){
+        $this->actingAs($this->instructor)->get(route('instructor.profile'))->assertStatus(200);
+    }
+
     public function test_instructor_can_update_profile()
     {
         // Storage::fake('public');

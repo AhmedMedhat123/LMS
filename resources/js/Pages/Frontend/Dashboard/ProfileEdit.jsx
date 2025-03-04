@@ -1,5 +1,5 @@
 import { useForm } from "@inertiajs/react";
-import DashboardLayout from "./DashboardLayout";
+import DashboardLayout from "../../../Layouts/DashboardLayout";
 import { CAlert } from "@coreui/react";
 
 const ProfileEdit = ({ user }) => {

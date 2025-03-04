@@ -1,5 +1,5 @@
 import { Link, useForm } from "@inertiajs/react";
-import DashboardLayout from "./DashboardLayout";
+import DashboardLayout from "../../../Layouts/DashboardLayout";
 const Profile = ({ user }) => {
     return (
         <>

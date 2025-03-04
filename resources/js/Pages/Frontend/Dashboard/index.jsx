@@ -1,5 +1,5 @@
 import { SidebarProvider } from "./Components/SidebarContext";
-import DashboardLayout from "./DashboardLayout";
+import DashboardLayout from "../../../Layouts/DashboardLayout";
 import { useState } from "react";
 
 const index = ({ user }) => {

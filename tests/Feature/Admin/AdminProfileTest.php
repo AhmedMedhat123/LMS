@@ -27,6 +27,10 @@ class AdminProfileTest extends TestCase
         ]);
     }
 
+    public function test_admin_profile_page_render(){
+        $this->actingAs($this->admin)->get(route('admin.profile'))->assertStatus(200);
+    }
+
     public function test_admin_can_update_profile()
     {
         // Storage::fake('public');

@@ -1,5 +1,5 @@
 import { CAlert } from "@coreui/react";
-import DashboardLayout from "./DashboardLayout";
+import DashboardLayout from "../../../Layouts/DashboardLayout";
 import { useForm } from "@inertiajs/react";
 
 const changePassword = () => {

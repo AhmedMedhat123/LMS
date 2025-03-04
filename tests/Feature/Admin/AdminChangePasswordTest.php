@@ -24,6 +24,10 @@ class AdminChangePasswordTest extends TestCase
         ]);
     }
 
+    public function test_admin_change_password_render(){
+        $this->actingAs($this->admin)->get(route('admin.change-password'))->assertStatus(200);
+    }
+
     public function test_loads_the_admin_change_password_page()
     {
         $this->actingAs($this->admin)

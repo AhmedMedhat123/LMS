@@ -1,25 +1,25 @@
 import { useEffect, useState } from "react";
-
 import { Helmet, HelmetProvider } from "react-helmet-async";
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
-import Sidebar from "./Components/Sidebar";
-import { SidebarProvider } from "./Components/SidebarContext";
+import { SidebarProvider } from "../Pages/Frontend/Dashboard/Components/SidebarContext";
 import { usePage } from "@inertiajs/react";
 import { Toaster, toast } from "react-hot-toast";
 
+// Dynamic imports based on user type
+import AdminHeader from "../Pages/Admin/Components/Header";
+import InstructorHeader from "../Pages/Instructor/Components/Header";
+import StudentHeader from "../Pages/Frontend/Dashboard/Components/Header";
+
+import AdminSidebar from "../Pages/Admin/Components/Sidebar";
+import InstructorSidebar from "../Pages/Instructor/Components/Sidebar";
+import StudentSidebar from "../Pages/Frontend/Dashboard/Components/Sidebar";
+
 const DashboardLayout = ({ children }) => {
     const [loading, setLoading] = useState(true);
-    const { flash } = usePage().props;
-    const { user } = usePage().props;
+    const { flash, user, admin, instructor, auth } = usePage().props;
 
     useEffect(() => {
-        // Simulate content loading
-        const timer = setTimeout(() => {
-            setLoading(false);
-        }, 1000); // Adjust timing as needed
-
-        return () => clearTimeout(timer); // Cleanup
+        const timer = setTimeout(() => setLoading(false), 1000);
+        return () => clearTimeout(timer);
     }, []);
 
     useEffect(() => {
@@ -29,47 +29,34 @@ const DashboardLayout = ({ children }) => {
         }
     }, [flash]);
 
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+    const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Select Header and Sidebar based on user role
+    const getHeader = () => {
+        switch (auth.user.role) {
+            case "admin":
+                return <AdminHeader admin={admin} />;
+            case "instructor":
+                return <InstructorHeader instructor={instructor} />;
+            case "user":
+                return <StudentHeader user={user} />;
+            default:
+                return null;
+        }
     };
 
-    // useEffect(() => {
-    //     const loadScript = (src) => {
-    //         if (document.querySelector(`script[src = "${src}"]`)) return; // Avoid loading the same script twice
-    //         const script = document.createElement("script");
-    //         script.src = src;
-    //         script.async = false; // Ensures scripts execute in order
-    //         document.body.appendChild(script);
-    //     };
-
-    //     const scripts = [
-    //         "assets/js/jquery-3.4.1.min.js",
-    //         "assets/js/bootstrap.bundle.min.js",
-    //         "assets/js/bootstrap-select.min.js",
-    //         "assets/js/owl.carousel.min.js",
-    //         "assets/js/isotope.js",
-    //         "assets/js/jquery.counterup.min.js",
-    //         "assets/js/fancybox.js",
-    //         // "assets/js/chart.js",
-    //         // "assets/js/doughnut-chart.js",
-    //         // "assets/js/bar-chart.js",
-    //         // "assets/js/line-chart.js",
-    //         "assets/js/datedropper.min.js",
-    //         "assets/js/emojionearea.min.js",
-    //         "assets/js/animated-skills.js",
-    //         "assets/js/jquery.MultiFile.min.js",
-    //         "assets/js/main.js"
-    //     ];
-
-    //     scripts.forEach(loadScript);
-
-    //     return () => {
-    //         scripts.forEach((src) => {
-    //             const script = document.querySelector(`script[src = "${src}"]`);
-    //             if (script) document.body.removeChild(script);
-    //         });
-    //     };
-    // }, []);
+    const getSidebar = () => {
+        switch (auth.user.role) {
+            case "admin":
+                return <AdminSidebar />;
+            case "instructor":
+                return <InstructorSidebar />;
+            case "user":
+                return <StudentSidebar />;
+            default:
+                return null;
+        }
+    };
 
     return (
         <HelmetProvider>
@@ -112,8 +99,7 @@ const DashboardLayout = ({ children }) => {
                 <link rel="stylesheet" href="/assets/css/style.css" />
             </Helmet>
 
-            {/* Preloader */}
-            {loading && (
+            {loading ? (
                 <div className="preloader">
                     <div className="loader">
                         <svg className="spinner" viewBox="0 0 50 50">
@@ -128,30 +114,22 @@ const DashboardLayout = ({ children }) => {
                         </svg>
                     </div>
                 </div>
-            )}
-
-            {/* Page Content */}
-            {!loading && (
-                <>
-                    <SidebarProvider>
-                        <Header user={user} />
-                        <Toaster position="top-right" reverseOrder={false} />
-
-                        <section className="dashboard-area">
-                            <Sidebar />
-
-                            <div className="dashboard-content-wrap">
-                                <div className="container-fluid">
-                                    <div>{children}</div>
-                                </div>
+            ) : (
+                <SidebarProvider>
+                    {getHeader()}
+                    <Toaster position="top-right" reverseOrder={false} />
+                    <section className="dashboard-area">
+                        {getSidebar()}
+                        <div className="dashboard-content-wrap">
+                            <div className="container-fluid">
+                                <div>{children}</div>
                             </div>
-                        </section>
-                    </SidebarProvider>
-
+                        </div>
+                    </section>
                     <div onClick={scrollToTop} id="scroll-top">
                         <i className="la la-arrow-up" title="Go top" />
                     </div>
-                </>
+                </SidebarProvider>
             )}
         </HelmetProvider>
     );
