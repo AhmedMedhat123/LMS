@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -31,40 +32,64 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-//Admin Route
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('admin/dashboard', [AdminController::class, 'AdminDashboard'])->name('admin.dashboard');
-    Route::post('admin/logout', [AdminController::class, 'AdminLogout'])->name('admin.logout');
-    Route::get('admin/profile', [AdminController::class, 'AdminProfile'])->name('admin.profile');
-    Route::post('admin/profile/store', [AdminController::class, 'AdminProfileStore'])->name('admin.profile.store');
-    Route::get('admin/change-password', [AdminController::class, 'AdminChangePassword'])->name('admin.change-password');
-    Route::post('admin/change-password/store', [AdminController::class, 'AdminChangePasswordStore'])->name('admin.change-password.store');
+///////////////////////////////////////////////////////////////////
+////////////////////////////  Admin Route  ////////////////////////
+///////////////////////////////////////////////////////////////////
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+
+    Route::controller(AdminController::class)->group(function(){
+        Route::get('/dashboard',  'AdminDashboard')->name('dashboard');
+        Route::post('/logout',  'AdminLogout')->name('logout');
+        Route::get('/profile',  'AdminProfile')->name('profile');
+        Route::post('/profile/store',  'AdminProfileStore')->name('profile.store');
+        Route::get('/change-password',  'AdminChangePassword')->name('change-password');
+        Route::post('/change-password/store',  'AdminChangePasswordStore')->name('change-password.store');
+    });
+
+    Route::controller(CategoryController::class)->prefix('category')->name('category.')->group(function(){
+        Route::get('/all-category','AllCategory')->name('all');
+    });
 });
 
 Route::get('admin/login', [AdminController::class, 'AdminLogin'])->name('admin.login');
 
-//Instructor Route
-Route::middleware(['auth', 'role:instructor'])->group(function () {
-    Route::get('instructor/dashboard', [InstructorController::class, 'InstructorDashboard'])->name('instructor.dashboard');
-    Route::post('instructor/logout', [InstructorController::class, 'InstructorLogout'])->name('instructor.logout');
-    Route::get('instructor/profile', [InstructorController::class, 'InstructorProfile'])->name('instructor.profile');
-    Route::post('instructor/profile/store', [InstructorController::class, 'InstructorProfileStore'])->name('instructor.profile.store');
-    Route::get('instructor/change-password', [InstructorController::class, 'InstructorChangePassword'])->name('instructor.change-password');
-    Route::post('instructor/change-password/store', [InstructorController::class, 'InstructorChangePasswordStore'])->name('instructor.change-password.store');
+///////////////////////////////////////////////////////////////////
+//////////////////////////  Instructor Route  /////////////////////
+///////////////////////////////////////////////////////////////////
+
+Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('instructor.')->group(function () {
+
+    Route::controller(InstructorController::class)->group(function(){
+        Route::get('/dashboard',  'InstructorDashboard')->name('dashboard');
+        Route::post('/logout',  'InstructorLogout')->name('logout');
+        Route::get('/profile',  'InstructorProfile')->name('profile');
+        Route::post('/profile/store',  'InstructorProfileStore')->name('profile.store');
+        Route::get('/change-password',  'InstructorChangePassword')->name('change-password');
+        Route::post('/change-password/store',  'InstructorChangePasswordStore')->name('change-password.store');
+    });
 });
 
 Route::get('instructor/login', [InstructorController::class, 'InstructorLogin'])->name('instructor.login');
 
-//Frontend Route
+
+///////////////////////////////////////////////////////////////////
+//////////////////////////  Frontend Route  /////////////////////
+///////////////////////////////////////////////////////////////////
+
 Route::get('/', [UserController::class, 'Index'])->name('index');
 
-Route::middleware('auth')->prefix('dashboard')->group(function () {
-    Route::get('profile',[UserController::class , 'UserProfile'])->name('user.profile');
-    Route::get('profile/edit',[UserController::class , 'UserProfileEdit'])->name('user.profile.edit');
-    Route::post('profile/edit/store',[UserController::class , 'UserProfileEditStore'])->name('user.profile.edit.store');
-    Route::post('logout',[UserController::class, 'UserLogout'])->name('user.logout');
-    Route::get('change-password',[UserController::class, 'UserChangePassword'])->name('user.change-password');
-    Route::post('change-password/store',[UserController::class, 'UserChangePasswordStore'])->name('user.change-password.store');
+Route::middleware('auth')->prefix('dashboard')->name('user.')->group(function () {
+
+    Route::controller(UserController::class)->group(function(){
+        Route::get('/profile', 'UserProfile')->name('profile');
+        Route::get('/profile/edit', 'UserProfileEdit')->name('profile.edit');
+        Route::post('/profile/edit/store', 'UserProfileEditStore')->name('profile.edit.store');
+        Route::post('/logout', 'UserLogout')->name('logout');
+        Route::get('/change-password', 'UserChangePassword')->name('change-password');
+        Route::post('/change-password/store', 'UserChangePasswordStore')->name('change-password.store');
+    });
+
 });
 
 require __DIR__ . '/auth.php';
