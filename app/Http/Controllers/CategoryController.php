@@ -80,5 +80,21 @@ class CategoryController extends Controller
             'alertType' => 'success'
         ]);
     }
+    public function DeleteCategory($id)
+    {
+        $category = Category::findOrFail($id);
 
+        // Delete the category image if it exists
+        if ($category->category_image && file_exists(public_path('upload/category/' . $category->category_image))) {
+            unlink(public_path('upload/category/' . $category->category_image));
+        }
+
+        // Delete the category from the database
+        $category->delete();
+
+        return redirect()->route('admin.category.all')->with([
+            'message' => 'Category Deleted Successfully',
+            'alertType' => 'success'
+        ]);
+    }
 }

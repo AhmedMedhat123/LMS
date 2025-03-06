@@ -55,7 +55,7 @@ const DataTable = ({ data }) => {
 
     return (
         <div className="overflow-x-auto">
-            <div className="mb-4 flex justify-between items-center">
+            <div className="mb-4 flex flex-col md:flex-row justify-between items-center gap-2">
                 <input
                     type="text"
                     placeholder="Search..."

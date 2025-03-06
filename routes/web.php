@@ -54,6 +54,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/add-category-store','StoreCategory')->name('add.store');
         Route::get('/edit-category/{id}','EditCategory')->name('edit');
         Route::post('/update-category','UpdateCategory')->name('update');
+        Route::get('/delete-category/{id}','DeleteCategory')->name('delete');
     });
 });
 
