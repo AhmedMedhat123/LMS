@@ -16,9 +16,13 @@ export default function AdminDashboard({ title, children }) {
                     <div className="">
                         <div>
                             {title && (
-                                <p className="dashboard-title">{title}</p>
+                                <p className="text-4xl font-bold text-[#333] pl-[30px]">
+                                    {title}
+                                </p>
                             )}
-                            <main className="content-area">{children}</main>
+                            <main className="content-area text-black">
+                                {children}
+                            </main>
                         </div>
                     </div>
                 </DashboardLayout>

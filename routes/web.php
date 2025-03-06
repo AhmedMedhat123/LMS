@@ -47,8 +47,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/change-password/store',  'AdminChangePasswordStore')->name('change-password.store');
     });
 
+    /////////////////////////// Category Route  /////////////////
     Route::controller(CategoryController::class)->prefix('category')->name('category.')->group(function(){
         Route::get('/all-category','AllCategory')->name('all');
+        Route::get('/add-category','AddCategory')->name('add');
+        Route::post('/add-category-store','StoreCategory')->name('add.store');
     });
 });
 
