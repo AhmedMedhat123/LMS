@@ -52,6 +52,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/all-category','AllCategory')->name('all');
         Route::get('/add-category','AddCategory')->name('add');
         Route::post('/add-category-store','StoreCategory')->name('add.store');
+        Route::get('/edit-category/{id}','EditCategory')->name('edit');
+        Route::post('/update-category','UpdateCategory')->name('update');
     });
 });
 

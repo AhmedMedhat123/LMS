@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import DataTable from "./DataTable";
 import AdminDashboard from "../../AdminDashboard";
+import { Link } from "@inertiajs/react";
 
 const AllCategory = ({ category }) => {
     const data = useMemo(() => {
@@ -8,18 +9,28 @@ const AllCategory = ({ category }) => {
             return category.map((cat, index) => ({
                 id: cat.id,
                 name: cat.category_name,
-                image:
-                    (
-                        <img
-                            src={`/upload/category/${cat.category_image}`}
-                            alt={cat.category_name}
-                            className="w-20 h-20 object-cover rounded"
-                        />
-                    ) || "N/A",
+                image: cat.category_image ? (
+                    <img
+                        src={`/upload/category/${cat.category_image}`}
+                        alt={cat.category_name}
+                        className="w-20 h-20 object-cover rounded"
+                    />
+                ) : (
+                    <img
+                        src="/images/no-image.png"
+                        alt="No Category"
+                        className="w-20 h-20 object-cover rounded"
+                    />
+                ),
                 action: (
                     <>
-                        <button className="btn btn-primary mr-3">edit</button>
-                        <button className="btn btn-danger">delete</button>
+                        <Link
+                            href={route("admin.category.edit", cat.id)}
+                            className="btn btn-primary mr-3"
+                        >
+                            edit
+                        </Link>
+                        <Link className="btn btn-danger">delete</Link>
                     </>
                 ),
             }));
