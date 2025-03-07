@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Foundation\Application;
@@ -49,13 +50,21 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     /////////////////////////// Category Route  /////////////////
     Route::controller(CategoryController::class)->prefix('category')->name('category.')->group(function(){
-        Route::get('/all-category','AllCategory')->name('all');
-        Route::get('/add-category','AddCategory')->name('add');
-        Route::post('/add-category-store','StoreCategory')->name('add.store');
-        Route::get('/edit-category/{id}','EditCategory')->name('edit');
-        Route::post('/update-category','UpdateCategory')->name('update');
-        Route::get('/delete-category/{id}','DeleteCategory')->name('delete');
+        Route::get('/all','AllCategory')->name('all');
+        Route::get('/add','AddCategory')->name('add');
+        Route::post('/add/store','StoreCategory')->name('add.store');
+        Route::get('/edit/{id}','EditCategory')->name('edit');
+        Route::post('/update','UpdateCategory')->name('update');
+        Route::get('/delete/{id}','DeleteCategory')->name('delete');
     });
+
+    /////////////////////////// SubCategory Route  /////////////////
+    Route::controller(SubCategoryController::class)->prefix('subcategory')->name('subcategory.')->group(function(){
+        Route::get('/all','AllSubCategory')->name('all');
+        Route::get('/add','AddSubCategory')->name('add');
+        Route::post('/add/store','StoreSubCategory')->name('add.store');
+    });
+
 });
 
 Route::get('admin/login', [AdminController::class, 'AdminLogin'])->name('admin.login');

@@ -110,6 +110,14 @@ const Sidebar = () => {
                                     All category
                                 </Link>
                             </li>
+                            <li>
+                                <Link
+                                    href={route("admin.subcategory.all")}
+                                    className="block px-4 py-2 hover:bg-gray-200"
+                                >
+                                    All SubCategory
+                                </Link>
+                            </li>
                         </ul>
                     </li>
                     <li>

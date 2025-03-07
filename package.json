@@ -29,6 +29,7 @@
         "hero-slider": "^3.2.1",
         "react-helmet-async": "^2.0.5",
         "react-hot-toast": "^2.5.2",
+        "react-select": "^5.10.1",
         "react-table": "^7.8.0",
         "swiper": "^11.2.4"
     }
