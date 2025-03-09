@@ -91,4 +91,9 @@ class InstructorController extends Controller
             'alertType' => 'success'
         ]);
     }
+
+    public function InstructorRegister()
+    {
+        return inertia('Frontend/InstructorRegister');
+    }
 }

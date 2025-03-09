@@ -89,6 +89,7 @@ Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('inst
 });
 
 Route::get('instructor/login', [InstructorController::class, 'InstructorLogin'])->name('instructor.login');
+Route::get('instructor/register', [InstructorController::class, 'InstructorRegister'])->name('instructor.register');
 
 
 ///////////////////////////////////////////////////////////////////
