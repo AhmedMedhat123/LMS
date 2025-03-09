@@ -1,10 +1,22 @@
 import { useSidebarContext } from "@/Pages/Frontend/Dashboard/Components/SidebarContext";
-import { Link, useForm } from "@inertiajs/react";
-import { useState } from "react";
+import { Link, useForm, usePage } from "@inertiajs/react";
+import { useEffect, useState } from "react";
 
 const Sidebar = () => {
     const { sidebarActive, setSidebarActive } = useSidebarContext();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const { url } = usePage();
+
+    useEffect(() => {
+        if (
+            url.startsWith("/admin/category") ||
+            url.startsWith("/admin/subcategory")
+        ) {
+            setIsDropdownOpen(true);
+        } else {
+            setIsDropdownOpen(false);
+        }
+    }, [url]); // Runs whenever the URL changes
 
     const { post } = useForm();
 
@@ -35,7 +47,13 @@ const Sidebar = () => {
                     </Link>
                 </div>
                 <ul className="generic-list-item off-canvas-menu-list off--canvas-menu-list pt-35px">
-                    <li className="page-active">
+                    <li
+                        className={
+                            url.startsWith("/admin/dashboard")
+                                ? "page-active"
+                                : ""
+                        }
+                    >
                         <Link href={route("admin.dashboard")}>
                             <svg
                                 className="mr-2"
@@ -50,7 +68,13 @@ const Sidebar = () => {
                             Dashboard
                         </Link>
                     </li>
-                    <li>
+                    <li
+                        className={
+                            url.startsWith("/admin/profile")
+                                ? "page-active"
+                                : ""
+                        }
+                    >
                         <Link href={route("admin.profile")}>
                             <svg
                                 className="mr-2"
@@ -102,7 +126,13 @@ const Sidebar = () => {
                                     : "max-h-0 opacity-0"
                             }`}
                         >
-                            <li>
+                            <li
+                                className={
+                                    url.startsWith("/admin/category")
+                                        ? "page-active"
+                                        : ""
+                                }
+                            >
                                 <Link
                                     href={route("admin.category.all")}
                                     className="block px-4 py-2 hover:bg-gray-200"
@@ -110,7 +140,13 @@ const Sidebar = () => {
                                     All category
                                 </Link>
                             </li>
-                            <li>
+                            <li
+                                className={
+                                    url.startsWith("/admin/subcategory")
+                                        ? "page-active"
+                                        : ""
+                                }
+                            >
                                 <Link
                                     href={route("admin.subcategory.all")}
                                     className="block px-4 py-2 hover:bg-gray-200"
