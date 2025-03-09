@@ -13,7 +13,7 @@ const AllSubCategory = ({ subcategory }) => {
     };
 
     const confirmDelete = () => {
-        router.get(route("admin.category.delete", deleteId), {
+        router.get(route("admin.subcategory.delete", deleteId), {
             onSuccess: () => {
                 setShowModal(false);
                 setDeleteId(null);
@@ -35,7 +35,7 @@ const AllSubCategory = ({ subcategory }) => {
                 action: (
                     <>
                         <Link
-                            href={route("admin.category.edit", cat.id)}
+                            href={route("admin.subcategory.edit", cat.id)}
                             className="btn btn-primary mr-3"
                         >
                             edit

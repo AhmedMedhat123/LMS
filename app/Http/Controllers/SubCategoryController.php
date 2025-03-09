@@ -33,4 +33,35 @@ class SubCategoryController extends Controller
             'alertType' => 'success'
         ]);
     }
+
+    public function EditSubCategory($id)
+    {
+        $category = Category::latest()->get();
+        $subcategory = SubCategory::find($id);
+        return inertia('Admin/Backend/SubCategory/EditSubCategory',['category'=>$category,'subcategory'=>$subcategory]);
+    }
+
+    public function UpdateSubCategory(SubCategoryRequest $request)
+    {
+        SubCategory::find($request->subcategory_id)->update([
+            'category_id'=>$request->category_id,
+            'subcategory_name'=>$request->subcategory_name,
+            'subcategory_slug' => strtolower(str_replace(' ', '-', $request->subcategory_name)),
+        ]);
+
+        return redirect()->route('admin.subcategory.all')->with([
+            'message' => 'Sub-Category Updated Successfully',
+            'alertType' => 'success'
+        ]);
+    }
+
+    public function DeleteSubCategory($id)
+    {
+        SubCategory::find($id)->delete();
+
+        return redirect()->route('admin.subcategory.all')->with([
+            'message' => 'Sub-Category Deleted Successfully',
+            'alertType' => 'success'
+        ]);
+    }
 }
