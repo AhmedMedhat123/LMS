@@ -4,19 +4,28 @@ import { useEffect, useState } from "react";
 
 const Sidebar = () => {
     const { sidebarActive, setSidebarActive } = useSidebarContext();
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState({
+        category: false,
+        instructor: false,
+    });
     const { url } = usePage();
 
     useEffect(() => {
-        if (
-            url.startsWith("/admin/category") ||
-            url.startsWith("/admin/subcategory")
-        ) {
-            setIsDropdownOpen(true);
-        } else {
-            setIsDropdownOpen(false);
-        }
-    }, [url]); // Runs whenever the URL changes
+        setDropdownOpen((prev) => ({
+            ...prev,
+            category:
+                url.startsWith("/admin/category") ||
+                url.startsWith("/admin/subcategory"),
+            instructor: url.startsWith("/admin/instructor"),
+        }));
+    }, [url]);
+
+    const toggleDropdown = (dropdownName) => {
+        setDropdownOpen((prev) => ({
+            ...prev,
+            [dropdownName]: !prev[dropdownName],
+        }));
+    };
 
     const { post } = useForm();
 
@@ -93,7 +102,7 @@ const Sidebar = () => {
                     <li className="relative">
                         <button
                             className="flex items-center w-full text-left px-[18px] py-[12px] text-[#233d63] hover:text-[#358FF7]"
-                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                            onClick={() => toggleDropdown("category")}
                         >
                             <svg
                                 className="mr-2"
@@ -108,7 +117,9 @@ const Sidebar = () => {
                             Category
                             <svg
                                 className={`ml-auto transform transition-transform ${
-                                    isDropdownOpen ? "rotate-180" : "rotate-0"
+                                    dropdownOpen.category
+                                        ? "rotate-180"
+                                        : "rotate-0"
                                 }`}
                                 xmlns="http://www.w3.org/2000/svg"
                                 height="18px"
@@ -121,7 +132,7 @@ const Sidebar = () => {
                         </button>
                         <ul
                             className={`pl-6 bg-gray-100 transition-all duration-300 ease-in-out overflow-hidden ${
-                                isDropdownOpen
+                                dropdownOpen.category
                                     ? "max-h-40 opacity-100"
                                     : "max-h-0 opacity-0"
                             }`}
@@ -156,25 +167,61 @@ const Sidebar = () => {
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="dashboard-quiz.html">
+
+                    {/* Manage Instructor Dropdown */}
+                    <li className="relative">
+                        <button
+                            className="flex items-center w-full text-left px-[18px] py-[12px] text-[#233d63] hover:text-[#358FF7]"
+                            onClick={() => toggleDropdown("instructor")}
+                        >
                             <svg
                                 className="mr-2"
                                 xmlns="http://www.w3.org/2000/svg"
-                                enableBackground="new 0 0 24 24"
                                 height="18px"
                                 viewBox="0 0 24 24"
                                 width="18px"
                             >
-                                <g>
-                                    <rect fill="none" height={24} width={24} />
-                                </g>
-                                <g>
-                                    <path d="M11,21h-1l1-7H7.5c-0.88,0-0.33-0.75-0.31-0.78C8.48,10.94,10.42,7.54,13.01,3h1l-1,7h3.51c0.4,0,0.62,0.19,0.4,0.66 C12.97,17.55,11,21,11,21z" />
-                                </g>
+                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                <path d="M12 5.9c1.16 0 2.1.94 2.1 2.1s-.94 2.1-2.1 2.1S9.9 9.16 9.9 8s.94-2.1 2.1-2.1m0 9c2.97 0 6.1 1.46 6.1 2.1v1.1H5.9V17c0-.64 3.13-2.1 6.1-2.1M12 4C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 9c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" />
                             </svg>{" "}
-                            Quiz Attempts
-                        </a>
+                            Manage Instructor
+                            <svg
+                                className={`ml-auto transform transition-transform ${
+                                    dropdownOpen.instructor
+                                        ? "rotate-180"
+                                        : "rotate-0"
+                                }`}
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="18px"
+                                viewBox="0 0 24 24"
+                                width="18px"
+                            >
+                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                <path d="M7 10l5 5 5-5H7z" />
+                            </svg>
+                        </button>
+                        <ul
+                            className={`pl-6 bg-gray-100 transition-all duration-300 ease-in-out overflow-hidden ${
+                                dropdownOpen.instructor
+                                    ? "max-h-40 opacity-100"
+                                    : "max-h-0 opacity-0"
+                            }`}
+                        >
+                            <li
+                                className={
+                                    url.startsWith("/admin/instructor")
+                                        ? "page-active"
+                                        : ""
+                                }
+                            >
+                                <Link
+                                    href={route("admin.instructor.all")}
+                                    className="block px-4 py-2 hover:bg-gray-200"
+                                >
+                                    All instructor
+                                </Link>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="dashboard-bookmark.html">

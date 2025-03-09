@@ -117,4 +117,22 @@ class InstructorController extends Controller
             'alertType' => 'success'
         ]);
     }
+
+    public function AllInstructor()
+    {
+        $instructors = User::where('role', 'instructor')->latest()->get();
+        return inertia('Admin/Backend/Instructor/AllInstructor', ['instructors' => $instructors]);
+    }
+
+    public function UpdateInstructorStatus(Request $request,$id)
+    {
+        $instructor = User::findOrFail($id);
+        $instructor->status = $request->status;
+        $instructor->save();
+
+        return redirect()->back()->with([
+            'message' => 'Instructor Status Updated Successfully',
+            'alertType' => 'success'
+        ]);
+    }
 }

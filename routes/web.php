@@ -68,6 +68,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/delete/{id}','DeleteSubCategory')->name('delete');
     });
 
+    /////////////////////////// Instructor Category Route  /////////////////
+    Route::controller(InstructorController::class)->prefix('instructor')->name('instructor.')->group(function(){
+        Route::get('/all','AllInstructor')->name('all');
+        Route::post('/update/status/{id}','UpdateInstructorStatus')->name('update.status');
+    });
+
 });
 
 Route::get('admin/login', [AdminController::class, 'AdminLogin'])->name('admin.login');
