@@ -125,7 +125,7 @@ const Header = () => {
                                             className="logo"
                                         >
                                             <img
-                                                src="assets/images/logo.png"
+                                                src="/assets/images/logo.png"
                                                 alt="logo"
                                             />
                                         </a>
@@ -946,7 +946,7 @@ const Header = () => {
                                                                         </a>
                                                                     </div>
                                                                     <img
-                                                                        src="assets/images/menu-banner-img.jpg"
+                                                                        src="/assets/images/menu-banner-img.jpg"
                                                                         alt="menu banner image"
                                                                         className="w-100 h-100 rounded-rounded"
                                                                     />
@@ -1010,7 +1010,7 @@ const Header = () => {
                                                                 className="media-img"
                                                             >
                                                                 <img
-                                                                    src="assets/images/small-img.jpg"
+                                                                    src="/assets/images/small-img.jpg"
                                                                     alt="Cart image"
                                                                 />
                                                             </a>
@@ -1044,7 +1044,7 @@ const Header = () => {
                                                                 className="media-img"
                                                             >
                                                                 <img
-                                                                    src="assets/images/small-img.jpg"
+                                                                    src="/assets/images/small-img.jpg"
                                                                     alt="Cart image"
                                                                 />
                                                             </a>

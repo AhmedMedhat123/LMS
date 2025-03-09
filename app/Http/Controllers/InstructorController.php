@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\InstructorChangePasswordRequest;
 use App\Http\Requests\InstructorProfileUpdate;
+use App\Http\Requests\InstructorRegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -95,5 +96,25 @@ class InstructorController extends Controller
     public function InstructorRegister()
     {
         return inertia('Frontend/InstructorRegister');
+    }
+
+    public function InstructorRegisterStore(InstructorRegisterRequest $request)
+    {
+        User::insert([
+            'name' => $request->name,
+            'username' => $request->username,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'role' => 'instructor',
+            'password' => Hash::make($request->password),
+            'role' => 'instructor',
+            'status' => '0',
+        ]);
+
+        return redirect()->back()->with([
+            'message' => 'Instructor Registed Successfully',
+            'alertType' => 'success'
+        ]);
     }
 }
