@@ -15,6 +15,13 @@ export default function InsturctorDashboard({ title, children }) {
                     <Head title="Instructor Dashboard" />
                     <div className="">
                         <div>
+                            {instructor.status === "0" ? (
+                                <div className="alert alert-warning">
+                                    Your account is not yet approved by admin.
+                                    You can't access the dashboard until your
+                                    account is approved.
+                                </div>
+                            ) : null}
                             {title && (
                                 <p className="dashboard-title">{title}</p>
                             )}
