@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubCategoryController;
@@ -92,12 +93,23 @@ Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('inst
         Route::get('/change-password',  'InstructorChangePassword')->name('change-password');
         Route::post('/change-password/store',  'InstructorChangePasswordStore')->name('change-password.store');
     });
+
+    /////////////////////////// Course Route  /////////////////
+    Route::controller(CourseController::class)->prefix('course')->name('course.')->group(function(){
+        Route::get('/all','AllCourses')->name('all');
+        Route::get('/add','AddCourse')->name('add');
+        Route::post('/add/store','StoreCourse')->name('add.store');
+        // Route::get('/edit/{id}','EditCourse')->name('edit');
+        // Route::post('/update','UpdateCourse')->name('update');
+        // Route::get('/delete/{id}','DeleteCourse')->name('delete');
+    });
+
 });
 
 Route::get('/instructor/login', [InstructorController::class, 'InstructorLogin'])->name('instructor.login');
 Route::get('/instructor/register', [InstructorController::class, 'InstructorRegister'])->name('instructor.register');
 Route::post('/instructor/register/store', [InstructorController::class, 'InstructorRegisterStore'])->name('instructor.register.store');
-
+Route::get('/subcategories/{categoryId}', [SubCategoryController::class, 'getSubcategories'])->name('subcategories.get');
 
 ///////////////////////////////////////////////////////////////////
 //////////////////////////  Frontend Route  /////////////////////
