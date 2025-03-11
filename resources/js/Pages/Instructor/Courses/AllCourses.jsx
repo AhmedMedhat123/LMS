@@ -50,14 +50,14 @@ const AllCourses = ({ courses }) => {
                 action: (
                     <>
                         <Link
-                            // href={route("admin.category.edit", cat.id)}
+                            href={route("instructor.course.edit", course.id)}
                             className="btn btn-primary mr-3"
                         >
                             edit
                         </Link>
                         <button
-                            // className="btn btn-danger"
-                            onClick={() => handleDelete(cat.id)}
+                            className="btn btn-danger"
+                            // onClick={() => handleDelete(cat.id)}
                         >
                             Delete
                         </button>

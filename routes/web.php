@@ -99,8 +99,8 @@ Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('inst
         Route::get('/all','AllCourses')->name('all');
         Route::get('/add','AddCourse')->name('add');
         Route::post('/add/store','StoreCourse')->name('add.store');
-        // Route::get('/edit/{id}','EditCourse')->name('edit');
-        // Route::post('/update','UpdateCourse')->name('update');
+        Route::get('/edit/{id}','EditCourse')->name('edit');
+        Route::post('/update','UpdateCourse')->name('update');
         // Route::get('/delete/{id}','DeleteCourse')->name('delete');
     });
 
