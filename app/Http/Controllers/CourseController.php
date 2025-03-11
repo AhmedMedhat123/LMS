@@ -163,4 +163,27 @@ class CourseController extends Controller
         ]);
     }
 
+    public function DeleteCourse($id)
+    {
+
+        $course = Course::findOrFail($id);
+
+        if ($course->course_image && file_exists(public_path('upload/course/image/' . $course->course_image))) {
+            unlink(public_path('upload/course/image/' . $course->course_image));
+        }
+
+        if ($course->video && file_exists(public_path('upload/course/video/' . $course->video))) {
+            unlink(public_path('upload/course/video/' . $course->video));
+        }
+
+        Course_goal::where('course_id', $course->id)->delete();
+
+        $course->delete();
+
+        return redirect()->route('instructor.course.all')->with([
+            'message' => 'Course Deleted Successfully',
+            'alertType' => 'success'
+        ]);
+    }
+
 }

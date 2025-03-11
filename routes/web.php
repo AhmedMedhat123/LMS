@@ -101,7 +101,7 @@ Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('inst
         Route::post('/add/store','StoreCourse')->name('add.store');
         Route::get('/edit/{id}','EditCourse')->name('edit');
         Route::post('/update','UpdateCourse')->name('update');
-        // Route::get('/delete/{id}','DeleteCourse')->name('delete');
+        Route::get('/delete/{id}','DeleteCourse')->name('delete');
     });
 
 });

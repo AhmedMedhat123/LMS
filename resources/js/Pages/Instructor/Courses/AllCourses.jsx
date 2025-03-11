@@ -13,12 +13,12 @@ const AllCourses = ({ courses }) => {
     };
 
     const confirmDelete = () => {
-        // router.get(route("admin.category.delete", deleteId), {
-        //     onSuccess: () => {
-        //         setShowModal(false);
-        //         setDeleteId(null);
-        //     },
-        // });
+        router.get(route("instructor.course.delete", deleteId), {
+            onSuccess: () => {
+                setShowModal(false);
+                setDeleteId(null);
+            },
+        });
     };
 
     const closeModal = () => {
@@ -57,7 +57,7 @@ const AllCourses = ({ courses }) => {
                         </Link>
                         <button
                             className="btn btn-danger"
-                            // onClick={() => handleDelete(cat.id)}
+                            onClick={() => handleDelete(course.id)}
                         >
                             Delete
                         </button>
@@ -99,7 +99,7 @@ const AllCourses = ({ courses }) => {
                             />
                         </div>
                         <h4 className="text-lg font-semibold mb-2">
-                            Are you sure you want to delete this category?
+                            Are you sure you want to delete this course?
                         </h4>
                         <p className="text-sm text-gray-600 mb-4">
                             This action cannot be undone.
