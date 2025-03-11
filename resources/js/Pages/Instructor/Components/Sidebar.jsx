@@ -55,7 +55,13 @@ const Sidebar = () => {
                             </Link>
                         </div>
                         <ul className="generic-list-item off-canvas-menu-list off--canvas-menu-list pt-35px">
-                            <li className="page-active">
+                            <li
+                                className={
+                                    url.startsWith("/instructor/dashboard")
+                                        ? "page-active"
+                                        : ""
+                                }
+                            >
                                 <Link href={route("instructor.dashboard")}>
                                     <svg
                                         className="mr-2"
@@ -148,7 +154,13 @@ const Sidebar = () => {
                                     </li>
                                 </ul>
                             </li>
-                            <li>
+                            <li
+                                className={
+                                    url.startsWith("/instructor/profile")
+                                        ? "page-active"
+                                        : ""
+                                }
+                            >
                                 <Link href={route("instructor.profile")}>
                                     <svg
                                         className="mr-2"

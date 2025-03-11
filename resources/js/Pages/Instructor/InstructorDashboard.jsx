@@ -23,7 +23,9 @@ export default function InsturctorDashboard({ title, children }) {
                                 </div>
                             ) : null}
                             {title && (
-                                <p className="dashboard-title">{title}</p>
+                                <p className="text-4xl font-bold text-[#333] pl-[30px]">
+                                    {title}
+                                </p>
                             )}
                             <main className="content-area">{children}</main>
                         </div>
