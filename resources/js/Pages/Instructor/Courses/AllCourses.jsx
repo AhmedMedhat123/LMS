@@ -51,16 +51,22 @@ const AllCourses = ({ courses }) => {
                     <>
                         <Link
                             href={route("instructor.course.edit", course.id)}
-                            className="btn btn-primary mr-3"
-                        >
-                            edit
-                        </Link>
+                            className="btn btn-primary mr-3 la la-edit"
+                            title="Edit Course"
+                        ></Link>
                         <button
-                            className="btn btn-danger"
+                            className="btn btn-danger mr-3 la la-trash"
                             onClick={() => handleDelete(course.id)}
-                        >
-                            Delete
-                        </button>
+                            title="Delete Course"
+                        ></button>
+                        <Link
+                            href={route(
+                                "instructor.course.lecture.all",
+                                course.id
+                            )}
+                            className="btn btn-warning la la-list"
+                            title="View Lecture"
+                        ></Link>
                     </>
                 ),
             }));

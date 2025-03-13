@@ -6,6 +6,7 @@ use App\Http\Requests\AddCourseRequest;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\Course_goal;
+use App\Models\CourseSection;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -182,6 +183,23 @@ class CourseController extends Controller
 
         return redirect()->route('instructor.course.all')->with([
             'message' => 'Course Deleted Successfully',
+            'alertType' => 'success'
+        ]);
+    }
+
+    public function StoreCourseSection(Request $request)
+    {
+        $request->validate([
+            'section_title' => 'required|string|max:255',
+        ]);
+
+        CourseSection::insert([
+            'course_id'=>$request->course_id,
+            'section_title'=>$request->section_title,
+        ]);
+
+        return redirect()->back()->with([
+            'message' => 'Section Add Successfully',
             'alertType' => 'success'
         ]);
     }

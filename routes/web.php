@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CourseLectureController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubCategoryController;
@@ -102,6 +103,18 @@ Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('inst
         Route::get('/edit/{id}','EditCourse')->name('edit');
         Route::post('/update','UpdateCourse')->name('update');
         Route::get('/delete/{id}','DeleteCourse')->name('delete');
+        Route::post('/add/section/store','StoreCourseSection')->name('section.add.store');
+    });
+
+
+    /////////////////////////// Course Lecture Route  /////////////////
+    Route::controller(CourseLectureController::class)->prefix('course/lecture')->name('course.lecture.')->group(function(){
+        Route::get('/all/{id}','AllCourseLecture')->name('all');
+        Route::get('/add/{course_id}/{section_id}','AddCourseLectures')->name('add');
+        Route::post('/add/store','StoreCourseLectures')->name('add.store');
+        Route::get('/edit/{course_id}/{section_id}/{lecture_id}','EditCourseLecture')->name('edit');
+        Route::post('/update','UpdateCourseLecture')->name('update');
+        // Route::get('/delete/{id}','DeleteCourseLecture')->name('delete');
     });
 
 });
@@ -112,7 +125,7 @@ Route::post('/instructor/register/store', [InstructorController::class, 'Instruc
 Route::get('/subcategories/{categoryId}', [SubCategoryController::class, 'getSubcategories'])->name('subcategories.get');
 
 ///////////////////////////////////////////////////////////////////
-//////////////////////////  Frontend Route  /////////////////////
+//////////////////////////  Frontend Route  ///////////////////////
 ///////////////////////////////////////////////////////////////////
 
 Route::get('/', [UserController::class, 'Index'])->name('index');
