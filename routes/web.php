@@ -104,6 +104,8 @@ Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('inst
         Route::post('/update','UpdateCourse')->name('update');
         Route::get('/delete/{id}','DeleteCourse')->name('delete');
         Route::post('/add/section/store','StoreCourseSection')->name('section.add.store');
+        Route::get('/delete/section/{id}','DeleteCourseSection')->name('section.delete');
+
     });
 
 
@@ -114,7 +116,7 @@ Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->name('inst
         Route::post('/add/store','StoreCourseLectures')->name('add.store');
         Route::get('/edit/{course_id}/{section_id}/{lecture_id}','EditCourseLecture')->name('edit');
         Route::post('/update','UpdateCourseLecture')->name('update');
-        // Route::get('/delete/{id}','DeleteCourseLecture')->name('delete');
+        Route::get('/delete/{id}','DeleteCourseLecture')->name('delete');
     });
 
 });

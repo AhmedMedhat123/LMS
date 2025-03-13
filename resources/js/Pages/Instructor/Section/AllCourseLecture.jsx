@@ -1,4 +1,4 @@
-import { Link, useForm } from "@inertiajs/react";
+import { Link, router, useForm } from "@inertiajs/react";
 import InsturctorDashboard from "../InstructorDashboard";
 import { useEffect, useState } from "react";
 import {
@@ -31,22 +31,49 @@ const AllCourseLecture = ({ course, sections }) => {
         }
     }, [data.section_id]);
 
-    const [showModal, setShowModal] = useState(false);
+    const [showSectionModal, setshowSectionModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deleteType, setDeleteType] = useState(null);
+    const [deleteId, setDeleteId] = useState(null);
 
     const handleModal = () => {
-        setShowModal(true);
+        setshowSectionModal(true);
     };
 
-    const closeModal = () => {
-        setShowModal(false);
+    const closeSectionModal = () => {
+        setshowSectionModal(false);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route("instructor.course.section.add.store"), {
             forceFormData: true,
-            onSuccess: () => closeModal(),
+            onSuccess: () => closeSectionModal(),
         });
+    };
+
+    const handleDeleteModal = (type, id) => {
+        setDeleteType(type);
+        setDeleteId(id);
+        setShowDeleteModal(true);
+    };
+
+    const closeDeleteModal = () => {
+        setShowDeleteModal(false);
+        setDeleteType(null);
+        setDeleteId(null);
+    };
+
+    const confirmDelete = () => {
+        if (deleteType === "section") {
+            router.get(route("instructor.course.section.delete", deleteId), {
+                onSuccess: () => closeDeleteModal(),
+            });
+        } else if (deleteType === "lecture") {
+            router.get(route("instructor.course.lecture.delete", deleteId), {
+                onSuccess: () => closeDeleteModal(),
+            });
+        }
     };
 
     const AddLecture = (e, sectionId) => {
@@ -103,9 +130,10 @@ const AllCourseLecture = ({ course, sections }) => {
                     </button>
                 </div>
 
-                {showModal && (
+                {/* Add Section Modal */}
+                {showSectionModal && (
                     <div
-                        onClick={closeModal}
+                        onClick={closeSectionModal}
                         className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
                     >
                         <div
@@ -150,7 +178,7 @@ const AllCourseLecture = ({ course, sections }) => {
                                                 : "Add Section"}
                                         </button>
                                         <button
-                                            onClick={closeModal}
+                                            onClick={closeSectionModal}
                                             className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition"
                                         >
                                             Cancel
@@ -158,6 +186,47 @@ const AllCourseLecture = ({ course, sections }) => {
                                     </div>
                                 </div>
                             </CForm>
+                        </div>
+                    </div>
+                )}
+
+                {/* Delete Confirmation Modal */}
+                {showDeleteModal && (
+                    <div
+                        onClick={closeDeleteModal}
+                        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                    >
+                        <div
+                            onClick={(e) => e.stopPropagation()}
+                            className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md"
+                        >
+                            <div className="flex justify-center mb-4">
+                                <img
+                                    src="/images/icon-alert.png"
+                                    className="w-17 h-17"
+                                />
+                            </div>
+                            <p className="flex justify-center">
+                                Are you sure you want to delete this{" "}
+                                {deleteType}?
+                            </p>
+                            <p className="text-sm text-red-600 mb-4 flex justify-center">
+                                This action cannot be undone.
+                            </p>
+                            <div className="flex justify-center gap-4 mt-4">
+                                <button
+                                    onClick={confirmDelete}
+                                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                                >
+                                    Confirm
+                                </button>
+                                <button
+                                    onClick={closeDeleteModal}
+                                    className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}
@@ -185,7 +254,12 @@ const AllCourseLecture = ({ course, sections }) => {
                                 >
                                     {processing ? "Loading..." : "Add Lecture"}
                                 </button>
-                                <button className="btn btn-danger">
+                                <button
+                                    onClick={() =>
+                                        handleDeleteModal("section", section.id)
+                                    }
+                                    className="btn btn-danger"
+                                >
                                     Delete Section
                                 </button>
                             </div>
@@ -217,9 +291,17 @@ const AllCourseLecture = ({ course, sections }) => {
                                                 >
                                                     Edit
                                                 </Link>
-                                                <Link className="btn btn-danger">
+                                                <button
+                                                    onClick={() =>
+                                                        handleDeleteModal(
+                                                            "lecture",
+                                                            lecture.id
+                                                        )
+                                                    }
+                                                    className="btn btn-danger"
+                                                >
                                                     Delete
-                                                </Link>
+                                                </button>
                                             </div>
                                         </li>
                                     ))}
