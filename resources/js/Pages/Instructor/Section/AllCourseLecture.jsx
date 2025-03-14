@@ -250,9 +250,8 @@ const AllCourseLecture = ({ course, sections }) => {
                                 <button
                                     onClick={(e) => AddLecture(e, section.id)}
                                     className="btn btn-primary mr-2"
-                                    disabled={processing}
                                 >
-                                    {processing ? "Loading..." : "Add Lecture"}
+                                    Add Lecture
                                 </button>
                                 <button
                                     onClick={() =>
