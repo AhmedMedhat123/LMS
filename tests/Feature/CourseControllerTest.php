@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\Course_goal;
+use App\Models\CourseSection;
 use App\Models\SubCategory;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -18,11 +19,15 @@ class CourseControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $instructor;
+    private Course $course;
+
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->instructor = $this->createUser(role: 'instructor');
+        $this->course = Course::factory()->create();
+
     }
 
     private function createUser(string $role = 'user'): User
@@ -194,4 +199,48 @@ class CourseControllerTest extends TestCase
         // Storage::disk('public')->assertMissing('upload/course/video/sample.mp4');
     }
 
+    public function test_can_store_a_course_section()
+    {
+        $data = [
+            'course_id' => $this->course->id,
+            'section_title' => 'New Section',
+        ];
+
+        $response = $this->actingAs($this->instructor)->post(route('instructor.course.section.add.store'), $data);
+
+        $this->assertDatabaseHas('course_sections', ['section_title' => 'New Section']);
+
+        $response->assertRedirect()
+                 ->assertSessionHas([
+                     'message' => 'Section Add Successfully',
+                     'alertType' => 'success',
+                 ]);
+    }
+
+    public function test_cannot_store_a_course_section_without_title()
+    {
+        $data = [
+            'course_id' => $this->course->id,
+            'section_title' => '',
+        ];
+
+        $response = $this->actingAs($this->instructor)->post(route('instructor.course.section.add.store'), $data);
+
+        $response->assertSessionHasErrors(['section_title']);
+        $this->assertDatabaseMissing('course_sections', ['course_id' => $this->course->id]);
+    }
+
+    public function test_can_delete_a_course_section()
+    {
+        $section = CourseSection::factory()->create(['course_id' => $this->course->id]);
+
+        $response = $this->actingAs($this->instructor)->get(route('instructor.course.section.delete', $section->id));
+
+        $this->assertDatabaseMissing('course_sections', ['id' => $section->id]);
+        $response->assertRedirect()
+                 ->assertSessionHas([
+                     'message' => 'Section Deleted Successfully',
+                     'alertType' => 'success',
+                 ]);
+    }
 }
