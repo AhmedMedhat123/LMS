@@ -46,6 +46,7 @@ class CourseController extends Controller
             'bestseller' => $validatedData['bestseller'],
             'featured' => $validatedData['featured'],
             'highestrated' => $validatedData['highestrated'],
+            'status'=>1,
         ];
 
         if ($request->hasFile('course_image') && $request->file('course_image')->isValid()) {

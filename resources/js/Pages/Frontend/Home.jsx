@@ -9,14 +9,17 @@ import GetStartArea from "./Components/GetStartArea";
 import TestimonialArea from "./Components/TestimonialArea/TestimonialArea";
 import AboutUsArea from "./Components/AboutUsArea";
 import StartLearningArea from "./Components/StartLearningArea";
+import { usePage } from "@inertiajs/react";
 
 const Home = () => {
+    const { categories, allCategories, courses } = usePage().props;
+
     return (
         <MainLayout>
             <HeroArea />
             <FeatureArea />
-            <CategoriesArea />
-            <CoursesArea />
+            <CategoriesArea categories={categories} />
+            <CoursesArea allCategories={allCategories} courses={courses} />
             {/* <CoursesArea2 /> */}
             <FunfactArea />
             <GetStartArea />

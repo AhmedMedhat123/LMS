@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AdminChangePasswordRequest;
 use App\Http\Requests\AdminProfileUpdateRequest;
 use App\Http\Requests\UserUpdateProfileRequest;
+use App\Models\Category;
+use App\Models\Course;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +17,15 @@ class UserController extends Controller
 {
     public function Index()
     {
-        return Inertia::render('Frontend/Home');
+        $categories = Category::latest()->limit(6)->get();
+        $courses = Course::with('instructor','category')->where('status',1)->orderBy('id','ASC')->limit(6)->get();
+        $allCategories = Category::orderBy('category_name','ASC')->get();
+
+        return Inertia::render('Frontend/Home',[
+            'categories'=> $categories,
+            'courses' => $courses,
+            'allCategories'=> $allCategories
+        ]);
     }
 
     public function UserProfile()
