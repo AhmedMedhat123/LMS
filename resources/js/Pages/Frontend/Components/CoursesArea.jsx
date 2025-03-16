@@ -1,3 +1,4 @@
+import { Link, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
 const CoursesArea = ({ allCategories, courses }) => {
@@ -10,6 +11,19 @@ const CoursesArea = ({ allCategories, courses }) => {
       : courses.filter(
           (course) => course.category?.category_name === selectedCategory
         );
+
+  const { get } = useForm();
+
+  const GetCourseDetails = (e, courseId, sectionId) => {
+    e.preventDefault();
+    get(
+      route('course.details', {
+        id: courseId,
+        slug: sectionId,
+      })
+    );
+  };
+
   return (
     <>
       <section className="course-area pb-120px">
@@ -77,7 +91,16 @@ const CoursesArea = ({ allCategories, courses }) => {
                             data-tooltip-content="#tooltip_content_1"
                           >
                             <div className="card-image">
-                              <a href="course-details.html" className="d-block">
+                              <Link
+                                onClick={(e) =>
+                                  GetCourseDetails(
+                                    e,
+                                    course.id,
+                                    course.course_name_slug
+                                  )
+                                }
+                                className="d-block"
+                              >
                                 <img
                                   className="card-img-top lazy w-[15rem] h-[15rem] object-cover"
                                   src={
@@ -92,7 +115,7 @@ const CoursesArea = ({ allCategories, courses }) => {
                                   }
                                   alt="Card image cap"
                                 />
-                              </a>
+                              </Link>
                               <div className="course-badge-labels">
                                 {course.bestseller && (
                                   <div className="course-badge blue mr-1">
@@ -110,9 +133,13 @@ const CoursesArea = ({ allCategories, courses }) => {
                                   </div>
                                 )}
 
-                                <div className="course-badge red mr-1">
-                                  {discount}% Off
-                                </div>
+                                {course.discount_price ? (
+                                  <div className="course-badge red mr-1">
+                                    {discount} %Off
+                                  </div>
+                                ) : (
+                                  ''
+                                )}
                               </div>
                             </div>
                             {/* end card-image */}
@@ -121,9 +148,17 @@ const CoursesArea = ({ allCategories, courses }) => {
                                 {course.label}
                               </h6>
                               <h5 className="card-title">
-                                <a href="course-details.html">
+                                <Link
+                                  onClick={(e) =>
+                                    GetCourseDetails(
+                                      e,
+                                      course.id,
+                                      course.course_name_slug
+                                    )
+                                  }
+                                >
                                   {course.course_name}
-                                </a>
+                                </Link>
                               </h5>
                               <p className="card-text">
                                 <a href="teacher-detail.html">

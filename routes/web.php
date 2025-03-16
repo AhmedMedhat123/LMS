@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseLectureController;
+use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubCategoryController;
@@ -129,6 +130,10 @@ Route::get('/subcategories/{categoryId}', [SubCategoryController::class, 'getSub
 ///////////////////////////////////////////////////////////////////
 //////////////////////////  Frontend Route  ///////////////////////
 ///////////////////////////////////////////////////////////////////
+
+Route::controller(FrontendController::class)->group(function(){
+    Route::get('/course/details/{id}/{slug}','CourseDetails')->name('course.details');
+});
 
 Route::get('/', [UserController::class, 'Index'])->name('index');
 
