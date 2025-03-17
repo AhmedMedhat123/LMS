@@ -135,6 +135,7 @@ Route::controller(FrontendController::class)->group(function(){
     Route::get('/course/details/{id}/{slug}','CourseDetails')->name('course.details');
     Route::get('/category/all/{id}/{slug}','CategoryCourse')->name('category.all');
     Route::get('/subcategory/all/{id}/{slug}','SubcategoryCourse')->name('subcategory.all');
+    Route::get('/instructor/details/{id}/','InstructorDetails')->name('instructor.details');
 });
 
 Route::get('/', [UserController::class, 'Index'])->name('index');

@@ -24,6 +24,15 @@ const CoursesArea = ({ allCategories, courses }) => {
     );
   };
 
+  const GetInsturctorDetails = (e, instructorId) => {
+    e.preventDefault();
+    get(
+      route('instructor.details', {
+        id: instructorId,
+      })
+    );
+  };
+
   return (
     <>
       <section className="course-area pb-120px">
@@ -161,9 +170,16 @@ const CoursesArea = ({ allCategories, courses }) => {
                                 </Link>
                               </h5>
                               <p className="card-text">
-                                <a href="teacher-detail.html">
+                                <Link
+                                  onClick={(e) =>
+                                    GetInsturctorDetails(
+                                      e,
+                                      course.instructor_id
+                                    )
+                                  }
+                                >
                                   {course.instructor.name}
-                                </a>
+                                </Link>
                               </p>
                               <div className="rating-wrap d-flex align-items-center py-2">
                                 <div className="review-stars">

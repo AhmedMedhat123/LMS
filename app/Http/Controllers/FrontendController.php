@@ -8,6 +8,7 @@ use App\Models\Course_goal;
 use App\Models\CourseLecture;
 use App\Models\CourseSection;
 use App\Models\SubCategory;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -54,6 +55,22 @@ class FrontendController extends Controller
         return Inertia('Frontend/Category/AllSubcategory',[
             'courses' => $courses,
             'subcategory' => $subcategory,
+        ]);
+    }
+
+    public function InstructorDetails($id){
+
+        $courses = Course::where('instructor_id', $id)
+            ->where('status','1')
+            ->with('instructor', 'category')
+            ->paginate(9);
+
+        $instructor = User::findOrFail($id);
+
+
+        return Inertia('Frontend/InstructorDetails',[
+            'courses' => $courses,
+            'instructor' => $instructor,
         ]);
     }
 }

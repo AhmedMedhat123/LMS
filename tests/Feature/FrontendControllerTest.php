@@ -115,4 +115,30 @@ class FrontendControllerTest extends TestCase
                 )
         );
     }
+
+    public function test_instructor_details_page_renders_correctly()
+{
+    $instructor = User::factory()->create();
+
+    Course::factory()->count(3)->create([
+        'instructor_id' => $instructor->id,
+        'status' => '1',
+    ]);
+
+    $response = $this->get(route('instructor.details', [
+        'id' => $instructor->id,
+    ]));
+
+    $response->assertStatus(200);
+
+    $response->assertInertia(fn (AssertableInertia $page) =>
+        $page->component('Frontend/InstructorDetails')
+            ->has('courses.data', 3)
+            ->has('instructor', fn (AssertableInertia $instructorData) =>
+                $instructorData->where('id', $instructor->id)
+                               ->etc()
+            )
+    );
+}
+
 }
