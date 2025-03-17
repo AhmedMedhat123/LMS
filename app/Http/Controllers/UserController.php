@@ -19,12 +19,10 @@ class UserController extends Controller
     {
         $categories = Category::latest()->limit(6)->get();
         $courses = Course::with('instructor','category')->where('status',1)->orderBy('id','ASC')->limit(6)->get();
-        $allCategories = Category::orderBy('category_name','ASC')->get();
 
         return Inertia::render('Frontend/Home',[
             'categories'=> $categories,
             'courses' => $courses,
-            'allCategories'=> $allCategories
         ]);
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Category;
+use App\Models\Course;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -42,6 +44,7 @@ class HandleInertiaRequests extends Middleware
                 'message' => $request->session()->get('message'),
                 'alertType' => $request->session()->get('alertType', 'success'),
             ],
+            'allCategories' => Category::with('subcategories')->orderBy('category_name', 'ASC')->get(),
         ];
     }
 

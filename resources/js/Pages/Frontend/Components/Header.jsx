@@ -4,12 +4,33 @@ import React, { useState } from 'react';
 const Header = () => {
   const [sidebarActive, setSidebarActive] = useState(false);
   const [searchBarActive, setSearchBarActive] = useState(false);
-  const { auth } = usePage().props;
-  const { post } = useForm();
+  const { auth, allCategories } = usePage().props;
+  const { post, get } = useForm();
   const handleLogout = (e) => {
     e.preventDefault();
     post(route('user.logout'));
   };
+
+  const handleCategory = (e, categoryId, categorySlug) => {
+    e.preventDefault();
+    get(
+      route('category.all', {
+        id: categoryId,
+        slug: categorySlug,
+      })
+    );
+  };
+
+  const handleSubcategory = (e, subcategoryId, subcategorySlug) => {
+    e.preventDefault();
+    get(
+      route('subcategory.all', {
+        id: subcategoryId,
+        slug: subcategorySlug,
+      })
+    );
+  };
+
   return (
     <>
       <header className="header-menu-area bg-white">
@@ -144,288 +165,43 @@ const Header = () => {
                             Categories <i className="la la-angle-down fs-12" />
                           </a>
                           <ul className="cat-dropdown-menu">
-                            <li>
-                              <a href="course-grid.html">
-                                Development <i className="la la-angle-right" />
-                              </a>
-                              <ul className="sub-menu">
-                                <li>
-                                  <a href="#">All Development</a>
-                                </li>
-                                <li>
-                                  <a href="#">Web Development</a>
-                                </li>
-                                <li>
-                                  <a href="#">Mobile Apps</a>
-                                </li>
-                                <li>
-                                  <a href="#">Game Development</a>
-                                </li>
-                                <li>
-                                  <a href="#">Databases</a>
-                                </li>
-                                <li>
-                                  <a href="#">Programming Languages</a>
-                                </li>
-                                <li>
-                                  <a href="#">Software Testing</a>
-                                </li>
-                                <li>
-                                  <a href="#">Software Engineering</a>
-                                </li>
-                                <li>
-                                  <a href="#">E-Commerce</a>
-                                </li>
-                              </ul>
-                            </li>
-                            <li>
-                              <a href="course-grid.html">
-                                business <i className="la la-angle-right" />
-                              </a>
-                              <ul className="sub-menu">
-                                <li>
-                                  <a href="#">All Business</a>
-                                </li>
-                                <li>
-                                  <a href="#">Finance</a>
-                                </li>
-                                <li>
-                                  <a href="#">Entrepreneurship</a>
-                                </li>
-                                <li>
-                                  <a href="#">Strategy</a>
-                                </li>
-                                <li>
-                                  <a href="#">Real Estate</a>
-                                </li>
-                                <li>
-                                  <a href="#">Home Business</a>
-                                </li>
-                                <li>
-                                  <a href="#">Communications</a>
-                                </li>
-                                <li>
-                                  <a href="#">Industry</a>
-                                </li>
-                                <li>
-                                  <a href="#">Other</a>
-                                </li>
-                              </ul>
-                            </li>
-                            <li>
-                              <a href="course-grid.html">
-                                IT &amp; Software{' '}
-                                <i className="la la-angle-right" />
-                              </a>
-                              <ul className="sub-menu">
-                                <li>
-                                  <a href="#">All IT &amp; Software</a>
-                                </li>
-                                <li>
-                                  <a href="#">IT Certification</a>
-                                </li>
-                                <li>
-                                  <a href="#">Hardware</a>
-                                </li>
-                                <li>
-                                  <a href="#">Network &amp; Security</a>
-                                </li>
-                                <li>
-                                  <a href="#">Operating Systems</a>
-                                </li>
-                                <li>
-                                  <a href="#">Other</a>
-                                </li>
-                              </ul>
-                            </li>
-                            <li>
-                              <a href="course-grid.html">
-                                Finance &amp; Accounting{' '}
-                                <i className="la la-angle-right" />
-                              </a>
-                              <ul className="sub-menu">
-                                <li>
-                                  <a href="#"> All Finance &amp; Accounting</a>
-                                </li>
-                                <li>
-                                  <a href="#">Accounting &amp; Bookkeeping</a>
-                                </li>
-                                <li>
-                                  <a href="#">
-                                    Cryptocurrency &amp; Blockchain
-                                  </a>
-                                </li>
-                                <li>
-                                  <a href="#">Economics</a>
-                                </li>
-                                <li>
-                                  <a href="#">Investing &amp; Trading</a>
-                                </li>
-                                <li>
-                                  <a href="#">Other Finance &amp; Economics</a>
-                                </li>
-                              </ul>
-                            </li>
-                            <li>
-                              <a href="course-grid.html">
-                                design <i className="la la-angle-right" />
-                              </a>
-                              <ul className="sub-menu">
-                                <li>
-                                  <a href="#">All Design</a>
-                                </li>
-                                <li>
-                                  <a href="#">Graphic Design</a>
-                                </li>
-                                <li>
-                                  <a href="#">Web Design</a>
-                                </li>
-                                <li>
-                                  <a href="#">Design Tools</a>
-                                </li>
-                                <li>
-                                  <a href="#">3D &amp; Animation</a>
-                                </li>
-                                <li>
-                                  <a href="#">User Experience</a>
-                                </li>
-                                <li>
-                                  <a href="#">Other</a>
-                                </li>
-                              </ul>
-                            </li>
-                            <li>
-                              <a href="course-grid.html">
-                                Personal Development{' '}
-                                <i className="la la-angle-right" />
-                              </a>
-                              <ul className="sub-menu">
-                                <li>
-                                  <a href="#">All Personal Development</a>
-                                </li>
-                                <li>
-                                  <a href="#">Personal Transformation</a>
-                                </li>
-                                <li>
-                                  <a href="#">Productivity</a>
-                                </li>
-                                <li>
-                                  <a href="#">Leadership</a>
-                                </li>
-                                <li>
-                                  <a href="#">Personal Finance</a>
-                                </li>
-                                <li>
-                                  <a href="#">Career Development</a>
-                                </li>
-                                <li>
-                                  <a href="#">Parenting &amp; Relationships</a>
-                                </li>
-                                <li>
-                                  <a href="#">Happiness</a>
-                                </li>
-                              </ul>
-                            </li>
-                            <li>
-                              <a href="course-grid.html">
-                                Marketing <i className="la la-angle-right" />
-                              </a>
-                              <ul className="sub-menu">
-                                <li>
-                                  <a href="#">All Marketing</a>
-                                </li>
-                                <li>
-                                  <a href="#">Digital Marketing</a>
-                                </li>
-                                <li>
-                                  <a href="#">Search Engine Optimization</a>
-                                </li>
-                                <li>
-                                  <a href="#">Social Media Marketing</a>
-                                </li>
-                                <li>
-                                  <a href="#">Branding</a>
-                                </li>
-                                <li>
-                                  <a href="#">Video &amp; Mobile Marketing</a>
-                                </li>
-                                <li>
-                                  <a href="#">Affiliate Marketing</a>
-                                </li>
-                                <li>
-                                  <a href="#">Growth Hacking</a>
-                                </li>
-                                <li>
-                                  <a href="#">Other</a>
-                                </li>
-                              </ul>
-                            </li>
-                            <li>
-                              <a href="course-grid.html">
-                                Health &amp; Fitness{' '}
-                                <i className="la la-angle-right" />
-                              </a>
-                              <ul className="sub-menu">
-                                <li>
-                                  <a href="#">All Health &amp; Fitness</a>
-                                </li>
-                                <li>
-                                  <a href="#">Fitness</a>
-                                </li>
-                                <li>
-                                  <a href="#">Sports</a>
-                                </li>
-                                <li>
-                                  <a href="#">Dieting</a>
-                                </li>
-                                <li>
-                                  <a href="#">Self Defense</a>
-                                </li>
-                                <li>
-                                  <a href="#">Meditation</a>
-                                </li>
-                                <li>
-                                  <a href="#">Mental Health</a>
-                                </li>
-                                <li>
-                                  <a href="#">Yoga</a>
-                                </li>
-                                <li>
-                                  <a href="#">Dance</a>
-                                </li>
-                                <li>
-                                  <a href="#">Other</a>
-                                </li>
-                              </ul>
-                            </li>
-                            <li>
-                              <a href="course-grid.html">
-                                Photography <i className="la la-angle-right" />
-                              </a>
-                              <ul className="sub-menu">
-                                <li>
-                                  <a href="#">All Photography</a>
-                                </li>
-                                <li>
-                                  <a href="#">Digital Photography</a>
-                                </li>
-                                <li>
-                                  <a href="#">Photography Fundamentals</a>
-                                </li>
-                                <li>
-                                  <a href="#">Commercial Photography</a>
-                                </li>
-                                <li>
-                                  <a href="#">Video Design</a>
-                                </li>
-                                <li>
-                                  <a href="#">Photography Tools</a>
-                                </li>
-                                <li>
-                                  <a href="#">Other</a>
-                                </li>
-                              </ul>
-                            </li>
+                            {allCategories.map((cat, index) => (
+                              <li key={index}>
+                                <Link
+                                  onClick={(e) =>
+                                    handleCategory(e, cat.id, cat.category_slug)
+                                  }
+                                >
+                                  {cat.category_name}
+                                  {cat.subcategories &&
+                                    cat.subcategories.length > 0 && (
+                                      <i className="la la-angle-right" />
+                                    )}
+                                </Link>
+                                {cat.subcategories &&
+                                  cat.subcategories.length > 0 && (
+                                    <ul className="sub-menu">
+                                      {cat.subcategories.map(
+                                        (sub, subIndex) => (
+                                          <li key={subIndex}>
+                                            <Link
+                                              onClick={(e) =>
+                                                handleSubcategory(
+                                                  e,
+                                                  sub.id,
+                                                  sub.subcategory_slug
+                                                )
+                                              }
+                                            >
+                                              {sub.subcategory_name}
+                                            </Link>
+                                          </li>
+                                        )
+                                      )}
+                                    </ul>
+                                  )}
+                              </li>
+                            ))}
                           </ul>
                         </li>
                       </ul>

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Course;
 use App\Models\Course_goal;
 use App\Models\CourseLecture;
 use App\Models\CourseSection;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -23,6 +25,35 @@ class FrontendController extends Controller
             'goals'=>$goals,
             'lectures'=>$lectures,
             'sections'=>$sections,
+        ]);
+    }
+
+    public function CategoryCourse($id){
+        $courses = Course::where('category_id', $id)
+            ->where('status','1')
+            ->with('instructor', 'category', 'subcategory')
+            ->paginate(9);
+
+        $category = Category::findOrFail($id);
+
+        return Inertia('Frontend/Category/AllCategory',[
+            'courses' => $courses,
+            'category' => $category,
+        ]);
+    }
+
+    public function SubcategoryCourse($id){
+
+        $courses = Course::where('subcategory_id', $id)
+            ->where('status','1')
+            ->with('instructor', 'category', 'subcategory')
+            ->paginate(9);
+
+        $subcategory = SubCategory::with('category')->findOrFail($id);
+
+        return Inertia('Frontend/Category/AllSubcategory',[
+            'courses' => $courses,
+            'subcategory' => $subcategory,
         ]);
     }
 }

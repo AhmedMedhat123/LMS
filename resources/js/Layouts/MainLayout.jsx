@@ -7,7 +7,7 @@ import { usePage } from '@inertiajs/react';
 
 const MainLayout = ({ children }) => {
   const [loading, setLoading] = useState(true);
-  const { flash } = usePage().props;
+  const { flash, allCategories } = usePage().props;
 
   useEffect(() => {
     // Simulate content loading
@@ -91,7 +91,7 @@ const MainLayout = ({ children }) => {
       {/* Page Content */}
       {!loading && (
         <>
-          <Header />
+          <Header allCategories={allCategories} />
           <Toaster position="top-right" reverseOrder={false} />
           <div>{children}</div>
           <Footer />
