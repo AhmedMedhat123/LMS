@@ -12,14 +12,18 @@ import StartLearningArea from './Components/StartLearningArea';
 import { usePage } from '@inertiajs/react';
 
 const Home = () => {
-  const { categories, allCategories, courses } = usePage().props;
+  const { categories, allCategories, courses, userWishlists } = usePage().props;
 
   return (
     <MainLayout>
       <HeroArea />
       <FeatureArea />
       <CategoriesArea categories={categories} />
-      <CoursesArea allCategories={allCategories} courses={courses} />
+      <CoursesArea
+        allCategories={allCategories}
+        courses={courses}
+        userWishlists={userWishlists}
+      />
       {/* <CoursesArea2 /> */}
       <FunfactArea />
       <GetStartArea />

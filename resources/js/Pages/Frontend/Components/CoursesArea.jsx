@@ -1,8 +1,12 @@
-import { Link, useForm } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
-const CoursesArea = ({ allCategories, courses }) => {
+const CoursesArea = ({ allCategories, courses, userWishlists }) => {
+  const { get, post } = useForm();
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [wishlist, setWishlist] = useState(userWishlists || []);
+
+  const { auth } = usePage().props;
 
   // Filter courses based on selected category
   const filteredCourses =
@@ -11,8 +15,6 @@ const CoursesArea = ({ allCategories, courses }) => {
       : courses.filter(
           (course) => course.category?.category_name === selectedCategory
         );
-
-  const { get } = useForm();
 
   const GetCourseDetails = (e, courseId, sectionId) => {
     e.preventDefault();
@@ -31,6 +33,24 @@ const CoursesArea = ({ allCategories, courses }) => {
         id: instructorId,
       })
     );
+  };
+
+  const toggleWishlist = (e, courseId) => {
+    e.preventDefault();
+
+    // update wishlist state
+    if (auth.user) {
+      setWishlist(
+        (prevWishlist) =>
+          prevWishlist.includes(courseId)
+            ? prevWishlist.filter((id) => id !== courseId) // Remove from wishlist
+            : [...prevWishlist, courseId] // Add to wishlist
+      );
+    }
+
+    post(route('wishlist.toggle', courseId), {
+      preserveScroll: true,
+    });
   };
 
   return (
@@ -212,8 +232,15 @@ const CoursesArea = ({ allCategories, courses }) => {
                                 <div
                                   className="icon-element icon-element-sm shadow-sm cursor-pointer"
                                   title="Add to Wishlist"
+                                  onClick={(e) => toggleWishlist(e, course.id)}
                                 >
-                                  <i className="la la-heart-o" />
+                                  <i
+                                    className={`la ${
+                                      wishlist.includes(course.id)
+                                        ? 'la-heart'
+                                        : 'la-heart-o'
+                                    }`}
+                                  />
                                 </div>
                               </div>
                             </div>

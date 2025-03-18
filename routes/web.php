@@ -9,6 +9,7 @@ use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WishlistController;
 use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
@@ -137,6 +138,8 @@ Route::controller(FrontendController::class)->group(function(){
     Route::get('/subcategory/all/{id}/{slug}','SubcategoryCourse')->name('subcategory.all');
     Route::get('/instructor/details/{id}/','InstructorDetails')->name('instructor.details');
 });
+
+Route::post('/wishlist/{id}',[WishlistController::class, 'wishlistToggle'])->name('wishlist.toggle');
 
 Route::get('/', [UserController::class, 'Index'])->name('index');
 

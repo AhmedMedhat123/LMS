@@ -1,8 +1,12 @@
 import MainLayout from '@/Layouts/MainLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 
 const AllCategory = ({ courses, category }) => {
-  const { get } = useForm();
+  const { get, post } = useForm();
+
+  const { auth, userWishlists } = usePage().props;
+  const [wishlist, setWishlist] = useState(userWishlists || []);
 
   const GetCourseDetails = (e, courseId, sectionId) => {
     e.preventDefault();
@@ -21,6 +25,24 @@ const AllCategory = ({ courses, category }) => {
         id: instructorId,
       })
     );
+  };
+
+  const toggleWishlist = (e, courseId) => {
+    e.preventDefault();
+
+    // update wishlist state
+    if (auth.user) {
+      setWishlist(
+        (prevWishlist) =>
+          prevWishlist.includes(courseId)
+            ? prevWishlist.filter((id) => id !== courseId) // Remove from wishlist
+            : [...prevWishlist, courseId] // Add to wishlist
+      );
+    }
+
+    post(route('wishlist.toggle', courseId), {
+      preserveScroll: true,
+    });
   };
 
   return (
@@ -161,8 +183,15 @@ const AllCategory = ({ courses, category }) => {
                             <div
                               className="icon-element icon-element-sm shadow-sm cursor-pointer"
                               title="Add to Wishlist"
+                              onClick={(e) => toggleWishlist(e, course.id)}
                             >
-                              <i className="la la-heart-o" />
+                              <i
+                                className={`la ${
+                                  wishlist.includes(course.id)
+                                    ? 'la-heart'
+                                    : 'la-heart-o'
+                                }`}
+                              />
                             </div>
                           </div>
                         </div>

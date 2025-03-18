@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Category;
 use App\Models\Course;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -45,6 +46,10 @@ class HandleInertiaRequests extends Middleware
                 'alertType' => $request->session()->get('alertType', 'success'),
             ],
             'allCategories' => Category::with('subcategories')->orderBy('category_name', 'ASC')->get(),
+
+            'userWishlists' => $user ? Wishlist::where('user_id', $user->id)->pluck('course_id')->toArray() : [],
+
+
         ];
     }
 

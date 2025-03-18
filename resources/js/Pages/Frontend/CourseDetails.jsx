@@ -1,8 +1,15 @@
 import MainLayout from '@/Layouts/MainLayout';
-import { Head } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
 const CourseDetails = ({ course, goals, lectures, sections }) => {
+  const { auth, userWishlists } = usePage().props;
+  const [openSections, setOpenSections] = useState(sections.map(() => false));
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [wishlist, setWishlist] = useState(userWishlists || []);
+
+  const { post } = useForm();
+
   const amount = course.selling_price - course.discount_price;
   const discount = Math.round((amount / course.selling_price) * 100);
 
@@ -15,9 +22,6 @@ const CourseDetails = ({ course, goals, lectures, sections }) => {
     }
   );
 
-  const [openSections, setOpenSections] = useState(sections.map(() => false));
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -27,6 +31,24 @@ const CourseDetails = ({ course, goals, lectures, sections }) => {
       ...prev,
       [index]: !prev[index],
     }));
+  };
+
+  const toggleWishlist = (e, courseId) => {
+    e.preventDefault();
+
+    // update wishlist state
+    if (auth.user) {
+      setWishlist(
+        (prevWishlist) =>
+          prevWishlist.includes(courseId)
+            ? prevWishlist.filter((id) => id !== courseId) // Remove from wishlist
+            : [...prevWishlist, courseId] // Add to wishlist
+      );
+    }
+
+    post(route('wishlist.toggle', courseId), {
+      preserveScroll: true,
+    });
   };
 
   return (
@@ -123,14 +145,21 @@ const CourseDetails = ({ course, goals, lectures, sections }) => {
                   </div>
                   {/* end d-flex */}
                   <div className="bread-btn-box pt-3">
-                    <button className="btn theme-btn theme-btn-sm theme-btn-transparent lh-28 mr-2 mb-2">
-                      <i className="la la-heart-o mr-1" />
-                      <span
-                        className="swapping-btn"
-                        data-text-swap="Wishlisted"
-                        data-text-original="Wishlist"
-                      >
-                        Wishlist
+                    <button
+                      className="btn theme-btn theme-btn-sm theme-btn-transparent lh-28 mr-2 mb-2"
+                      onClick={(e) => toggleWishlist(e, course.id)}
+                    >
+                      <i
+                        className={`mr-1 ${
+                          wishlist.includes(course.id)
+                            ? 'la la-heart'
+                            : 'la la-heart-o'
+                        }`}
+                      />
+                      <span>
+                        {wishlist.includes(course.id)
+                          ? 'Wishlisted'
+                          : 'Wishlist'}
                       </span>
                     </button>
                   </div>
