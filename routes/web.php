@@ -139,9 +139,11 @@ Route::controller(FrontendController::class)->group(function(){
     Route::get('/instructor/details/{id}/','InstructorDetails')->name('instructor.details');
 });
 
-Route::post('/wishlist/{id}',[WishlistController::class, 'wishlistToggle'])->name('wishlist.toggle');
 
-Route::get('/', [UserController::class, 'Index'])->name('index');
+
+///////////////////////////////////////////////////////////////////
+//////////////////////////  User Route  ///////////////////////
+///////////////////////////////////////////////////////////////////
 
 Route::middleware('auth')->prefix('dashboard')->name('user.')->group(function () {
 
@@ -154,6 +156,14 @@ Route::middleware('auth')->prefix('dashboard')->name('user.')->group(function ()
         Route::post('/change-password/store', 'UserChangePasswordStore')->name('change-password.store');
     });
 
+    Route::controller(WishlistController::class)->prefix('wishlist')->name('wishlist.')->group(function(){
+        Route::get('/all','AllWishlist')->name('all');
+    });
+
 });
+
+Route::post('/wishlist/{id}',[WishlistController::class, 'wishlistToggle'])->name('wishlist.toggle');
+
+Route::get('/', [UserController::class, 'Index'])->name('index');
 
 require __DIR__ . '/auth.php';

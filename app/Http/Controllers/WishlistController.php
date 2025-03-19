@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class WishlistController extends Controller
 {
@@ -41,5 +42,11 @@ class WishlistController extends Controller
                 'alertType' => 'success',
             ]);
         }
+    }
+
+    public function AllWishlist()
+    {
+        $wishlist = Wishlist::with('course.instructor')->where('user_id',Auth::id())->latest()->paginate(9);
+        return Inertia('Frontend/Dashboard/Wishlist',['wishlist' => $wishlist]);
     }
 }
