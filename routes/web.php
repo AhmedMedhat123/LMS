@@ -79,6 +79,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::post('/update/status/{id}','UpdateInstructorStatus')->name('update.status');
     });
 
+    //////////////////////////// Courses Route  ///////////////////
+    Route::controller(CourseController::class)->prefix('course')->name('course.')->group(function(){
+        Route::get('/all','AdminAllCourses')->name('all');
+        Route::post('/update/status/{id}','UpdateCourseStatus')->name('update.status');
+        Route::get('/details/{id}','AdminCourseDetails')->name('details');
+    });
+
 });
 
 Route::get('admin/login', [AdminController::class, 'AdminLogin'])->name('admin.login');

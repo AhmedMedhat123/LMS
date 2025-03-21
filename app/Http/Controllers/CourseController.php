@@ -10,6 +10,7 @@ use App\Models\CourseSection;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 use PHPUnit\Framework\Constraint\Count;
 
 class CourseController extends Controller
@@ -215,5 +216,29 @@ class CourseController extends Controller
             'message' => 'Section Deleted Successfully',
             'alertType' => 'success'
         ]);
+    }
+
+    public function AdminAllCourses()
+    {
+        $courses = Course::with('instructor','category')->latest()->get();
+        return Inertia('Admin/Backend/Course/AllCourses',['courses'=> $courses]);
+    }
+
+    public function UpdateCourseStatus(Request $request,$id)
+    {
+
+        $course = Course::findOrFail($id);
+        $course->status = $request->status;
+        $course->save();
+
+        return redirect()->back()->with([
+            'message' => 'course Status Updated Successfully',
+            'alertType' => 'success'
+        ]);
+    }
+
+    public function AdminCourseDetails($id){
+        $course = Course::with('category','subcategory','instructor')->findOrFail($id);
+        return Inertia('Admin/Backend/Course/CourseDetails',['course'=> $course]);
     }
 }

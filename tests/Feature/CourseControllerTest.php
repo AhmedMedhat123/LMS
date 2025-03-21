@@ -19,6 +19,7 @@ class CourseControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $instructor;
+    private User $admin;
     private Course $course;
 
 
@@ -26,6 +27,7 @@ class CourseControllerTest extends TestCase
     {
         parent::setUp();
         $this->instructor = $this->createUser(role: 'instructor');
+        $this->admin = $this->createUser(role: 'admin');
         $this->course = Course::factory()->create();
 
     }
@@ -243,4 +245,51 @@ class CourseControllerTest extends TestCase
                      'alertType' => 'success',
                  ]);
     }
+
+    public function test_admin_all_courses_page_renders_correctly()
+    {
+        $response = $this->actingAs($this->admin)->get(route('admin.course.all'));
+
+        $response->assertStatus(200);
+
+        $response->assertInertia(function ($page) {
+            $page->component('Admin/Backend/Course/AllCourses')
+                ->has('courses', 1);
+        });
+    }
+
+    public function test_admin_can_update_course_status()
+    {
+        $response = $this->actingAs($this->admin)
+            ->post(route('admin.course.update.status', $this->course->id), [
+                'status' => 0,
+            ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('courses', [
+            'id' => $this->course->id,
+            'status' => 0,
+        ]);
+
+        $response->assertSessionHas([
+            'message' => 'course Status Updated Successfully',
+            'alertType' => 'success',
+        ]);
+    }
+
+    public function test_admin_course_details_page_renders_correctly()
+    {
+        $course = Course::factory()->create();
+
+        $response = $this->actingAs($this->admin)->get(route('admin.course.details', $course->id));
+
+        $response->assertStatus(200);
+
+        $response->assertInertia(function ($page) use ($course) {
+            $page->component('Admin/Backend/Course/CourseDetails')
+                ->where('course.id', $course->id);
+    });
+}
+
 }
