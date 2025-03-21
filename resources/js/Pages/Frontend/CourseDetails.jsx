@@ -1,5 +1,5 @@
 import MainLayout from '@/Layouts/MainLayout';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
 const CourseDetails = ({ course, goals, lectures, sections }) => {
@@ -49,6 +49,19 @@ const CourseDetails = ({ course, goals, lectures, sections }) => {
     post(route('wishlist.toggle', courseId), {
       preserveScroll: true,
     });
+  };
+
+  const addToCart = (e, courseId, instructorId) => {
+    e.preventDefault();
+    post(
+      route('user.cart.add', {
+        id: courseId,
+        instructor_id: instructorId,
+      }),
+      {
+        preserveScroll: true,
+      }
+    );
   };
 
   return (
@@ -801,13 +814,15 @@ const CourseDetails = ({ course, goals, lectures, sections }) => {
                           </p>
 
                           <div className="buy-course-btn-box">
-                            <button
-                              type="button"
+                            <Link
+                              onClick={(e) =>
+                                addToCart(e, course.id, course.instructor_id)
+                              }
                               className="btn theme-btn w-100 mb-2"
                             >
                               <i className="la la-shopping-cart fs-18 mr-1" />{' '}
                               Add to cart
-                            </button>
+                            </Link>
                             <button
                               type="button"
                               className="btn theme-btn w-100 theme-btn-white mb-2"

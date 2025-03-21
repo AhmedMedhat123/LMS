@@ -2,10 +2,13 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -49,6 +52,15 @@ class HandleInertiaRequests extends Middleware
 
             'userWishlists' => $user ? Wishlist::where('user_id', $user->id)->pluck('course_id')->toArray() : [],
 
+            'cartItems' => Cart::with('user','instructor','course')->where('user_id', Auth::id())->get(),
+            'cartTotalPrice' => Cart::where('user_id', Auth::id())->sum('price'),
+            'cartTotalDiscount' => Cart::join('courses', 'carts.course_id', '=', 'courses.id')
+                                    ->where('user_id', Auth::id())
+                                    ->sum(DB::raw('CASE
+                                        WHEN courses.discount_price IS NOT NULL
+                                        THEN courses.selling_price
+                                        END'
+                                    )),
 
         ];
     }

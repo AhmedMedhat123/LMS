@@ -4,8 +4,10 @@ import React, { useState } from 'react';
 const Header = () => {
   const [sidebarActive, setSidebarActive] = useState(false);
   const [searchBarActive, setSearchBarActive] = useState(false);
-  const { auth, allCategories } = usePage().props;
+  const { auth, allCategories, cartItems, cartTotalPrice, cartTotalDiscount } =
+    usePage().props;
   const { post, get } = useForm();
+
   const handleLogout = (e) => {
     e.preventDefault();
     post(route('user.logout'));
@@ -31,6 +33,17 @@ const Header = () => {
     );
   };
 
+  const deleteFromCart = (e, catId) => {
+    e.preventDefault();
+    post(route('user.cart.delete', catId), {
+      preserveScroll: true,
+    });
+  };
+
+  const goToCart = (e) => {
+    e.preventDefault();
+    get(route('user.cart.all'));
+  };
   return (
     <>
       <header className="header-menu-area bg-white">
@@ -284,84 +297,95 @@ const Header = () => {
                         <li>
                           <p className="shop-cart-btn d-flex align-items-center">
                             <i className="la la-shopping-cart" />
-                            <span className="product-count">2</span>
+                            {cartItems ? (
+                              <span className="product-count">
+                                {cartItems.length}
+                              </span>
+                            ) : (
+                              ''
+                            )}{' '}
                           </p>
                           <ul className="cart-dropdown-menu">
-                            <li className="media media-card">
-                              <a
-                                href="shopping-cart.html"
-                                className="media-img"
-                              >
-                                <img
-                                  src="/assets/images/small-img.jpg"
-                                  alt="Cart image"
-                                />
-                              </a>
-                              <div className="media-body">
-                                <h5>
-                                  <a href="course-details.html">
-                                    The Complete JavaScript Course 2021: From
-                                    Zero to Expert!
-                                  </a>
-                                </h5>
-                                <span className="d-block lh-18 py-1">
-                                  Kamran Ahmed
-                                </span>
-                                <p className="text-black font-weight-semi-bold lh-18">
-                                  $12.99{' '}
-                                  <span className="before-price fs-14">
-                                    $129.99
-                                  </span>
-                                </p>
-                              </div>
-                            </li>
-                            <li className="media media-card">
-                              <a
-                                href="shopping-cart.html"
-                                className="media-img"
-                              >
-                                <img
-                                  src="/assets/images/small-img.jpg"
-                                  alt="Cart image"
-                                />
-                              </a>
-                              <div className="media-body">
-                                <h5>
-                                  <a href="course-details.html">
-                                    The Complete JavaScript Course 2021: From
-                                    Zero to Expert!
-                                  </a>
-                                </h5>
-                                <span className="d-block lh-18 py-1">
-                                  Kamran Ahmed
-                                </span>
-                                <p className="text-black font-weight-semi-bold lh-18">
-                                  $12.99{' '}
-                                  <span className="before-price fs-14">
-                                    $129.99
-                                  </span>
-                                </p>
-                              </div>
-                            </li>
+                            {cartItems.map((cart, index) => (
+                              <li key={index} className="media media-card">
+                                <a
+                                  href="shopping-cart.html"
+                                  className="media-img"
+                                >
+                                  <img
+                                    src={
+                                      cart.course.course_image
+                                        ? `/upload/course/image/${cart.course.course_image}`
+                                        : 'assets/images/img-loading.png'
+                                    }
+                                    alt="Cart image"
+                                  />
+                                </a>
+                                <div className="media-body flex justify-between items-center">
+                                  <div className="flex-1">
+                                    <h5 className="truncate w-40">
+                                      {' '}
+                                      {/* Adjust width as needed */}
+                                      <a
+                                        href="course-details.html"
+                                        title={cart.course.course_name}
+                                      >
+                                        {cart.course.course_name.length > 25
+                                          ? cart.course.course_name.substring(
+                                              0,
+                                              22
+                                            ) + '...'
+                                          : cart.course.course_name}
+                                      </a>
+                                    </h5>
+                                    <span className="d-block text-gray-500 text-sm py-1">
+                                      {cart.instructor.name}
+                                    </span>
+                                    {cart.course.discount_price === null ? (
+                                      <p className="text-black font-semibold text-lg">
+                                        {cart.course.selling_price}$
+                                      </p>
+                                    ) : (
+                                      <p className="text-black font-semibold text-lg">
+                                        {cart.course.discount_price}$
+                                        <span className="before-price text-gray-400 line-through ml-2 text-sm">
+                                          {cart.course.selling_price}$
+                                        </span>
+                                      </p>
+                                    )}
+                                  </div>
+                                  <Link
+                                    onClick={(e) => deleteFromCart(e, cart.id)}
+                                    className="text-red-500 hover:text-red-800 transition"
+                                  >
+                                    <i className="la la-trash text-xl"></i>
+                                  </Link>
+                                </div>
+                              </li>
+                            ))}
                             <li className="media media-card">
                               <div className="media-body fs-16">
                                 <p className="text-black font-weight-semi-bold lh-18">
                                   Total:{' '}
-                                  <span className="cart-total">$12.99</span>{' '}
+                                  <span className="cart-total">
+                                    ${cartTotalPrice}
+                                  </span>{' '}
                                   <span className="before-price fs-14">
-                                    $129.99
+                                    {cartTotalDiscount === 0
+                                      ? ''
+                                      : `$${cartTotalDiscount}`}
                                   </span>
                                 </p>
                               </div>
                             </li>
                             <li>
-                              <a
-                                href="shopping-cart.html"
+                              <Link
+                                onClick={(e) => goToCart(e)}
                                 className="btn theme-btn w-100"
                               >
                                 Got to cart{' '}
                                 <i className="la la-arrow-right icon ml-1" />
-                              </a>
+                              </Link>
                             </li>
                           </ul>
                         </li>

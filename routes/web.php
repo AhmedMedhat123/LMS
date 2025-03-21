@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseLectureController;
@@ -142,7 +143,7 @@ Route::controller(FrontendController::class)->group(function(){
 
 
 ///////////////////////////////////////////////////////////////////
-//////////////////////////  User Route  ///////////////////////
+//////////////////////////  User Dashboard Route  /////////////////
 ///////////////////////////////////////////////////////////////////
 
 Route::middleware('auth')->prefix('dashboard')->name('user.')->group(function () {
@@ -161,6 +162,19 @@ Route::middleware('auth')->prefix('dashboard')->name('user.')->group(function ()
     });
 
 });
+
+///////////////////////////////////////////////////////////////////
+//////////////////////////  User Route  ///////////////////////////
+///////////////////////////////////////////////////////////////////
+Route::middleware('auth')->name('user.')->group(function () {
+
+    Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(function(){
+        Route::post('/add/{id}/{instructor_id}','AddToCart')->name('add');
+        Route::post('/delelte/{id}','DeleteFromCart')->name('delete');
+        Route::get('/all','AllCart')->name('all');
+    });
+});
+
 
 Route::post('/wishlist/{id}',[WishlistController::class, 'wishlistToggle'])->name('wishlist.toggle');
 
