@@ -18,7 +18,7 @@ const Cart = () => {
 
   const applyCode = (e) => {
     e.preventDefault();
-    post(route('user.apply-coupon', data.coupon_name));
+    post(route('user.apply-coupon', { coupon_name: data.coupon_name }));
   };
 
   return (
