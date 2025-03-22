@@ -8,6 +8,7 @@ const Sidebar = () => {
     category: false,
     instructor: false,
     course: false,
+    coupon: false,
   });
   const { url } = usePage();
 
@@ -19,6 +20,7 @@ const Sidebar = () => {
         url.startsWith('/admin/subcategory'),
       instructor: url.startsWith('/admin/instructor'),
       course: url.startsWith('/admin/course'),
+      coupon: url.startsWith('/admin/coupon'),
     }));
   }, [url]);
 
@@ -251,6 +253,69 @@ const Sidebar = () => {
                   className="block px-4 py-2 hover:bg-gray-200"
                 >
                   All Courses
+                </Link>
+              </li>
+            </ul>
+          </li>
+          {/*Manage Coupon Dropdown*/}
+          <li className="relative">
+            <button
+              className="flex items-center w-full text-left px-[18px] py-[12px] text-[#233d63] hover:text-[#358FF7]"
+              onClick={() => toggleDropdown('coupon')}
+            >
+              <svg
+                className="mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                height="18px"
+                viewBox="0 0 24 24"
+                width="18px"
+              >
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path d="M12 5.9c1.16 0 2.1.94 2.1 2.1s-.94 2.1-2.1 2.1S9.9 9.16 9.9 8s.94-2.1 2.1-2.1m0 9c2.97 0 6.1 1.46 6.1 2.1v1.1H5.9V17c0-.64 3.13-2.1 6.1-2.1M12 4C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 9c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" />
+              </svg>{' '}
+              Manage coupons
+              <svg
+                className={`ml-auto transform transition-transform ${
+                  dropdownOpen.coupon ? 'rotate-180' : 'rotate-0'
+                }`}
+                xmlns="http://www.w3.org/2000/svg"
+                height="18px"
+                viewBox="0 0 24 24"
+                width="18px"
+              >
+                <path d="M0 0h24v24H0V0z" fill="none" />
+                <path d="M7 10l5 5 5-5H7z" />
+              </svg>
+            </button>
+            <ul
+              className={`pl-6 bg-gray-100 transition-all duration-300 ease-in-out overflow-hidden ${
+                dropdownOpen.coupon
+                  ? 'max-h-40 opacity-100'
+                  : 'max-h-0 opacity-0'
+              }`}
+            >
+              <li
+                className={
+                  url.startsWith('/admin/coupon/all') ? 'page-active' : ''
+                }
+              >
+                <Link
+                  href={route('admin.coupon.all')}
+                  className="block px-4 py-2 hover:bg-gray-200"
+                >
+                  All Coupons
+                </Link>
+              </li>
+              <li
+                className={
+                  url.startsWith('/admin/coupon/add') ? 'page-active' : ''
+                }
+              >
+                <Link
+                  href={route('admin.coupon.add')}
+                  className="block px-4 py-2 hover:bg-gray-200"
+                >
+                  Add Coupon
                 </Link>
               </li>
             </ul>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseLectureController;
 use App\Http\Controllers\FrontendController;
@@ -86,6 +87,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::get('/details/{id}','AdminCourseDetails')->name('details');
     });
 
+    //////////////////////////// Coupon Route  ///////////////////
+    Route::controller(CouponController::class)->prefix('coupon')->name('coupon.')->group(function(){
+        Route::get('/all','AdminAllCoupon')->name('all');
+        Route::get('/add','AdminAddCoupon')->name('add');
+        Route::post('/add/store','StoreCoupon')->name('add.store');
+        Route::get('/edit/{id}','AdminEditCoupon')->name('edit');
+        Route::post('/update','AdminUpdateCoupon')->name('update');
+        Route::get('/delete/{id}','AdminDeleteCoupon')->name('delete');
+    });
 });
 
 Route::get('admin/login', [AdminController::class, 'AdminLogin'])->name('admin.login');
