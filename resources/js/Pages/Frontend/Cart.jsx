@@ -2,9 +2,12 @@ import MainLayout from '@/Layouts/MainLayout';
 import { Link, useForm, usePage } from '@inertiajs/react';
 
 const Cart = () => {
-  const { post } = useForm();
+  const { post, data, setData } = useForm({
+    coupon_name: '',
+  });
 
-  const { cartItems, cartTotalPrice, cartTotalDiscount } = usePage().props;
+  const { cartItems, cartTotalPrice, cartTotalDiscount, coupon } =
+    usePage().props;
 
   const deleteFromCart = (e, catId) => {
     e.preventDefault();
@@ -12,6 +15,12 @@ const Cart = () => {
       preserveScroll: true,
     });
   };
+
+  const applyCode = (e) => {
+    e.preventDefault();
+    post(route('user.apply-coupon', data.coupon_name));
+  };
+
   return (
     <MainLayout>
       <section className="cart-area section-padding">
@@ -90,47 +99,90 @@ const Cart = () => {
               </tbody>
             </table>
             <div className="d-flex flex-wrap align-items-center justify-content-between pt-4">
-              <form method="post">
-                <div className="input-group mb-2">
-                  <input
-                    className="form-control form--control pl-3"
-                    type="text"
-                    name="search"
-                    placeholder="Coupon code"
-                  />
-                  <div className="input-group-append">
-                    <button className="btn theme-btn">Apply Code</button>
+              {!coupon && (
+                <form>
+                  <div className="input-group mb-2">
+                    <input
+                      className="form-control form--control pl-3"
+                      type="text"
+                      name="search"
+                      placeholder="Coupon code"
+                      onChange={(e) => setData('coupon_name', e.target.value)}
+                    />
+                    <div className="input-group-append">
+                      <button
+                        onClick={applyCode}
+                        disabled={!data.coupon_name.trim()}
+                        className="btn theme-btn"
+                      >
+                        Apply Code
+                      </button>
+                    </div>
                   </div>
+                </form>
+              )}
+              {/* {coupon && <pre>{JSON.stringify(coupon, null, 2)}</pre>} */}
+            </div>
+          </div>
+          {!coupon ? (
+            <div className="col-lg-4 ml-auto">
+              <div className="bg-gray p-4 rounded-rounded mt-40px">
+                <h3 className="fs-18 font-weight-bold pb-3">Cart Totals</h3>
+                <div className="divider">
+                  <span />
                 </div>
-              </form>
-              <a href="#" className="btn theme-btn mb-2">
-                Update Cart
-              </a>
-            </div>
-          </div>
-          <div className="col-lg-4 ml-auto">
-            <div className="bg-gray p-4 rounded-rounded mt-40px">
-              <h3 className="fs-18 font-weight-bold pb-3">Cart Totals</h3>
-              <div className="divider">
-                <span />
+                <ul className="generic-list-item pb-4">
+                  <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
+                    <span className="text-black">Discount:</span>
+                    <span className="before-price">
+                      {cartTotalDiscount === 0 ? '' : `$${cartTotalDiscount}`}
+                    </span>
+                  </li>
+                  <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
+                    <span className="text-black">Total:</span>
+                    <span> ${cartTotalPrice}</span>
+                  </li>
+                </ul>
+                <a href="checkout.html" className="btn theme-btn w-100">
+                  Checkout <i className="la la-arrow-right icon ml-1" />
+                </a>
               </div>
-              <ul className="generic-list-item pb-4">
-                <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
-                  <span className="text-black">Discount:</span>
-                  <span className="before-price">
-                    {cartTotalDiscount === 0 ? '' : `$${cartTotalDiscount}`}
-                  </span>
-                </li>
-                <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
-                  <span className="text-black">Total:</span>
-                  <span> ${cartTotalPrice}</span>
-                </li>
-              </ul>
-              <a href="checkout.html" className="btn theme-btn w-100">
-                Checkout <i className="la la-arrow-right icon ml-1" />
-              </a>
             </div>
-          </div>
+          ) : (
+            <div className="col-lg-4 ml-auto">
+              <div className="bg-gray p-4 rounded-rounded mt-40px">
+                <h3 className="fs-18 font-weight-bold pb-3">Cart Totals</h3>
+                <div className="divider">
+                  <span />
+                </div>
+                <ul className="generic-list-item pb-4">
+                  <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
+                    <span className="text-black">Coupon Name:</span>
+                    <span>{coupon.coupon_name}</span>
+                  </li>
+                  <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
+                    <span className="text-black">Coupon Discount:</span>
+                    <span>{coupon.coupon_discount}%</span>
+                  </li>
+                  <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
+                    <span className="text-black">Course Discount:</span>
+                    <span className="before-price">
+                      {cartTotalDiscount === 0 ? '' : `$${cartTotalDiscount}`}
+                    </span>
+                  </li>
+                  <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
+                    <span className="text-black">Total:</span>
+                    <span className="text-green-500">
+                      ${coupon.total_amount}
+                    </span>
+                  </li>
+                </ul>
+                <a href="checkout.html" className="btn theme-btn w-100">
+                  Checkout <i className="la la-arrow-right icon ml-1" />
+                </a>
+              </div>
+            </div>
+          )}
         </div>
         {/* end container */}
       </section>

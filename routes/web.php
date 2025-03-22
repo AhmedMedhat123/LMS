@@ -190,6 +190,8 @@ Route::middleware('auth')->name('user.')->group(function () {
         Route::post('/delelte/{id}','DeleteFromCart')->name('delete');
         Route::get('/all','AllCart')->name('all');
     });
+
+    Route::post('/coupon/{coupon_name}', [CouponController::class, 'ApplyCoupon'])->name('apply-coupon');
 });
 
 

@@ -61,7 +61,7 @@ class HandleInertiaRequests extends Middleware
                                         THEN courses.selling_price
                                         END'
                                     )),
-
+            'coupon' => session('coupon', null),
         ];
     }
 
