@@ -2,7 +2,7 @@ import MainLayout from '@/Layouts/MainLayout';
 import { Link, useForm, usePage } from '@inertiajs/react';
 
 const Cart = () => {
-  const { post, data, setData } = useForm({
+  const { get, post, data, setData } = useForm({
     coupon_name: '',
   });
 
@@ -20,6 +20,7 @@ const Cart = () => {
     e.preventDefault();
     post(route('user.apply-coupon', { coupon_name: data.coupon_name }));
   };
+  console.log(usePage().props.coupon);
 
   return (
     <MainLayout>
@@ -143,9 +144,12 @@ const Cart = () => {
                     <span> ${cartTotalPrice}</span>
                   </li>
                 </ul>
-                <a href="checkout.html" className="btn theme-btn w-100">
+                <Link
+                  href={route('user.checkout')}
+                  className="btn theme-btn w-100"
+                >
                   Checkout <i className="la la-arrow-right icon ml-1" />
-                </a>
+                </Link>
               </div>
             </div>
           ) : (
@@ -177,9 +181,12 @@ const Cart = () => {
                     </span>
                   </li>
                 </ul>
-                <a href="checkout.html" className="btn theme-btn w-100">
+                <Link
+                  href={route('user.checkout')}
+                  className="btn theme-btn w-100"
+                >
                   Checkout <i className="la la-arrow-right icon ml-1" />
-                </a>
+                </Link>
               </div>
             </div>
           )}

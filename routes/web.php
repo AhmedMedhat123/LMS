@@ -183,7 +183,7 @@ Route::middleware('auth')->prefix('dashboard')->name('user.')->group(function ()
 ///////////////////////////////////////////////////////////////////
 //////////////////////////  User Route  ///////////////////////////
 ///////////////////////////////////////////////////////////////////
-Route::middleware('auth')->name('user.')->group(function () {
+Route::middleware(['auth'])->name('user.')->group(function () {
 
     Route::controller(CartController::class)->prefix('cart')->name('cart.')->group(function(){
         Route::post('/add/{id}/{instructor_id}','AddToCart')->name('add');
@@ -192,9 +192,15 @@ Route::middleware('auth')->name('user.')->group(function () {
     });
 
     Route::post('/coupon/{coupon_name}', [CouponController::class, 'ApplyCoupon'])->name('apply-coupon');
+    Route::get('/checkout',[FrontendController::class,'CheckoutPage'])->name('checkout');
+
 });
 
-
+Route::get('/check-session', function () {
+    return response()->json([
+        'session' => session()->all()
+    ]);
+});
 Route::post('/wishlist/{id}',[WishlistController::class, 'wishlistToggle'])->name('wishlist.toggle');
 
 Route::get('/', [UserController::class, 'Index'])->name('index');

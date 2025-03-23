@@ -823,13 +823,13 @@ const CourseDetails = ({ course, goals, lectures, sections }) => {
                               <i className="la la-shopping-cart fs-18 mr-1" />{' '}
                               Add to cart
                             </Link>
-                            <button
-                              type="button"
+                            <Link
+                              href={route('user.checkout')}
                               className="btn theme-btn w-100 theme-btn-white mb-2"
                             >
                               <i className="la la-shopping-bag mr-1" /> Buy this
                               course
-                            </button>
+                            </Link>
                           </div>
                         </div>
                         {/* end preview-course-content */}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\Course_goal;
@@ -10,6 +11,7 @@ use App\Models\CourseSection;
 use App\Models\SubCategory;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class FrontendController extends Controller
@@ -72,5 +74,17 @@ class FrontendController extends Controller
             'courses' => $courses,
             'instructor' => $instructor,
         ]);
+    }
+
+    public function CheckoutPage()
+    {
+        if(Cart::where('user_id', Auth::id())->count() === 0){
+            return redirect()->back()->with([
+                'message' => 'You must have at least one course to proceed to checkout.',
+                'alertType' => 'error',
+            ]);
+        }
+
+        return Inertia('Frontend/Checkout');
     }
 }

@@ -9,6 +9,7 @@ use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -41,6 +42,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $user,
+                'session' => session()->all(),
             ],
             'admin' => $user && $user->role === 'admin' ? $user : null,
             'instructor' => $user && $user->role === 'instructor' ? $user : null,
@@ -61,7 +63,8 @@ class HandleInertiaRequests extends Middleware
                                         THEN courses.selling_price
                                         END'
                                     )),
-            'coupon' => session('coupon', null),
+            'coupon' => Session('coupon', null),
+
         ];
     }
 
