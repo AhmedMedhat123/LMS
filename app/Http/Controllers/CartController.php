@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Course;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -13,6 +14,18 @@ class CartController extends Controller
     public function AddToCart($id,$instructorId)
     {
         $course = Course::findOrFail($id);
+
+        $existingOrder = Order::where('user_id', Auth::user()->id)
+            ->where('course_id', $id)
+            ->first();
+
+        if ($existingOrder) {
+            return redirect()->back()->with([
+                'message' => 'You have already enrolled in this course',
+                'alertType' => 'error',
+            ]);
+        }
+
 
         if (Auth::check()) {
             // Check if course already in cart

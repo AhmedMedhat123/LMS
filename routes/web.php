@@ -8,6 +8,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseLectureController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\InstructorController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\UserController;
@@ -196,6 +197,7 @@ Route::middleware(['auth'])->name('user.')->group(function () {
 
     Route::get('/checkout',[FrontendController::class,'CheckoutPage'])->name('checkout');
 
+    Route::post('/payment',[PaymentController::class, 'payment'])->name('payment');
 });
 
 Route::get('/check-session', function () {
