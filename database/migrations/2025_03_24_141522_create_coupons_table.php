@@ -11,11 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::dropIfExists('coupons');
+
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('coupon_slug');
             $table->string('discount');
+            $table->string('discount_amount')->nullable();
+            $table->string('total_amount')->nullable();
             $table->string('validity');
             $table->integer('status')->default(1);
             $table->timestamps();

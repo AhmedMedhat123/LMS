@@ -18,9 +18,17 @@ const Cart = () => {
 
   const applyCode = (e) => {
     e.preventDefault();
-    post(route('user.apply-coupon', { coupon_name: data.coupon_name }));
+    post(route('user.coupon.apply', { coupon_name: data.coupon_name }), {
+      preserveScroll: true,
+    });
   };
-  console.log(usePage().props.coupon);
+
+  const removeCoupon = (e) => {
+    e.preventDefault();
+    post(route('user.coupon.remove'), {
+      preserveScroll: true,
+    });
+  };
 
   return (
     <MainLayout>
@@ -140,7 +148,7 @@ const Cart = () => {
                     </span>
                   </li>
                   <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
-                    <span className="text-black">Total:</span>
+                    <span className="text-black">Price:</span>
                     <span> ${cartTotalPrice}</span>
                   </li>
                 </ul>
@@ -162,7 +170,13 @@ const Cart = () => {
                 <ul className="generic-list-item pb-4">
                   <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
                     <span className="text-black">Coupon Name:</span>
-                    <span>{coupon.coupon_name}</span>
+                    <span className="flex gap-1 items-center">
+                      {coupon.coupon_name}
+                      <Link
+                        onClick={(e) => removeCoupon(e)}
+                        className="la la-trash text-red-500 hover:text-red-700 hover:text-lg"
+                      />
+                    </span>
                   </li>
                   <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
                     <span className="text-black">Coupon Discount:</span>
@@ -175,7 +189,7 @@ const Cart = () => {
                     </span>
                   </li>
                   <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
-                    <span className="text-black">Total:</span>
+                    <span className="text-black">Price:</span>
                     <span className="text-green-500">
                       ${coupon.total_amount}
                     </span>

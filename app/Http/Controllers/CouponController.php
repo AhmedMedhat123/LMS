@@ -92,12 +92,13 @@ class CouponController extends Controller
             $finalTotal = round($cartTotal - $discountAmount);
 
             // Store coupon details in session
-            Session::put('coupon', [
+            session()->put('coupon', [
                 'coupon_name' => $coupon->name,
                 'coupon_discount' => $coupon->discount,
                 'discount_amount' => $discountAmount,
                 'total_amount' => $finalTotal
             ]);
+            session()->save();
 
             return redirect()->back()->with([
                 'message' => 'Coupon Applied Successfully',
@@ -110,5 +111,14 @@ class CouponController extends Controller
                 'alertType' => 'error'
             ]);
         }
+    }
+
+    public function removeCoupon()
+    {
+        Session::forget('coupon');
+        return redirect()->back()->with([
+            'message' => 'Coupon Removed',
+            'alertType' => 'success',
+        ]);
     }
 }

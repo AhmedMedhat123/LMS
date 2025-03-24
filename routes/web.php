@@ -191,7 +191,9 @@ Route::middleware(['auth'])->name('user.')->group(function () {
         Route::get('/all','AllCart')->name('all');
     });
 
-    Route::post('/coupon/{coupon_name}', [CouponController::class, 'ApplyCoupon'])->name('apply-coupon');
+    Route::post('/coupon/{coupon_name}', [CouponController::class, 'ApplyCoupon'])->name('coupon.apply');
+    Route::post('/remove-coupon', [CouponController::class, 'removeCoupon'])->name('coupon.remove');
+
     Route::get('/checkout',[FrontendController::class,'CheckoutPage'])->name('checkout');
 
 });
@@ -201,6 +203,14 @@ Route::get('/check-session', function () {
         'session' => session()->all()
     ]);
 });
+
+Route::get('/debug-session', function () {
+    return response()->json([
+        'session_id' => session()->getId(),
+        'session' => session()->all(),
+    ]);
+});
+
 Route::post('/wishlist/{id}',[WishlistController::class, 'wishlistToggle'])->name('wishlist.toggle');
 
 Route::get('/', [UserController::class, 'Index'])->name('index');

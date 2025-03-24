@@ -78,6 +78,7 @@ class FrontendController extends Controller
 
     public function CheckoutPage()
     {
+
         if(Cart::where('user_id', Auth::id())->count() === 0){
             return redirect()->back()->with([
                 'message' => 'You must have at least one course to proceed to checkout.',
@@ -85,6 +86,9 @@ class FrontendController extends Controller
             ]);
         }
 
-        return Inertia('Frontend/Checkout');
+        return Inertia('Frontend/Checkout', [
+            'coupon' => session()->get('coupon', null) 
+        ]);
     }
+
 }

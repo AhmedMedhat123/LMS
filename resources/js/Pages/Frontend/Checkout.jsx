@@ -8,13 +8,12 @@ const Checkout = ({
   cartTotalPrice,
   cartTotalDiscount,
 }) => {
-  console.log(usePage().props.coupon);
-
-  const { get, data, setData, processing } = useForm({
+  const { post, get, data, setData, processing } = useForm({
     name: auth.user.name,
     email: auth.user.email,
     phone: auth.user.phone,
     address: auth.user.address,
+    coupon_name: '',
   });
 
   const GetCourseDetails = (e, courseId, sectionId) => {
@@ -25,6 +24,19 @@ const Checkout = ({
         slug: sectionId,
       })
     );
+  };
+  const applyCode = (e) => {
+    e.preventDefault();
+    post(route('user.coupon.apply', { coupon_name: data.coupon_name }), {
+      preserveScroll: true,
+    });
+  };
+
+  const removeCoupon = (e) => {
+    e.preventDefault();
+    post(route('user.coupon.remove'), {
+      preserveScroll: true,
+    });
   };
 
   return (
@@ -123,7 +135,6 @@ const Checkout = ({
                         <img
                           className="payment-logo"
                           src="/assets/images/paypal.png"
-                          alt
                         />
                       </div>
                       <div className="payment-tab-content">
@@ -146,7 +157,6 @@ const Checkout = ({
                         <img
                           className="payment-logo"
                           src="assets/images/payment-img.png"
-                          alt
                         />
                       </div>
                       <div className="payment-tab-content">
@@ -214,6 +224,39 @@ const Checkout = ({
                 </div>
                 {/* end card-body */}
               </div>
+              {!coupon && (
+                <div className="card card-item">
+                  <div className="card-body">
+                    <h3 className="card-title fs-22 pb-3">Coupon</h3>
+                    <div className="divider">
+                      <span />
+                    </div>
+                    <form>
+                      <div className="input-group mb-2">
+                        <input
+                          className="form-control form--control pl-3"
+                          type="text"
+                          name="search"
+                          placeholder="Coupon code"
+                          onChange={(e) =>
+                            setData('coupon_name', e.target.value)
+                          }
+                        />
+                        <div className="input-group-append">
+                          <button
+                            onClick={applyCode}
+                            disabled={!data.coupon_name.trim()}
+                            className="btn theme-btn"
+                          >
+                            Apply Code
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  {/* end card-body */}
+                </div>
+              )}
               {/* end card */}
             </div>
             {/* end col-lg-7 */}
@@ -226,7 +269,10 @@ const Checkout = ({
                   </div>
                   <div className="order-details-lists">
                     {cartItems.map((cart, index) => (
-                      <div className="media media-card border-bottom border-bottom-gray pb-3 mb-3">
+                      <div
+                        key={index}
+                        className="media media-card border-bottom border-bottom-gray pb-3 mb-3"
+                      >
                         <Link
                           onClick={(e) =>
                             GetCourseDetails(
@@ -299,14 +345,14 @@ const Checkout = ({
                     <ul className="generic-list-item generic-list-item-flash fs-15">
                       <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
                         <span className="text-black">Discount:</span>
-                        <span>
+                        <span className="before-price">
                           {cartTotalDiscount === 0
                             ? ''
                             : `$${cartTotalDiscount}`}
                         </span>
                       </li>
                       <li className="d-flex align-items-center justify-content-between font-weight-bold">
-                        <span className="text-black">Total:</span>
+                        <span className="text-black">Price:</span>
                         <span>${cartTotalPrice}</span>
                       </li>
                     </ul>
@@ -314,15 +360,31 @@ const Checkout = ({
                     <ul className="generic-list-item generic-list-item-flash fs-15">
                       <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
                         <span className="text-black">Coupon Name:</span>
-                        <span>{coupon.coupon_name}</span>
+                        <span className="flex gap-1 items-center">
+                          {coupon.coupon_name}
+                          <Link
+                            onClick={(e) => removeCoupon(e)}
+                            className="la la-trash text-red-500 hover:text-red-700 hover:text-lg"
+                          />
+                        </span>
                       </li>
                       <li className="d-flex align-items-center justify-content-between font-weight-semi-bold">
                         <span className="text-black">Coupon discounts:</span>
                         <span>{coupon.coupon_discount}%</span>
                       </li>
                       <li className="d-flex align-items-center justify-content-between font-weight-bold">
-                        <span className="text-black">Total:</span>
-                        <span>$18.99</span>
+                        <span className="text-black">Course Discount:</span>
+                        <span className="before-price">
+                          {cartTotalDiscount === 0
+                            ? ''
+                            : `$${cartTotalDiscount}`}
+                        </span>
+                      </li>
+                      <li className="d-flex align-items-center justify-content-between font-weight-bold">
+                        <span className="text-black">Price:</span>
+                        <span className="text-green-500">
+                          ${coupon.total_amount}
+                        </span>{' '}
                       </li>
                     </ul>
                   )}

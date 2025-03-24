@@ -109,7 +109,7 @@ class CouponControllerTest extends TestCase
             'coupon_discount' => 10,
         ]);
 
-        $response = $this->post(route('user.apply-coupon', ['coupon_name' => $coupon->coupon_name]));
+        $response = $this->post(route('user.coupon.apply', ['coupon_name' => $coupon->coupon_name]));
 
         $response->assertStatus(302);
 
@@ -137,8 +137,27 @@ class CouponControllerTest extends TestCase
             'validity' => now()->subDays(1),
         ]);
 
-        $response = $this->post(route('user.apply-coupon', ['coupon_name' => $coupon->name]));
+        $response = $this->post(route('user.coupon.apply', ['coupon_name' => $coupon->name]));
         $response->assertSessionMissing('coupon');
         $response->assertRedirect();
     }
+
+    public function test_user_can_remove_coupon()
+{
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    session()->put('coupon', [
+        'coupon_name' => 'DISCOUNT10',
+        'coupon_discount' => 10,
+        'discount_amount' => 100,
+        'total_amount' => 900
+    ]);
+
+    $response = $this->post(route('user.coupon.remove'));
+
+    $response->assertRedirect();
+    $this->assertFalse(session()->has('coupon'));
+}
+
 }

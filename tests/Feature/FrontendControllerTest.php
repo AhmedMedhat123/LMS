@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\Course_goal;
@@ -117,28 +118,42 @@ class FrontendControllerTest extends TestCase
     }
 
     public function test_instructor_details_page_renders_correctly()
-{
-    $instructor = User::factory()->create();
+    {
+        $instructor = User::factory()->create();
 
-    Course::factory()->count(3)->create([
-        'instructor_id' => $instructor->id,
-        'status' => '1',
-    ]);
+        Course::factory()->count(3)->create([
+            'instructor_id' => $instructor->id,
+            'status' => '1',
+        ]);
 
-    $response = $this->get(route('instructor.details', [
-        'id' => $instructor->id,
-    ]));
+        $response = $this->get(route('instructor.details', [
+            'id' => $instructor->id,
+        ]));
 
-    $response->assertStatus(200);
+        $response->assertStatus(200);
 
-    $response->assertInertia(fn (AssertableInertia $page) =>
-        $page->component('Frontend/InstructorDetails')
-            ->has('courses.data', 3)
-            ->has('instructor', fn (AssertableInertia $instructorData) =>
-                $instructorData->where('id', $instructor->id)
-                               ->etc()
-            )
-    );
-}
+        $response->assertInertia(fn (AssertableInertia $page) =>
+            $page->component('Frontend/InstructorDetails')
+                ->has('courses.data', 3)
+                ->has('instructor', fn (AssertableInertia $instructorData) =>
+                    $instructorData->where('id', $instructor->id)
+                                ->etc()
+                )
+        );
+    }
 
+    public function test_user_checkout_page_renders_correctly()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        Cart::factory()->create(['user_id' => $user->id]);
+
+        $response = $this->get(route('user.checkout'));
+
+        $response->assertInertia(fn(AssertableInertia $page) =>
+            $page->component('Frontend/Checkout')
+                ->has('coupon')
+        );
+    }
 }
