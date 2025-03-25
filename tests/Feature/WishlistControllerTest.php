@@ -72,7 +72,7 @@ class WishlistControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertInertia(fn ($page) =>
             $page->component('Frontend/Dashboard/Wishlist')
-                ->has('wishlist.data', 1) 
+                ->has('wishlist.data', 1)
                 ->where('wishlist.data.0.course_id', $course->id)
         );
     }
