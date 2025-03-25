@@ -179,6 +179,8 @@ Route::middleware('auth')->prefix('dashboard')->name('user.')->group(function ()
         Route::get('/all','AllWishlist')->name('all');
     });
 
+    Route::get('/my/courses',[CourseController::class, 'MyCourses'])->name('my.courses');
+
 });
 
 ///////////////////////////////////////////////////////////////////
@@ -196,7 +198,6 @@ Route::middleware(['auth'])->name('user.')->group(function () {
     Route::post('/remove-coupon', [CouponController::class, 'removeCoupon'])->name('coupon.remove');
 
     Route::get('/checkout',[FrontendController::class,'CheckoutPage'])->name('checkout');
-
     Route::post('/payment',[PaymentController::class, 'payment'])->name('payment');
 });
 
