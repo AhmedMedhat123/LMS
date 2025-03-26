@@ -1,5 +1,4 @@
-import MainLayout from '@/Layouts/MainLayout';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'react-hot-toast';
@@ -12,6 +11,20 @@ const ViewCourse = ({ course, lectures, sections }) => {
   const [openSections, setOpenSections] = useState(sections.map(() => false));
   const [showFull, setShowFull] = useState(false);
   const shortDescription = course.description.slice(0, 600);
+
+  const { data, setData } = useForm({
+    video: course.video,
+    lectureContent: '',
+    lectureVideo: '',
+  });
+
+  const [videoSrc, setVideoSrc] = useState(
+    `/upload/course/video/${data.video}`
+  );
+
+  const [content, setContent] = useState(data.lectureContent);
+
+  console.log(data.video);
 
   useEffect(() => {
     // Simulate content loading
@@ -146,25 +159,32 @@ const ViewCourse = ({ course, lectures, sections }) => {
               </div>
               {/* end header-menu-content */}
             </section>
-            <section className="course-dashboard">
+            <section className="course-dashboard mt-14">
               <div className="course-dashboard-wrap">
                 <div className="course-dashboard-container d-flex">
                   <div className="course-dashboard-column">
                     <div className="flex justify-center items-center w-full">
                       <div className="lecture-video-item w-full max-w-6xl">
-                        <video
-                          controls
-                          crossOrigin
-                          playsInline
-                          poster={`/upload/course/image/${course.course_image}`}
-                          id="player"
-                          className="w-full shadow-lg"
-                        >
-                          <source
-                            src={`/upload/course/video/${course.video}`}
-                            type="video/mp4"
-                          />
-                        </video>
+                        {content ? (
+                          <div className="px-52 py-20 text-black text-lg">
+                            {content}
+                          </div>
+                        ) : (
+                          ''
+                        )}
+                        {data.video ? (
+                          <video
+                            key={videoSrc} // React will re-render the video when src changes
+                            controls
+                            crossOrigin
+                            playsInline
+                            className="w-full shadow-lg"
+                          >
+                            <source src={videoSrc} type="video/mp4" />
+                          </video>
+                        ) : (
+                          ''
+                        )}
                       </div>
                     </div>
 
@@ -2079,6 +2099,16 @@ const ViewCourse = ({ course, lectures, sections }) => {
                                           <li
                                             className="px-3 h-10 d-flex align-items-center justify-content-between hover:bg-slate-200 cursor-pointer"
                                             key={index}
+                                            onClick={() => {
+                                              const newSrc = `/upload/course/lectureVideo/${lecture.video}`;
+                                              setData('video', lecture.video);
+                                              setData(
+                                                'lectureContent',
+                                                lecture.content
+                                              );
+                                              setVideoSrc(newSrc);
+                                              setContent(lecture.content);
+                                            }}
                                           >
                                             <div className="flex items-center ">
                                               <div className="custom-control custom-checkbox">
