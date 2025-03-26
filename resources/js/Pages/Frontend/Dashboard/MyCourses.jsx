@@ -2,13 +2,12 @@ import DashboardLayout from '@/Layouts/DashboardLayout';
 import { Link, useForm } from '@inertiajs/react';
 
 const MyCourses = ({ mycourses }) => {
-  console.log(mycourses);
   const { get } = useForm();
 
-  const GetCourseDetails = (e, courseId, sectionId) => {
+  const viewCourse = (e, courseId, sectionId) => {
     e.preventDefault();
     get(
-      route('course.details', {
+      route('user.course.view', {
         id: courseId,
         slug: sectionId,
       })
@@ -36,7 +35,7 @@ const MyCourses = ({ mycourses }) => {
                 <div className="card-image">
                   <Link
                     onClick={(e) =>
-                      GetCourseDetails(
+                      viewCourse(
                         e,
                         mycourse.course.id,
                         mycourse.course.course_name_slug

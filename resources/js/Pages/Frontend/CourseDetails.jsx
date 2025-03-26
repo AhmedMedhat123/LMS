@@ -7,6 +7,8 @@ const CourseDetails = ({ course, goals, lectures, sections }) => {
   const [openSections, setOpenSections] = useState(sections.map(() => false));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [wishlist, setWishlist] = useState(userWishlists || []);
+  const [showFull, setShowFull] = useState(false);
+  const shortDescription = course.description.slice(0, 600);
 
   const { post } = useForm();
 
@@ -220,8 +222,20 @@ const CourseDetails = ({ course, goals, lectures, sections }) => {
                       </h3>
                       <p
                         className="fs-15 pb-2"
-                        dangerouslySetInnerHTML={{ __html: course.description }}
+                        dangerouslySetInnerHTML={{
+                          __html: showFull
+                            ? course.description
+                            : shortDescription,
+                        }}
                       ></p>
+                      {course.description.length > 600 && (
+                        <button
+                          className="text-blue-500 font-semibold focus:outline-none"
+                          onClick={() => setShowFull(!showFull)}
+                        >
+                          {showFull ? 'Show Less' : 'Show More'}
+                        </button>
+                      )}
                     </div>
                     {/* end course-overview-card */}
                     <div className="course-overview-card">

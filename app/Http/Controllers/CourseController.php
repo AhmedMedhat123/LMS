@@ -6,6 +6,7 @@ use App\Http\Requests\AddCourseRequest;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\Course_goal;
+use App\Models\CourseLecture;
 use App\Models\CourseSection;
 use App\Models\Order;
 use App\Models\SubCategory;
@@ -257,5 +258,21 @@ class CourseController extends Controller
 
 
         return Inertia('Frontend/Dashboard/MyCourses',  ['mycourses'=> $mycourse]);
+    }
+
+    public function CourseView($id)
+    {
+        $course = Course::with('instructor','category','subcategory')->findOrFail($id);
+        $goals = Course_goal::where('course_id',$id)->orderBy('id','DESC')->get();
+        $lectures = CourseLecture::where('course_id',$id)->get();
+        $sections = CourseSection::with('lectures')->where('course_id',$id)->orderBy('id','ASC')->get();
+
+        // dd($course,$goals,$lectures,$sections);
+
+        return Inertia('Frontend/ViewCourse',[
+            'course'=>$course,
+            'lectures'=>$lectures,
+            'sections'=>$sections,
+        ]);
     }
 }

@@ -199,6 +199,8 @@ Route::middleware(['auth'])->name('user.')->group(function () {
 
     Route::get('/checkout',[FrontendController::class,'CheckoutPage'])->name('checkout');
     Route::post('/payment',[PaymentController::class, 'payment'])->name('payment');
+
+    Route::get('/course/view/{id}/{slug}',[CourseController::class, 'CourseView'])->name('course.view');
 });
 
 Route::get('/check-session', function () {

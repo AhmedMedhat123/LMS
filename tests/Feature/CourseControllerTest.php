@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\Course_goal;
+use App\Models\CourseLecture;
 use App\Models\CourseSection;
 use App\Models\SubCategory;
 use App\Models\User;
@@ -12,12 +13,14 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class CourseControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $user;
     private User $instructor;
     private User $admin;
     private Course $course;
@@ -26,6 +29,7 @@ class CourseControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->user = $this->createUser(role: 'user');
         $this->instructor = $this->createUser(role: 'instructor');
         $this->admin = $this->createUser(role: 'admin');
         $this->course = Course::factory()->create();
@@ -289,7 +293,26 @@ class CourseControllerTest extends TestCase
         $response->assertInertia(function ($page) use ($course) {
             $page->component('Admin/Backend/Course/CourseDetails')
                 ->where('course.id', $course->id);
-    });
-}
+        });
+    }
+
+    public function test_renders_course_view_page_with_correct_data()
+    {
+        CourseLecture::factory()->create(['course_id' => $this->course->id]);
+        CourseSection::factory()->hasLectures(2)->create(['course_id' => $this->course->id]);
+
+        $response = $this->actingAs($this->user)->get(route('user.course.view', [
+            'id' => $this->course->id,
+            'slug' => $this->course->course_name_slug
+        ]));
+
+        $response->assertStatus(200)
+            ->assertInertia(fn (Assert $page) =>
+                $page->component('Frontend/ViewCourse')
+                    ->has('course')
+                    ->has('lectures', 1)
+                    ->has('sections', 1)
+            );
+    }
 
 }
