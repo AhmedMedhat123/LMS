@@ -263,7 +263,6 @@ class CourseController extends Controller
     public function CourseView($id)
     {
         $course = Course::with('instructor','category','subcategory')->findOrFail($id);
-        $goals = Course_goal::where('course_id',$id)->orderBy('id','DESC')->get();
         $lectures = CourseLecture::where('course_id',$id)->get();
         $sections = CourseSection::with('lectures')->where('course_id',$id)->orderBy('id','ASC')->get();
 
