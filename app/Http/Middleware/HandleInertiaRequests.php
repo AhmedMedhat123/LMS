@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Course;
+use App\Models\Order;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +38,15 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $user = $request->user();
+        $userId = $user ? $user->id : null;
+
+        $latestOrders = Order::where('user_id', $userId)
+            ->select('course_id', \DB::raw('MAX(id) as max_id'))
+            ->groupBy('course_id');
+
+        $mycourse = Order::with('course')->joinSub($latestOrders, 'latest_order', function ($join) {
+            $join->on('orders.id', '=', 'latest_order.max_id');
+        })->orderBy('latest_order.max_id', 'DESC')->get();
 
         return [
             ...parent::share($request),
@@ -64,6 +74,8 @@ class HandleInertiaRequests extends Middleware
                                         END'
                                     )),
             'coupon' => session()->get('coupon', null),
+
+            'mycourse' => $mycourse,
         ];
     }
 

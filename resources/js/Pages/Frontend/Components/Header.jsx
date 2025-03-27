@@ -4,8 +4,14 @@ import React, { useState } from 'react';
 const Header = () => {
   const [sidebarActive, setSidebarActive] = useState(false);
   const [searchBarActive, setSearchBarActive] = useState(false);
-  const { auth, allCategories, cartItems, cartTotalPrice, cartTotalDiscount } =
-    usePage().props;
+  const {
+    auth,
+    allCategories,
+    cartItems,
+    cartTotalPrice,
+    cartTotalDiscount,
+    mycourse,
+  } = usePage().props;
   const { post, get } = useForm();
 
   const handleLogout = (e) => {
@@ -44,6 +50,17 @@ const Header = () => {
     e.preventDefault();
     get(route('user.cart.all'));
   };
+
+  const viewCourse = (e, courseId, sectionId) => {
+    e.preventDefault();
+    get(
+      route('user.course.view', {
+        id: courseId,
+        slug: sectionId,
+      })
+    );
+  };
+
   return (
     <>
       <header className="header-menu-area bg-white">
@@ -68,26 +85,6 @@ const Header = () => {
               {/* end col-lg-6 */}
               <div className="col-lg-6">
                 <div className="header-widget d-flex flex-wrap align-items-center justify-content-end">
-                  {/* <div className="theme-picker d-flex align-items-center">
-                                        <button className="theme-picker-btn dark-mode-btn" title="Dark mode">
-                                            <svg id="moon" viewBox="0 0 24 24" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                                            </svg>
-                                        </button>
-                                        <button className="theme-picker-btn light-mode-btn" title="Light mode">
-                                            <svg id="sun" viewBox="0 0 24 24" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                                <circle cx={12} cy={12} r={5} />
-                                                <line x1={12} y1={1} x2={12} y2={3} />
-                                                <line x1={12} y1={21} x2={12} y2={23} />
-                                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                                                <line x1={1} y1={12} x2={3} y2={12} />
-                                                <line x1={21} y1={12} x2={23} y2={12} />
-                                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                                            </svg>
-                                        </button>
-                                    </div> */}
                   <ul className="generic-list-item d-flex flex-wrap align-items-center fs-14 border-left border-left-gray pl-3 ml-3">
                     {auth.user ? (
                       <>
@@ -238,50 +235,72 @@ const Header = () => {
                         </li>
                         <li>
                           <a href="#">
-                            courses <i className="la la-angle-down fs-12" />
+                            My courses <i className="la la-angle-down fs-12" />
                           </a>
                           <ul className="dropdown-menu-item">
-                            <li>
-                              <a href="course-grid.html">course grid</a>
-                            </li>
-                            <li>
-                              <a href="course-list.html">course list</a>
-                            </li>
-                            <li>
-                              <a href="course-grid-left-sidebar.html">
-                                grid left sidebar
-                              </a>
-                            </li>
-                            <li>
-                              <a href="course-grid-right-sidebar.html">
-                                grid right sidebar
-                              </a>
-                            </li>
-                            <li>
-                              <a href="course-list-left-sidebar.html">
-                                list left sidebar{' '}
-                                <span className="ribbon ribbon-blue-bg">
-                                  New
-                                </span>
-                              </a>
-                            </li>
-                            <li>
-                              <a href="course-list-right-sidebar.html">
-                                list right sidebar{' '}
-                                <span className="ribbon ribbon-blue-bg">
-                                  New
-                                </span>
-                              </a>
-                            </li>
-                            <li>
-                              <a href="course-details.html">course details</a>
-                            </li>
-                            <li>
-                              <a href="lesson-details.html">lesson details</a>
-                            </li>
-                            <li>
-                              <a href="my-courses.html">My courses</a>
-                            </li>
+                            {mycourse.length === 0 ? (
+                              'You have no course'
+                            ) : (
+                              <>
+                                {mycourse.map((item, index) => (
+                                  <li className="media media-card  pb-3 border-b">
+                                    <div className="flex items-center">
+                                      <Link
+                                        onClick={(e) =>
+                                          viewCourse(
+                                            e,
+                                            item.course.id,
+                                            item.course.course_name_slug
+                                          )
+                                        }
+                                        className="w-24 h-24 mr-3"
+                                      >
+                                        <img
+                                          className="rounded-lg mt-3"
+                                          src={
+                                            item.course.course_image
+                                              ? `/upload/course/image/${item.course.course_image}`
+                                              : 'assets/images/img-loading.png'
+                                          }
+                                          alt="Course image"
+                                        />
+                                      </Link>
+                                      <div className="media-body mt-3">
+                                        <h5>
+                                          <Link
+                                            onClick={(e) =>
+                                              viewCourse(
+                                                e,
+                                                item.course.id,
+                                                item.course.course_name_slug
+                                              )
+                                            }
+                                          >
+                                            {item.course.course_name}
+                                          </Link>
+                                        </h5>
+                                        <div className="skillbar-box pt-3">
+                                          <div
+                                            className="skillbar skillbar-skillbar"
+                                            data-percent="36%"
+                                          >
+                                            <div className="skillbar-bar skillbar--bar bg-1" />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </li>
+                                ))}
+
+                                <Link
+                                  href={route('user.my.courses')}
+                                  className="btn theme-btn text-white mt-3 p-3 w-100"
+                                >
+                                  Got to my courses{' '}
+                                  <i className="la la-arrow-right icon ml-1" />
+                                </Link>
+                              </>
+                            )}
                           </ul>
                         </li>
 

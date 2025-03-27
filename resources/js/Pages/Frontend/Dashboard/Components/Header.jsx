@@ -4,7 +4,8 @@ const Header = ({ user }) => {
   const { sidebarActive, setSidebarActive } = useSidebarContext();
   const { get, post } = useForm();
 
-  const { cartItems, cartTotalPrice, cartTotalDiscount } = usePage().props;
+  const { cartItems, cartTotalPrice, cartTotalDiscount, mycourse } =
+    usePage().props;
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -27,6 +28,17 @@ const Header = ({ user }) => {
     e.preventDefault();
     get(route('user.cart.all'));
   };
+
+  const viewCourse = (e, courseId, sectionId) => {
+    e.preventDefault();
+    get(
+      route('user.course.view', {
+        id: courseId,
+        slug: sectionId,
+      })
+    );
+  };
+
   return (
     <>
       <header className="header-menu-area">
@@ -65,80 +77,76 @@ const Header = ({ user }) => {
                       <div className="user-action-wrap d-flex align-items-center">
                         <div className="shop-cart course-cart pr-3 mr-3 border-right border-right-gray">
                           <ul>
-                            <li>
-                              <p className="shop-cart-btn d-flex align-items-center fs-16">
+                            <li className="relative group">
+                              <button className="shop-cart-btn d-flex align-items-center fs-16">
                                 My Courses
                                 <span className="la la-angle-down fs-13 ml-1" />
-                              </p>
-                              <ul className="cart-dropdown-menu after-none">
-                                <li className="media media-card">
-                                  <a
-                                    href="lesson-details.html"
-                                    className="media-img"
-                                  >
-                                    <img
-                                      className="mr-3"
-                                      src="/assets/images/small-img-3.jpg"
-                                      alt="Course thumbnail image"
-                                    />
-                                  </a>
-                                  <div className="media-body">
-                                    <h5>
-                                      <a href="lesson-details.html">
-                                        The Complete JavaScript Course 2021:
-                                        From Zero to Expert!
-                                      </a>
-                                    </h5>
-                                    <div className="skillbar-box pt-3">
-                                      <div
-                                        className="skillbar skillbar-skillbar"
-                                        data-percent="36%"
+                              </button>
+                              <ul className="cart-dropdown-menu absolute hidden group-hover:block bg-white shadow-md rounded-md p-3 w-64">
+                                {mycourse.length === 0 ? (
+                                  <li className="p-2 text-gray-600">
+                                    You have no course
+                                  </li>
+                                ) : (
+                                  mycourse.map((item, index) => (
+                                    <li
+                                      key={index}
+                                      className="media media-card flex items-center p-2"
+                                    >
+                                      <Link
+                                        onClick={(e) =>
+                                          viewCourse(
+                                            e,
+                                            item.course.id,
+                                            item.course.course_name_slug
+                                          )
+                                        }
+                                        className="media-img"
                                       >
-                                        <div className="skillbar-bar skillbar--bar bg-1" />
+                                        <img
+                                          className="mr-3 w-12 h-12 rounded-md"
+                                          src={
+                                            item.course.course_image
+                                              ? `/upload/course/image/${item.course.course_image}`
+                                              : 'assets/images/img-loading.png'
+                                          }
+                                          alt="Course image"
+                                        />
+                                      </Link>
+                                      <div className="media-body ml-2">
+                                        <h5 className="text-sm font-semibold">
+                                          <Link
+                                            onClick={(e) =>
+                                              viewCourse(
+                                                e,
+                                                item.course.id,
+                                                item.course.course_name_slug
+                                              )
+                                            }
+                                          >
+                                            {item.course.course_name}
+                                          </Link>
+                                        </h5>
+                                        <div className="skillbar-box pt-2">
+                                          <div
+                                            className="skillbar skillbar-skillbar"
+                                            data-percent="36%"
+                                          >
+                                            <div className="skillbar-bar skillbar--bar bg-1" />
+                                          </div>
+                                        </div>
                                       </div>
-                                      {/* End Skill Bar */}
-                                    </div>
-                                    {/* End skillbar-box */}
-                                  </div>
-                                </li>
-                                <li className="media media-card">
-                                  <a
-                                    href="lesson-details.html"
-                                    className="media-img"
+                                    </li>
+                                  ))
+                                )}
+                                <li className="mt-2">
+                                  <Link
+                                    href={route('user.my.courses')}
+                                    className="btn theme-btn text-white mt-3 p-3 w-100"
                                   >
-                                    <img
-                                      className="mr-3"
-                                      src="/assets/images/small-img-4.jpg"
-                                      alt="Course thumbnail image"
-                                    />
-                                  </a>
-                                  <div className="media-body">
-                                    <h5>
-                                      <a href="lesson-details.html">
-                                        The Complete JavaScript Course 2021:
-                                        From Zero to Expert!
-                                      </a>
-                                    </h5>
-                                    <div className="skillbar-box pt-3">
-                                      <div
-                                        className="skillbar skillbar-skillbar"
-                                        data-percent="77%"
-                                      >
-                                        <div className="skillbar-bar skillbar--bar bg-1" />
-                                      </div>
-                                      {/* End Skill Bar */}
-                                    </div>
-                                    {/* End skillbar-box */}
-                                  </div>
-                                </li>
-                                <li>
-                                  <a
-                                    href="my-courses.html"
-                                    className="btn theme-btn w-100"
-                                  >
-                                    Got to my course{' '}
+                                    Got to my courses{' '}
                                     <i className="la la-arrow-right icon ml-1" />
-                                  </a>
+                                  </Link>
                                 </li>
                               </ul>
                             </li>
