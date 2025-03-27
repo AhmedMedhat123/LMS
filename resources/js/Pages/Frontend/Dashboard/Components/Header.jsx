@@ -4,7 +4,7 @@ const Header = ({ user }) => {
   const { sidebarActive, setSidebarActive } = useSidebarContext();
   const { get, post } = useForm();
 
-  const { cartItems, cartTotalPrice, cartTotalDiscount, mycourse } =
+  const { cartItems, cartTotalPrice, cartTotalDiscount, mycourse, wishlists } =
     usePage().props;
 
   const handleLogout = (e) => {
@@ -33,6 +33,29 @@ const Header = ({ user }) => {
     e.preventDefault();
     get(
       route('user.course.view', {
+        id: courseId,
+        slug: sectionId,
+      })
+    );
+  };
+
+  const addToCart = (e, courseId, instructorId) => {
+    e.preventDefault();
+    post(
+      route('user.cart.add', {
+        id: courseId,
+        instructor_id: instructorId,
+      }),
+      {
+        preserveScroll: true,
+      }
+    );
+  };
+
+  const GetCourseDetails = (e, courseId, sectionId) => {
+    e.preventDefault();
+    get(
+      route('course.details', {
         id: courseId,
         slug: sectionId,
       })
@@ -260,94 +283,96 @@ const Header = ({ user }) => {
                             <li>
                               <p className="shop-cart-btn">
                                 <i className="la la-heart-o" />
-                                <span className="dot-status bg-1" />
+                                {wishlists.length === 0 ? (
+                                  ''
+                                ) : (
+                                  <span className="dot-status bg-1" />
+                                )}
                               </p>
                               <ul className="cart-dropdown-menu after-none">
-                                <li>
-                                  <div className="media media-card">
-                                    <a
-                                      href="course-details.html"
-                                      className="media-img"
+                                {wishlists.length === 0 ? (
+                                  <li>You have no course in wishlist</li>
+                                ) : (
+                                  wishlists.map((item, index) => (
+                                    <li key={index}>
+                                      <div className="media media-card">
+                                        <Link
+                                          onClick={(e) =>
+                                            GetCourseDetails(
+                                              e,
+                                              item.course.id,
+                                              item.course.course_name_slug
+                                            )
+                                          }
+                                          className="media-img"
+                                        >
+                                          <img
+                                            className="mr-3"
+                                            src={
+                                              item.course.course_image
+                                                ? `/upload/course/image/${item.course.course_image}`
+                                                : 'assets/images/img-loading.png'
+                                            }
+                                            alt="Cart image"
+                                          />
+                                        </Link>
+                                        <div className="media-body">
+                                          <h5>
+                                            <Link
+                                              onClick={(e) =>
+                                                GetCourseDetails(
+                                                  e,
+                                                  item.course.id,
+                                                  item.course.course_name_slug
+                                                )
+                                              }
+                                            >
+                                              {item.course.course_name}
+                                            </Link>
+                                          </h5>
+
+                                          {item.course.discount_price ===
+                                          null ? (
+                                            <p className="card-price text-black font-weight-bold">
+                                              {item.course.selling_price}$
+                                            </p>
+                                          ) : (
+                                            <p className="card-price text-black font-weight-bold">
+                                              {item.course.discount_price}$
+                                              <span className="before-price font-weight-medium ml-2">
+                                                {item.course.selling_price}$
+                                              </span>
+                                            </p>
+                                          )}
+                                        </div>
+                                      </div>
+                                      <Link
+                                        onClick={(e) =>
+                                          addToCart(
+                                            e,
+                                            item.course.id,
+                                            item.course.instructor_id
+                                          )
+                                        }
+                                        className="btn theme-btn theme-btn-sm theme-btn-transparent lh-28 w-100 mt-3"
+                                      >
+                                        Add to cart{' '}
+                                        <i className="la la-arrow-right icon ml-1" />
+                                      </Link>
+                                    </li>
+                                  ))
+                                )}
+                                {wishlists.length > 0 && (
+                                  <li>
+                                    <Link
+                                      href={route('user.wishlist.all')}
+                                      className="btn theme-btn w-100"
                                     >
-                                      <img
-                                        className="mr-3"
-                                        src="/assets/images/small-img.jpg"
-                                        alt="Cart image"
-                                      />
-                                    </a>
-                                    <div className="media-body">
-                                      <h5>
-                                        <a href="course-details.html">
-                                          The Complete JavaScript Course 2021:
-                                          From Zero to Expert!
-                                        </a>
-                                      </h5>
-                                      <span className="d-block lh-18 py-1">
-                                        Kamran Ahmed
-                                      </span>
-                                      <p className="text-black font-weight-semi-bold lh-18">
-                                        $12.99{' '}
-                                        <span className="before-price fs-14">
-                                          $129.99
-                                        </span>
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <a
-                                    href="#"
-                                    className="btn theme-btn theme-btn-sm theme-btn-transparent lh-28 w-100 mt-3"
-                                  >
-                                    Add to cart{' '}
-                                    <i className="la la-arrow-right icon ml-1" />
-                                  </a>
-                                </li>
-                                <li>
-                                  <div className="media media-card">
-                                    <a
-                                      href="course-details.html"
-                                      className="media-img"
-                                    >
-                                      <img
-                                        className="mr-3"
-                                        src="/assets/images/small-img.jpg"
-                                        alt="Cart image"
-                                      />
-                                    </a>
-                                    <div className="media-body">
-                                      <h5>
-                                        <a href="course-details.html">
-                                          The Complete JavaScript Course 2021:
-                                          From Zero to Expert!
-                                        </a>
-                                      </h5>
-                                      <span className="d-block lh-18 py-1">
-                                        Kamran Ahmed
-                                      </span>
-                                      <p className="text-black font-weight-semi-bold lh-18">
-                                        $12.99{' '}
-                                        <span className="before-price fs-14">
-                                          $129.99
-                                        </span>
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <a
-                                    href="#"
-                                    className="btn theme-btn theme-btn-sm theme-btn-transparent lh-28 w-100 mt-3"
-                                  >
-                                    Add to cart{' '}
-                                    <i className="la la-arrow-right icon ml-1" />
-                                  </a>
-                                </li>
-                                <li>
-                                  <a
-                                    href="my-courses.html"
-                                    className="btn theme-btn w-100"
-                                  >
-                                    Got to wishlist{' '}
-                                    <i className="la la-arrow-right icon ml-1" />
-                                  </a>
-                                </li>
+                                      Go to wishlist{' '}
+                                      <i className="la la-arrow-right icon ml-1" />
+                                    </Link>
+                                  </li>
+                                )}
                               </ul>
                             </li>
                           </ul>

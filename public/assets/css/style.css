@@ -7393,7 +7393,7 @@ div.datedropper .picker .pick-lg-b li {
 .main-menu > ul > li .dropdown-menu-item {
   position: absolute;
   left: 0px;
-  right: 50px;
+  right: 0px;
   top: 60px;
   width: 350px;
   background-color: #fff;

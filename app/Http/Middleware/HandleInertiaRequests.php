@@ -76,6 +76,8 @@ class HandleInertiaRequests extends Middleware
             'coupon' => session()->get('coupon', null),
 
             'mycourse' => $mycourse,
+
+            'wishlists' => Wishlist::with('course.instructor')->where('user_id',$userId)->get(),
         ];
     }
 

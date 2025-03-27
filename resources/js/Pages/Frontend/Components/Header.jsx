@@ -11,6 +11,7 @@ const Header = () => {
     cartTotalPrice,
     cartTotalDiscount,
     mycourse,
+    wishlists,
   } = usePage().props;
   const { post, get } = useForm();
 
@@ -58,6 +59,19 @@ const Header = () => {
         id: courseId,
         slug: sectionId,
       })
+    );
+  };
+
+  const addToCart = (e, courseId, instructorId) => {
+    e.preventDefault();
+    post(
+      route('user.cart.add', {
+        id: courseId,
+        instructor_id: instructorId,
+      }),
+      {
+        preserveScroll: true,
+      }
     );
   };
 
@@ -233,6 +247,7 @@ const Header = () => {
                         <li>
                           <a href="#">Home </a>
                         </li>
+
                         <li>
                           <a href="#">
                             My courses <i className="la la-angle-down fs-12" />
@@ -305,7 +320,101 @@ const Header = () => {
                         </li>
 
                         <li>
-                          <a href="#">blog</a>
+                          <p className="shop-cart-btn">
+                            <i className="la la-heart-o text-lg" />
+                            {wishlists.length === 0 ? (
+                              ''
+                            ) : (
+                              <span className="dot-status bg-1" />
+                            )}
+                          </p>
+                          <ul className="dropdown-menu-item">
+                            {wishlists.length === 0 ? (
+                              'You have no course in wishlist'
+                            ) : (
+                              <>
+                                {wishlists.map((item, index) => (
+                                  <li
+                                    key={index}
+                                    className="media media-card pb-3 border-b"
+                                  >
+                                    <div className="flex items-center">
+                                      <Link
+                                        onClick={(e) =>
+                                          GetCourseDetails(
+                                            e,
+                                            item.course.id,
+                                            item.course.course_name_slug
+                                          )
+                                        }
+                                        className="media-img"
+                                      >
+                                        <img
+                                          className="mr-3 mt-3"
+                                          src={
+                                            item.course.course_image
+                                              ? `/upload/course/image/${item.course.course_image}`
+                                              : 'assets/images/img-loading.png'
+                                          }
+                                          alt="Cart image"
+                                        />
+                                      </Link>
+                                      <div className="media-body mt-3">
+                                        <h5>
+                                          <Link
+                                            onClick={(e) =>
+                                              viewCourse(
+                                                e,
+                                                item.course.id,
+                                                item.course.course_name_slug
+                                              )
+                                            }
+                                          >
+                                            {item.course.course_name}
+                                          </Link>
+                                        </h5>
+                                        {item.course.discount_price === null ? (
+                                          <p className="card-price text-black font-weight-bold">
+                                            {item.course.selling_price}$
+                                          </p>
+                                        ) : (
+                                          <p className="card-price text-black font-weight-bold">
+                                            {item.course.discount_price}$
+                                            <span className="before-price font-weight-medium ml-2">
+                                              {item.course.selling_price}$
+                                            </span>
+                                          </p>
+                                        )}
+                                      </div>
+                                    </div>
+                                    <div className="flex justify-center">
+                                      <Link
+                                        onClick={(e) =>
+                                          addToCart(
+                                            e,
+                                            item.course.id,
+                                            item.course.instructor_id
+                                          )
+                                        }
+                                        className="btn theme-btn theme-btn-sm theme-btn-transparent lh-28 w-100 mt-3 p-2"
+                                      >
+                                        Add to cart{' '}
+                                        <i className="la la-arrow-right icon ml-1" />
+                                      </Link>
+                                    </div>
+                                  </li>
+                                ))}
+
+                                <Link
+                                  href={route('user.wishlist.all')}
+                                  className="btn theme-btn text-white mt-3 p-3 w-100"
+                                >
+                                  Go to wishlist{' '}
+                                  <i className="la la-arrow-right icon ml-1" />
+                                </Link>
+                              </>
+                            )}
+                          </ul>
                         </li>
                       </ul>
                       {/* end ul */}
