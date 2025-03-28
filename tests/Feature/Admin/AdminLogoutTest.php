@@ -35,6 +35,6 @@ class AdminLogoutTest extends TestCase
 
         $this->assertGuest();
 
-        $response->assertRedirect(route('admin.login'));
+        $response->assertRedirect(route('login'));
     }
 }

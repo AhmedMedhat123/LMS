@@ -32,7 +32,7 @@ class InstructorController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('instructor.login');
+        return redirect()->route('login');
     }
 
     public function InstructorProfile()
