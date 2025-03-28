@@ -88,10 +88,10 @@ class MultiAuthTest extends TestCase
 
         $response = $this->actingAs($this->admin)->get(route('instructor.dashboard'));
         $response->assertStatus(302)
-            ->assertRedirect(route('dashboard'));
+            ->assertRedirect(route('admin.dashboard'));
 
         $response = $this->actingAs($this->instructor)->get(route('admin.dashboard'));
         $response->assertStatus(302)
-            ->assertRedirect(route('dashboard'));
+            ->assertRedirect(route('instructor.dashboard'));
     }
 }
