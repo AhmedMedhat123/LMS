@@ -1,26 +1,34 @@
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { Toaster } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 import Footer from './Components/Footer';
 import { CFormCheck } from '@coreui/react';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 
-const ViewCourse = ({ course, lectures, sections }) => {
+const ViewCourse = ({ course, lectures, sections, questions }) => {
+  console.log(questions);
   const [loading, setLoading] = useState(true);
   const { flash } = usePage().props;
   const [openSections, setOpenSections] = useState(sections.map(() => false));
   const [showFull, setShowFull] = useState(false);
   const shortDescription = course.description.slice(0, 600);
 
-  const [activeTab, setActiveTab] = useState('overview');
+  // const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('questions');
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
-  const { data, setData } = useForm({
+  const { data, setData, post, errors } = useForm({
     video: course.video,
     lectureContent: '',
     lectureVideo: '',
+    questionSubject: '',
+    questionContent: '',
+    parent_id: '',
+    course_id: course.id,
+    instructor_id: course.instructor.id,
   });
 
   const [videoSrc, setVideoSrc] = useState(
@@ -61,6 +69,24 @@ const ViewCourse = ({ course, lectures, sections }) => {
       [index]: !prev[index],
     }));
   };
+
+  const submitQuestion = (e) => {
+    e.preventDefault();
+    post(route('user.question.add'));
+  };
+
+  const ReplyToQuestion = (id) => {
+    setData('parent_id', id);
+    handleTabChange('replyQuestion');
+  };
+
+  const submitReplyQuestion = (e) => {
+    e.preventDefault();
+    post(route('user.question.reply'));
+    handleTabChange('replyQuestion');
+  };
+
+  console.log(data.parent_id);
 
   return (
     <HelmetProvider>
@@ -385,187 +411,13 @@ const ViewCourse = ({ course, lectures, sections }) => {
                           {activeTab === 'questions' && (
                             <div className="tab-pane fade show active">
                               <div className="lecture-overview-wrap lecture-quest-wrap">
-                                {/* end new-question-wrap */}
-                                <div className="replay-question-wrap">
-                                  <button className="btn theme-btn theme-btn-transparent back-to-question-btn">
-                                    <i className="la la-reply mr-1" />
-                                    Back to all questions
-                                  </button>
-                                  <div className="replay-question-body pt-30px">
-                                    <div className="question-list-item">
-                                      <div className="media media-card border-bottom border-bottom-gray py-4">
-                                        <div className="media-img rounded-full flex-shrink-0 avatar-sm">
-                                          <img
-                                            className="rounded-full"
-                                            src="images/small-avatar-1.jpg"
-                                            alt="User image"
-                                          />
-                                        </div>
-                                        <div className="media-body">
-                                          <div className="d-flex justify-content-between">
-                                            <div className="question-meta-content">
-                                              <h5 className="fs-16 pb-1">
-                                                I still did't get H264 after
-                                                installing Quicktime. Please
-                                                what do I do
-                                              </h5>
-                                              <p className="meta-tags fs-13">
-                                                <a href="#">Alex Smith</a>
-                                                <a href="#">Lecture 20</a>
-                                                <span>3 hours ago</span>
-                                              </p>
-                                              <p className="fs-15 text-gray">
-                                                Lorem ipsum dolor sit amet,
-                                                consectetur adipisicing elit,
-                                                sed do eiusmod tempor incididunt
-                                                ut labore et dolore magna
-                                                aliqua. Ut enim ad minim veniam,
-                                                quis nostrud exercitation.
-                                              </p>
-                                            </div>
-                                            {/* end question-meta-content */}
-                                            <div className="question-upvote-action">
-                                              <div className="number-upvotes pb-2 d-flex align-items-center generic-action-wrap">
-                                                <span>1</span>
-                                                <button type="button">
-                                                  <i className="la la-arrow-up" />
-                                                </button>
-                                                <div className="dropdown">
-                                                  <button
-                                                    className="ml-0"
-                                                    type="button"
-                                                    data-toggle="dropdown"
-                                                    aria-haspopup="true"
-                                                    aria-expanded="false"
-                                                  >
-                                                    <i className="la la-ellipsis-v" />
-                                                  </button>
-                                                  <div className="dropdown-menu dropdown-menu-right">
-                                                    <a
-                                                      className="dropdown-item"
-                                                      href="#"
-                                                      data-toggle="modal"
-                                                      data-target="#reportModal"
-                                                    >
-                                                      <i className="la la-flag mr-1" />{' '}
-                                                      Report abuse
-                                                    </a>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            </div>
-                                            {/* end question-upvote-action */}
-                                          </div>
-                                        </div>
-                                        {/* end media-body */}
-                                      </div>
-                                      {/* end media */}
-                                      <div className="question-replay-separator-wrap d-flex align-items-center justify-content-between py-3">
-                                        <h4 className="fs-16 font-weight-semi-bold">
-                                          1 Replay
-                                        </h4>
-                                        <button
-                                          className="btn swapping-btn text-gray font-weight-medium"
-                                          data-text-swap="Following replies"
-                                          data-text-original="Follow replies"
-                                        >
-                                          Follow replies
-                                        </button>
-                                      </div>
-                                      {/* end question-replay-separator-wrap */}
-                                      <div className="section-block" />
-                                      <div className="question-answer-wrap">
-                                        <div className="media media-card mb-3 border-bottom border-bottom-gray py-4">
-                                          <div className="media-img rounded-full avatar-sm flex-shrink-0">
-                                            <img
-                                              src="images/small-avatar-2.jpg"
-                                              alt="Instructor avatar"
-                                              className="rounded-full"
-                                            />
-                                          </div>
-                                          {/* end media-img */}
-                                          <div className="media-body">
-                                            <h5 className="fs-16">
-                                              <a href="#">David Luise</a>
-                                            </h5>
-                                            <span className="fs-14">
-                                              3 years ago
-                                            </span>
-                                            <p className="pt-1 fs-15">
-                                              Occaecati cupiditate non
-                                              provident, similique sunt in culpa
-                                              fuga.
-                                            </p>
-                                          </div>
-                                          {/* end media-body */}
-                                        </div>
-                                        {/* end media */}
-                                        <div className="question-replay-input-wrap pt-20px">
-                                          <div className="question-replay-body">
-                                            <h3 className="fs-16 font-weight-semi-bold">
-                                              Add Replay
-                                            </h3>
-                                            <form
-                                              method="post"
-                                              className="pt-4"
-                                            >
-                                              <div className="replay-action-bar">
-                                                <div className="btn-group">
-                                                  <button
-                                                    className="btn"
-                                                    type="button"
-                                                    data-toggle="modal"
-                                                    data-target="#insertLinkModal"
-                                                    title="Insert link"
-                                                  >
-                                                    <i className="la la-link" />
-                                                  </button>
-                                                  <button
-                                                    className="btn"
-                                                    type="button"
-                                                    data-toggle="modal"
-                                                    data-target="#uploadPhotoModal"
-                                                    title="Upload an image"
-                                                  >
-                                                    <i className="la la-photo" />
-                                                  </button>
-                                                </div>
-                                              </div>
-                                              <div className="form-group">
-                                                <textarea
-                                                  className="form-control form--control pl-3"
-                                                  name="message"
-                                                  rows={4}
-                                                  placeholder="Write your response..."
-                                                  defaultValue={''}
-                                                />
-                                              </div>
-                                              <div className="btn-box">
-                                                <button
-                                                  className="btn theme-btn"
-                                                  type="submit"
-                                                >
-                                                  Add an answer{' '}
-                                                  <i className="la la-arrow-right icon ml-1" />
-                                                </button>
-                                              </div>
-                                            </form>
-                                          </div>
-                                        </div>
-                                        {/* end question-replay-input-wrap */}
-                                      </div>
-                                      {/* end question-answer-wrap */}
-                                    </div>
-                                    {/* end question-list-item */}
-                                  </div>
-                                  {/* end replay-question-body */}
-                                </div>
                                 {/* end replay-question-wrap */}
                                 <div className="question-overview-result-wrap">
                                   <div className="lecture-overview-item">
                                     <div className="question-overview-result-header d-flex align-items-center justify-content-between">
                                       <h3 className="fs-17 font-weight-semi-bold">
-                                        30 questions in this course
+                                        {questions.length} questions in this
+                                        course
                                       </h3>
                                       <button
                                         onClick={() =>
@@ -580,67 +432,75 @@ const ViewCourse = ({ course, lectures, sections }) => {
                                   {/* end lecture-overview-item */}
                                   <div className="section-block" />
                                   <div className="lecture-overview-item mt-0">
-                                    <div className="question-list-item">
-                                      <div className="media media-card border-bottom border-bottom-gray py-4 px-3">
-                                        <div className="media-img rounded-full flex-shrink-0 avatar-sm">
-                                          <img
-                                            className="rounded-full"
-                                            src="images/small-avatar-1.jpg"
-                                            alt="User image"
-                                          />
-                                        </div>
-                                        <div className="media-body">
-                                          <div className="d-flex align-items-center justify-content-between">
-                                            <div className="question-meta-content">
-                                              <a
-                                                href="javascript:void(0)"
-                                                className="d-block"
-                                              >
-                                                <h5 className="fs-16 pb-1">
-                                                  I still did't get H264 after
-                                                  installing Quicktime. Please
-                                                  what do I do
-                                                </h5>
-                                                <p className="text-truncate fs-15 text-gray">
-                                                  Lorem ipsum dolor sit amet,
-                                                  consectetur adipisicing elit,
-                                                  sed do eiusmod tempor
-                                                  incididunt ut labore et dolore
-                                                  magna aliqua. Ut enim ad minim
-                                                  veniam, quis nostrud
-                                                  exercitation.
+                                    {questions.map(
+                                      (ques, index) =>
+                                        ques.parent === null && (
+                                          <div
+                                            key={index}
+                                            className="question-list-item"
+                                          >
+                                            <div className="media media-card border-bottom border-bottom-gray py-4 px-3">
+                                              <div className="media-img rounded-full flex-shrink-0 avatar-sm">
+                                                <img
+                                                  className="rounded-full"
+                                                  src={
+                                                    ques.user.photo
+                                                      ? `/upload/users_images/${ques.user.photo}`
+                                                      : '/images/user_placeholder.png'
+                                                  }
+                                                  alt="User image"
+                                                />
+                                              </div>
+                                              <div className="media-body">
+                                                <div className="d-flex align-items-center justify-content-between">
+                                                  <div className="question-meta-content">
+                                                    <a
+                                                      href=""
+                                                      className="d-block"
+                                                    >
+                                                      <h5 className="fs-16 pb-1">
+                                                        {ques.subject}
+                                                      </h5>
+                                                      <p className=" fs-15 text-gray">
+                                                        {ques.question}
+                                                      </p>
+                                                    </a>
+                                                  </div>
+                                                  {/* end question-meta-content */}
+                                                  <div className="question-upvote-action">
+                                                    <div className="number-upvotes question-response d-flex align-items-center">
+                                                      <span>1</span>
+                                                      <button
+                                                        type="button"
+                                                        className="question-replay-btn"
+                                                        onClick={() =>
+                                                          ReplyToQuestion(
+                                                            ques.id
+                                                          )
+                                                        }
+                                                      >
+                                                        <i className="la la-comments" />
+                                                      </button>
+                                                    </div>
+                                                  </div>
+                                                  {/* end question-upvote-action */}
+                                                </div>
+                                                <p className="meta-tags pt-1 fs-13">
+                                                  {ques.created_at
+                                                    ? formatDistanceToNow(
+                                                        parseISO(
+                                                          ques.created_at
+                                                        ),
+                                                        { addSuffix: true }
+                                                      )
+                                                    : 'Unknown time'}
                                                 </p>
-                                              </a>
-                                            </div>
-                                            {/* end question-meta-content */}
-                                            <div className="question-upvote-action">
-                                              <div className="number-upvotes pb-2 d-flex align-items-center">
-                                                <span>1</span>
-                                                <button type="button">
-                                                  <i className="la la-arrow-up" />
-                                                </button>
                                               </div>
-                                              <div className="number-upvotes question-response d-flex align-items-center">
-                                                <span>1</span>
-                                                <button
-                                                  type="button"
-                                                  className="question-replay-btn"
-                                                >
-                                                  <i className="la la-comments" />
-                                                </button>
-                                              </div>
+                                              {/* end media-body */}
                                             </div>
-                                            {/* end question-upvote-action */}
                                           </div>
-                                          <p className="meta-tags pt-1 fs-13">
-                                            <a href="#">Alex Smith</a>
-                                            <a href="#">Lecture 20</a>
-                                            <span>3 hours ago</span>
-                                          </p>
-                                        </div>
-                                        {/* end media-body */}
-                                      </div>
-                                    </div>
+                                        )
+                                    )}
                                     <div className="question-btn-box pt-35px text-center">
                                       <button
                                         className="btn theme-btn theme-btn-transparent w-100"
@@ -668,54 +528,249 @@ const ViewCourse = ({ course, lectures, sections }) => {
                                 <h3 className="fs-20 font-weight-semi-bold">
                                   My question relates to
                                 </h3>
-                                <form action="#" className="pt-4">
+                                <form
+                                  onSubmit={submitQuestion}
+                                  className="pt-4"
+                                >
                                   <div className="custom-control-wrap">
-                                    <div className="custom-control custom-radio mb-3 pl-0">
-                                      <input
-                                        type="radio"
-                                        className="custom-control-input"
-                                        id="courseContentRadio"
-                                        name="radio-stacked"
-                                        required
-                                      />
-                                      <label
-                                        className="custom-control-label custom--control-label custom--control-label-boxed"
-                                        htmlFor="courseContentRadio"
-                                      >
-                                        <span className="font-weight-semi-bold text-black d-block">
-                                          Course content
-                                        </span>
-                                        <span className="d-block fs-14 lh-20">
-                                          This might include comments,
-                                          questions, tips, or projects to share
-                                        </span>
+                                    {/* First Input - Text */}
+                                    <div className="form-group mb-3">
+                                      <label htmlFor="subject">
+                                        Question Subject
                                       </label>
+                                      <input
+                                        type="text"
+                                        className="form-control"
+                                        name="subject"
+                                        id="subject"
+                                        onChange={(e) =>
+                                          setData(
+                                            'questionSubject',
+                                            e.target.value
+                                          )
+                                        }
+                                        // required
+                                      />
                                     </div>
-                                    <div className="custom-control custom-radio mb-3 pl-0">
-                                      <input
-                                        type="radio"
-                                        className="custom-control-input"
-                                        id="somethingElseRadio"
-                                        name="radio-stacked"
-                                        required
-                                      />
-                                      <label
-                                        className="custom-control-label custom--control-label custom--control-label-boxed"
-                                        htmlFor="somethingElseRadio"
-                                      >
-                                        <span className="font-weight-semi-bold text-black d-block">
-                                          Something else
-                                        </span>
-                                        <span className="d-block fs-14 lh-20">
-                                          This might include questions about
-                                          certificates, audio and video
-                                          troubleshooting, or download issues
-                                        </span>
+
+                                    {/* Second Input - Textarea */}
+                                    <div className="form-group mb-3">
+                                      <label htmlFor="question">
+                                        Question Content
                                       </label>
+                                      <textarea
+                                        className="form-control"
+                                        id="question"
+                                        name="question"
+                                        rows="4"
+                                        onChange={(e) =>
+                                          setData(
+                                            'questionContent',
+                                            e.target.value
+                                          )
+                                        }
+                                        required
+                                      ></textarea>
                                     </div>
                                   </div>
+
                                   <div className="btn-box text-center">
-                                    <button className="btn theme-btn w-100">
+                                    <button
+                                      type="submit"
+                                      className="btn theme-btn w-100"
+                                    >
+                                      Continue{' '}
+                                      <i className="la la-arrow-right icon ml-1" />
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          )}
+                          {activeTab === 'replyQuestion' && (
+                            <div className="new-question-wrap active">
+                              <button
+                                onClick={() => handleTabChange('questions')}
+                                className="btn theme-btn theme-btn-transparent back-to-question-btn"
+                              >
+                                <i className="la la-reply mr-1" />
+                                Back to all questions
+                              </button>
+                              <div>
+                                {questions.map((ques, index) => (
+                                  <p key={index}>
+                                    {ques.id === data.parent_id && (
+                                      <>
+                                        <div className="media media-card border-bottom border-bottom-gray py-4 px-3 mt-3">
+                                          <div className="media-img rounded-full flex-shrink-0 avatar-sm">
+                                            <img
+                                              className="rounded-full"
+                                              src={
+                                                ques.user.photo
+                                                  ? `/upload/users_images/${ques.user.photo}`
+                                                  : '/images/user_placeholder.png'
+                                              }
+                                              alt="User image"
+                                            />
+                                          </div>
+                                          <div className="media-body">
+                                            <div className="d-flex align-items-center justify-content-between">
+                                              <div className="question-meta-content">
+                                                <a href="" className="d-block">
+                                                  <h5 className="fs-16 pb-1">
+                                                    {ques.subject}
+                                                  </h5>
+                                                  <p className=" fs-15 text-gray">
+                                                    {ques.question}
+                                                  </p>
+                                                </a>
+                                              </div>
+                                              {/* end question-meta-content */}
+                                              <div className="question-upvote-action">
+                                                <div className="number-upvotes question-response d-flex align-items-center">
+                                                  <span>1</span>
+                                                  <button
+                                                    type="button"
+                                                    className="question-replay-btn"
+                                                    onClick={() =>
+                                                      ReplyToQuestion(ques.id)
+                                                    }
+                                                  >
+                                                    <i className="la la-comments" />
+                                                  </button>
+                                                </div>
+                                              </div>
+                                              {/* end question-upvote-action */}
+                                            </div>
+                                            <p className="meta-tags pt-1 fs-13">
+                                              {ques.created_at
+                                                ? formatDistanceToNow(
+                                                    parseISO(ques.created_at),
+                                                    { addSuffix: true }
+                                                  )
+                                                : 'Unknown time'}
+                                            </p>
+                                          </div>
+                                          {/* end media-body */}
+                                        </div>
+                                        <div>{ques.replies.length} Repley</div>
+                                        {ques.replies.map((ques, index) => (
+                                          <div className="media media-card border-bottom border-bottom-gray py-4 px-3 mt-3">
+                                            <div className="media-img rounded-full flex-shrink-0 avatar-sm">
+                                              <img
+                                                className="rounded-full"
+                                                src={
+                                                  ques.user.photo
+                                                    ? `/upload/users_images/${ques.user.photo}`
+                                                    : '/images/user_placeholder.png'
+                                                }
+                                                alt="User image"
+                                              />
+                                            </div>
+                                            <div className="media-body  w-56">
+                                              <div className="d-flex align-items-center justify-content-between">
+                                                <div className="question-meta-content">
+                                                  <a
+                                                    href=""
+                                                    className="d-block"
+                                                  >
+                                                    <h5 className="fs-16 pb-1">
+                                                      {ques.subject}
+                                                    </h5>
+                                                    <p className=" fs-15 text-gray">
+                                                      {ques.question}
+                                                    </p>
+                                                  </a>
+                                                </div>
+                                                {/* end question-meta-content */}
+                                                <div className="question-upvote-action">
+                                                  <div className="number-upvotes question-response d-flex align-items-center">
+                                                    <span>1</span>
+                                                    <button
+                                                      type="button"
+                                                      className="question-replay-btn"
+                                                      onClick={() =>
+                                                        ReplyToQuestion(ques.id)
+                                                      }
+                                                    >
+                                                      <i className="la la-comments" />
+                                                    </button>
+                                                  </div>
+                                                </div>
+                                                {/* end question-upvote-action */}
+                                              </div>
+                                              <p className="meta-tags pt-1 fs-13">
+                                                {ques.created_at
+                                                  ? formatDistanceToNow(
+                                                      parseISO(ques.created_at),
+                                                      { addSuffix: true }
+                                                    )
+                                                  : 'Unknown time'}
+                                              </p>
+                                            </div>
+                                            {/* end media-body */}
+                                          </div>
+                                        ))}
+                                      </>
+                                    )}
+                                  </p>
+                                ))}
+                              </div>
+                              <div className="new-question-body pt-40px">
+                                <h3 className="fs-20 font-weight-semi-bold">
+                                  Reply to question
+                                </h3>
+                                <form
+                                  onSubmit={(e) => submitReplyQuestion(e)}
+                                  className="pt-4"
+                                >
+                                  <div className="custom-control-wrap">
+                                    {/* First Input - Text */}
+                                    <div className="form-group mb-3">
+                                      <label htmlFor="subject">
+                                        Question Subject
+                                      </label>
+                                      <input
+                                        type="text"
+                                        className="form-control"
+                                        name="subject"
+                                        id="subject"
+                                        onChange={(e) =>
+                                          setData(
+                                            'questionSubject',
+                                            e.target.value
+                                          )
+                                        }
+                                        required
+                                      />
+                                    </div>
+
+                                    {/* Second Input - Textarea */}
+                                    <div className="form-group mb-3">
+                                      <label htmlFor="question">
+                                        Question Content
+                                      </label>
+                                      <textarea
+                                        className="form-control"
+                                        id="question"
+                                        name="question"
+                                        rows="4"
+                                        onChange={(e) =>
+                                          setData(
+                                            'questionContent',
+                                            e.target.value
+                                          )
+                                        }
+                                        required
+                                      ></textarea>
+                                    </div>
+                                  </div>
+
+                                  <div className="btn-box text-center">
+                                    <button
+                                      type="submit"
+                                      className="btn theme-btn w-100"
+                                    >
                                       Continue{' '}
                                       <i className="la la-arrow-right icon ml-1" />
                                     </button>

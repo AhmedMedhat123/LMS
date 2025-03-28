@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\Order;
+use App\Models\Question;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,6 +79,8 @@ class HandleInertiaRequests extends Middleware
             'mycourse' => $mycourse,
 
             'wishlists' => Wishlist::with('course.instructor')->where('user_id',$userId)->get(),
+
+            'questions' => Question::with('user', 'parent' , 'replies.user')->get(),
         ];
     }
 

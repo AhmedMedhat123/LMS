@@ -10,6 +10,7 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
@@ -201,6 +202,10 @@ Route::middleware(['auth'])->name('user.')->group(function () {
     Route::post('/payment',[PaymentController::class, 'payment'])->name('payment');
 
     Route::get('/course/view/{id}/{slug}',[CourseController::class, 'CourseView'])->name('course.view');
+
+    Route::post('/question',[QuestionController::class, 'UserAddQuestion'])->name('question.add');
+
+    Route::post('/question/reply',[QuestionController::class, 'UserReplyQuestion'])->name('question.reply');
 });
 
 Route::get('/check-session', function () {

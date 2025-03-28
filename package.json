@@ -26,6 +26,7 @@
         "@coreui/icons-react": "^2.3.0",
         "@coreui/react": "^5.5.0",
         "@tinymce/tinymce-react": "^6.0.0",
+        "date-fns": "^4.1.0",
         "framer-motion": "^12.4.7",
         "hero-slider": "^3.2.1",
         "react-helmet-async": "^2.0.5",
