@@ -252,9 +252,23 @@ class CourseController extends Controller
             ->select('course_id', \DB::raw('MAX(id) as max_id'))
             ->groupBy('course_id');
 
-        $mycourse = Order::with('course','instructor')->joinSub($latestOrders, 'latest_order', function ($join) {
-            $join->on('orders.id', '=', 'latest_order.max_id');
-        })->orderBy('latest_order.max_id', 'DESC')->paginate(6);
+        $mycourse = Order::with('course.reviews','instructor')
+                        ->joinSub($latestOrders, 'latest_order', function ($join) {
+                            $join->on('orders.id', '=', 'latest_order.max_id');
+                        })
+                        ->orderBy('latest_order.max_id', 'DESC')->paginate(6);
+
+        $mycourse->transform(function ($order) {
+            if ($order->course) {
+                $order->averageReviews = $order->course->reviews
+                    ->where('status', 1)
+                    ->avg('rating') ?? 0;
+            } else {
+                $order->averageReviews = 0; // Default if no course exists
+            }
+            return $order;
+        });
+
 
 
         return Inertia('Frontend/Dashboard/MyCourses',  ['mycourses'=> $mycourse]);

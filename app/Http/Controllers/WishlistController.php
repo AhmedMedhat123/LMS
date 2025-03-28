@@ -46,7 +46,22 @@ class WishlistController extends Controller
 
     public function AllWishlist()
     {
-        $wishlist = Wishlist::with('course.instructor')->where('user_id',Auth::id())->latest()->paginate(9);
+        $wishlist = Wishlist::with('course.instructor','course.reviews')
+                            ->where('user_id',Auth::id())
+                            ->latest()
+                            ->paginate(9);
+
+        $wishlist->transform(function ($item) {
+            if ($item->course) {
+                $item->averageReviews = $item->course->reviews
+                    ->where('status', 1) // Filter only approved reviews
+                    ->avg('rating') ?? 0;
+            } else {
+                $item->averageReviews = 0;
+            }
+            return $item;
+        });
+
         return Inertia('Frontend/Dashboard/Wishlist',['wishlist' => $wishlist]);
     }
 }

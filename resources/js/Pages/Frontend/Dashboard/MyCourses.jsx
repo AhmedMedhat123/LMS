@@ -4,6 +4,8 @@ import { Link, useForm } from '@inertiajs/react';
 const MyCourses = ({ mycourses }) => {
   const { get } = useForm();
 
+  console.log(mycourses);
+
   const viewCourse = (e, courseId, sectionId) => {
     e.preventDefault();
     get(
@@ -95,17 +97,34 @@ const MyCourses = ({ mycourses }) => {
                   <p className="card-text">
                     <a>{mycourse.instructor.name}</a>
                   </p>
-                  <div className="rating-wrap d-flex align-items-center py-2">
-                    <div className="review-stars">
-                      <span className="rating-number">4.4</span>
-                      <span className="la la-star" />
-                      <span className="la la-star" />
-                      <span className="la la-star" />
-                      <span className="la la-star" />
-                      <span className="la la-star-o" />
+                  {mycourse.course.reviews.length > 0 ? (
+                    <div className="rating-wrap d-flex align-items-center py-2">
+                      <div className="review-stars">
+                        <span className="rating-number">
+                          {mycourse.averageReviews
+                            ? Math.round(mycourse.averageReviews * 10) / 10
+                            : 'No ratings yet'}
+                        </span>
+                        {[...Array(5)].map((_, index) => (
+                          <span
+                            key={index}
+                            className={
+                              index < Math.floor(mycourse.averageReviews)
+                                ? 'la la-star'
+                                : index < mycourse.averageReviews
+                                ? 'la la-star-half-alt'
+                                : 'la la-star-o'
+                            }
+                          />
+                        ))}
+                      </div>
+                      <span className="rating-total pl-1">
+                        ({mycourse.course.reviews.length} ratings)
+                      </span>
                     </div>
-                    <span className="rating-total pl-1">(20,230)</span>
-                  </div>
+                  ) : (
+                    'No ratings yet'
+                  )}
                   {/* end rating-wrap */}
                   <ul className="card-duration d-flex align-items-center fs-15 pb-2">
                     {/* <li className="mr-2">

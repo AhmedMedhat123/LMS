@@ -18,7 +18,19 @@ class UserController extends Controller
     public function Index()
     {
         $categories = Category::latest()->limit(6)->get();
-        $courses = Course::with('instructor','category')->where('status',1)->orderBy('id','ASC')->limit(6)->get();
+        $courses = Course::with('instructor','category','reviews')
+                    ->where('status',1)
+                    ->orderBy('id','ASC')
+                    ->limit(6)
+                    ->get();
+
+        $courses->transform(function ($course) {
+            $course->averageReviews = $course->reviews()
+                ->where('status', 1)
+                ->avg('rating') ?? 0; 
+            return $course;
+        });
+
 
         return Inertia::render('Frontend/Home',[
             'categories'=> $categories,

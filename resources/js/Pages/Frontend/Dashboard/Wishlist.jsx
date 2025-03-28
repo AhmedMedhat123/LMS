@@ -7,6 +7,8 @@ const Wishlist = ({ wishlist }) => {
   const { auth, userWishlists } = usePage().props;
   const [wishlists, setWishlists] = useState(userWishlists || []);
 
+  console.log(wishlist);
+
   const GetCourseDetails = (e, courseId, sectionId) => {
     e.preventDefault();
     get(
@@ -134,17 +136,34 @@ const Wishlist = ({ wishlist }) => {
                       {wish.course.instructor.name}
                     </Link>
                   </p>
-                  <div className="rating-wrap d-flex align-items-center py-2">
-                    <div className="review-stars">
-                      <span className="rating-number">4.4</span>
-                      <span className="la la-star" />
-                      <span className="la la-star" />
-                      <span className="la la-star" />
-                      <span className="la la-star" />
-                      <span className="la la-star-o" />
+                  {wish.course.reviews.length > 0 ? (
+                    <div className="rating-wrap d-flex align-items-center py-2">
+                      <div className="review-stars">
+                        <span className="rating-number">
+                          {wish.averageReviews
+                            ? Math.round(wish.averageReviews * 10) / 10
+                            : 'No ratings yet'}
+                        </span>
+                        {[...Array(5)].map((_, index) => (
+                          <span
+                            key={index}
+                            className={
+                              index < Math.floor(wish.averageReviews)
+                                ? 'la la-star'
+                                : index < wish.averageReviews
+                                ? 'la la-star-half-alt'
+                                : 'la la-star-o'
+                            }
+                          />
+                        ))}
+                      </div>
+                      <span className="rating-total pl-1">
+                        ({wish.course.reviews.length} ratings)
+                      </span>
                     </div>
-                    <span className="rating-total pl-1">(20,230)</span>
-                  </div>
+                  ) : (
+                    'No ratings yet'
+                  )}
                   {/* end rating-wrap */}
                   <div className="d-flex justify-content-between align-items-center">
                     {wish.course.discount_price === null ? (

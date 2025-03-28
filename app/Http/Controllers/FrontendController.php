@@ -70,8 +70,15 @@ class FrontendController extends Controller
     public function CategoryCourse($id){
         $courses = Course::where('category_id', $id)
             ->where('status','1')
-            ->with('instructor', 'category', 'subcategory')
+            ->with('instructor', 'category', 'subcategory', 'reviews')
             ->paginate(9);
+
+        $courses->transform(function ($course) {
+            $course->averageReviews = $course->reviews()
+                ->where('status', 1)
+                ->avg('rating') ?? 0;
+            return $course;
+        });
 
         $category = Category::findOrFail($id);
 
@@ -85,8 +92,15 @@ class FrontendController extends Controller
 
         $courses = Course::where('subcategory_id', $id)
             ->where('status','1')
-            ->with('instructor', 'category', 'subcategory')
+            ->with('instructor', 'category', 'subcategory', 'reviews')
             ->paginate(9);
+
+        $courses->transform(function ($course) {
+            $course->averageReviews = $course->reviews()
+                ->where('status', 1)
+                ->avg('rating') ?? 0;
+            return $course;
+        });
 
         $subcategory = SubCategory::with('category')->findOrFail($id);
 
