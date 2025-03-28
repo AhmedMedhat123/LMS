@@ -11,6 +11,7 @@ use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
@@ -222,6 +223,8 @@ Route::get('/debug-session', function () {
 });
 
 Route::post('/wishlist/{id}',[WishlistController::class, 'wishlistToggle'])->name('wishlist.toggle');
+
+Route::post('/Review',[ReviewController::class, 'StoreReview'])->name('review.store');
 
 Route::get('/', [UserController::class, 'Index'])->name('index');
 

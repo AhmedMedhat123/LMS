@@ -1,16 +1,32 @@
 import MainLayout from '@/Layouts/MainLayout';
+import { CAlert } from '@coreui/react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 import { useState } from 'react';
 
-const CourseDetails = ({ course, goals, lectures, sections }) => {
+const CourseDetails = ({
+  course,
+  goals,
+  lectures,
+  sections,
+  averageReviews,
+  enrollmentCount,
+  reviewBreakdown,
+}) => {
   const { auth, userWishlists } = usePage().props;
   const [openSections, setOpenSections] = useState(sections.map(() => false));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [wishlist, setWishlist] = useState(userWishlists || []);
   const [showFull, setShowFull] = useState(false);
   const shortDescription = course.description.slice(0, 600);
-
-  const { post } = useForm();
+  const { data, setData, post, errors } = useForm({
+    courseId: course.id,
+    userId: auth.user?.id,
+    instructorId: course.instructor.id,
+    comment: '',
+    rating: 0,
+    status: 1,
+  });
 
   const amount = course.selling_price - course.discount_price;
   const discount = Math.round((amount / course.selling_price) * 100);
@@ -66,6 +82,16 @@ const CourseDetails = ({ course, goals, lectures, sections }) => {
     );
   };
 
+  const submitReview = (e) => {
+    e.preventDefault();
+    post(route('review.store'), {
+      preserveScroll: true,
+    });
+
+    setData('rating', 0);
+    setData('comment', '');
+  };
+
   return (
     <>
       <MainLayout>
@@ -111,18 +137,31 @@ const CourseDetails = ({ course, goals, lectures, sections }) => {
                     )}
                     <div className="rating-wrap d-flex flex-wrap align-items-center">
                       <div className="review-stars">
-                        <span className="rating-number">4.4</span>
-                        <span className="la la-star" />
-                        <span className="la la-star" />
-                        <span className="la la-star" />
-                        <span className="la la-star" />
-                        <span className="la la-star-o" />
+                        <span className="rating-number">
+                          {averageReviews
+                            ? Math.round(averageReviews * 10) / 10
+                            : 'No ratings yet'}
+                        </span>
+                        {[...Array(5)].map((_, index) => (
+                          <span
+                            key={index}
+                            className={
+                              index < Math.floor(averageReviews)
+                                ? 'la la-star'
+                                : index < averageReviews
+                                ? 'la la-star-half-alt'
+                                : 'la la-star-o'
+                            }
+                          />
+                        ))}
                       </div>
+
                       <span className="rating-total pl-1">
-                        (20,230 ratings)
+                        ({course.reviews.length} ratings)
                       </span>
                       <span className="student-total pl-2">
-                        540,815 students
+                        {enrollmentCount}{' '}
+                        {enrollmentCount === 1 ? 'student' : 'student'}
                       </span>
                     </div>
                   </div>
@@ -378,17 +417,28 @@ const CourseDetails = ({ course, goals, lectures, sections }) => {
                       <div className="feedback-wrap">
                         <div className="media media-card align-items-center">
                           <div className="review-rating-summary">
-                            <span className="stats-average__count">4.6</span>
+                            <span className="stats-average__count">
+                              {averageReviews
+                                ? Math.round(averageReviews * 10) / 10
+                                : 'No ratings yet'}
+                            </span>
                             <div className="rating-wrap pt-1">
                               <div className="review-stars">
-                                <span className="la la-star" />
-                                <span className="la la-star" />
-                                <span className="la la-star" />
-                                <span className="la la-star" />
-                                <span className="la la-star-half-alt" />
+                                {[...Array(5)].map((_, index) => (
+                                  <span
+                                    key={index}
+                                    className={
+                                      index < Math.floor(averageReviews)
+                                        ? 'la la-star'
+                                        : index < averageReviews
+                                        ? 'la la-star-half-alt'
+                                        : 'la la-star-o'
+                                    }
+                                  />
+                                ))}
                               </div>
                               <span className="rating-total d-block">
-                                (2,533)
+                                ({course.reviews.length})
                               </span>
                               <span>Course Rating</span>
                             </div>
@@ -396,76 +446,32 @@ const CourseDetails = ({ course, goals, lectures, sections }) => {
                           </div>
                           {/* end review-rating-summary */}
                           <div className="media-body">
-                            <div className="review-bars d-flex align-items-center mb-2">
-                              <div className="review-bars__text">5 stars</div>
-                              <div className="review-bars__fill">
-                                <div className="skillbar-box">
-                                  <div className="skillbar" data-percent="77%">
-                                    <div className="skillbar-bar bg-3" />
+                            {reviewBreakdown?.map((review, index) => (
+                              <div
+                                key={index}
+                                className="review-bars d-flex align-items-center mb-2"
+                              >
+                                <div className="review-bars__text">
+                                  {review.rating} stars
+                                </div>
+                                <div className="review-bars__fill">
+                                  <div className="skillbar-box">
+                                    <div
+                                      className="skillbar"
+                                      data-percent={`${review.percent}%`}
+                                    >
+                                      <div
+                                        className="skillbar-bar bg-3"
+                                        style={{ width: `${review.percent}%` }}
+                                      />
+                                    </div>
                                   </div>
-                                  {/* End Skill Bar */}
+                                </div>
+                                <div className="review-bars__percent">
+                                  {review.percent}%
                                 </div>
                               </div>
-                              {/* end review-bars__fill */}
-                              <div className="review-bars__percent">77%</div>
-                            </div>
-                            {/* end review-bars */}
-                            <div className="review-bars d-flex align-items-center mb-2">
-                              <div className="review-bars__text">4 stars</div>
-                              <div className="review-bars__fill">
-                                <div className="skillbar-box">
-                                  <div className="skillbar" data-percent="54%">
-                                    <div className="skillbar-bar bg-3" />
-                                  </div>
-                                  {/* End Skill Bar */}
-                                </div>
-                              </div>
-                              {/* end review-bars__fill */}
-                              <div className="review-bars__percent">54%</div>
-                            </div>
-                            {/* end review-bars */}
-                            <div className="review-bars d-flex align-items-center mb-2">
-                              <div className="review-bars__text">3 stars</div>
-                              <div className="review-bars__fill">
-                                <div className="skillbar-box">
-                                  <div className="skillbar" data-percent="14%">
-                                    <div className="skillbar-bar bg-3" />
-                                  </div>
-                                  {/* End Skill Bar */}
-                                </div>
-                              </div>
-                              {/* end review-bars__fill */}
-                              <div className="review-bars__percent">14%</div>
-                            </div>
-                            {/* end review-bars */}
-                            <div className="review-bars d-flex align-items-center mb-2">
-                              <div className="review-bars__text">2 stars</div>
-                              <div className="review-bars__fill">
-                                <div className="skillbar-box">
-                                  <div className="skillbar" data-percent="5%">
-                                    <div className="skillbar-bar bg-3" />
-                                  </div>
-                                  {/* End Skill Bar */}
-                                </div>
-                              </div>
-                              {/* end review-bars__fill */}
-                              <div className="review-bars__percent">5%</div>
-                            </div>
-                            {/* end review-bars */}
-                            <div className="review-bars d-flex align-items-center mb-2">
-                              <div className="review-bars__text">1 stars</div>
-                              <div className="review-bars__fill">
-                                <div className="skillbar-box">
-                                  <div className="skillbar" data-percent="2%">
-                                    <div className="skillbar-bar bg-3" />
-                                  </div>
-                                  {/* End Skill Bar */}
-                                </div>
-                              </div>
-                              {/* end review-bars__fill */}
-                              <div className="review-bars__percent">2%</div>
-                            </div>
-                            {/* end review-bars */}
+                            ))}
                           </div>
                           {/* end media-body */}
                         </div>
@@ -478,167 +484,50 @@ const CourseDetails = ({ course, goals, lectures, sections }) => {
                         Reviews
                       </h3>
                       <div className="review-wrap">
-                        <div className="d-flex flex-wrap align-items-center pb-4">
-                          <form method="post" className="mr-3 flex-grow-1">
-                            <div className="form-group">
-                              <input
-                                className="form-control form--control pl-3"
-                                type="text"
-                                name="search"
-                                placeholder="Search reviews"
+                        {course.reviews.map((review, index) => (
+                          <div
+                            key={index}
+                            className="media media-card border-bottom border-bottom-gray pb-4 mb-4"
+                          >
+                            <div className="media-img mr-4 rounded-full">
+                              <img
+                                className="rounded-full lazy"
+                                src={
+                                  review.user.photo
+                                    ? `/upload/users_images/${review.user.photo}`
+                                    : '/images/user_placeholder.png'
+                                }
+                                alt="User image"
                               />
-                              <span className="la la-search search-icon" />
                             </div>
-                          </form>
-                          <div className="select-container mb-3">
-                            <select className="select-container-select">
-                              <option value="all-rating">All ratings</option>
-                              <option value="five-star">Five stars</option>
-                              <option value="four-star">Four stars</option>
-                              <option value="three-star">Three stars</option>
-                              <option value="two-star">Two stars</option>
-                              <option value="one-star">One star</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="media media-card border-bottom border-bottom-gray pb-4 mb-4">
-                          <div className="media-img mr-4 rounded-full">
-                            <img
-                              className="rounded-full lazy"
-                              src="/assets/images/img-loading.png"
-                              data-src="/assets/images/small-avatar-1.jpg"
-                              alt="User image"
-                            />
-                          </div>
-                          <div className="media-body">
-                            <div className="d-flex flex-wrap align-items-center justify-content-between pb-1">
-                              <h5>Kavi arasan</h5>
-                              <div className="review-stars">
-                                <span className="la la-star" />
-                                <span className="la la-star" />
-                                <span className="la la-star" />
-                                <span className="la la-star" />
-                                <span className="la la-star" />
+                            <div className="media-body">
+                              <div className="d-flex flex-wrap align-items-center justify-content-between pb-1">
+                                <h5>{review.user.name}</h5>
+                                <div className="review-stars">
+                                  {[...Array(5)].map((_, i) => (
+                                    <span
+                                      key={i}
+                                      className={
+                                        i < review.rating
+                                          ? 'la la-star'
+                                          : 'la la-star-o'
+                                      }
+                                    />
+                                  ))}
+                                </div>
                               </div>
-                            </div>
-                            <span className="d-block lh-18 pb-2">
-                              a month ago
-                            </span>
-                            <p className="pb-2">
-                              This is one of the best courses I have taken in
-                              Udemy. It is very complete, and it has made
-                              continue learning about Java and SQL databases as
-                              well.
-                            </p>
-                            <div className="helpful-action">
-                              <span className="d-block fs-13">
-                                Was this review helpful?
+                              <span className="d-block lh-18 pb-2">
+                                {review.created_at
+                                  ? formatDistanceToNow(
+                                      parseISO(review.created_at),
+                                      { addSuffix: true }
+                                    )
+                                  : 'Unknown time'}
                               </span>
-                              <button className="btn">Yes</button>
-                              <button className="btn">No</button>
-                              <span
-                                className="btn-text fs-14 cursor-pointer pl-1"
-                                data-toggle="modal"
-                                data-target="#reportModal"
-                              >
-                                Report
-                              </span>
+                              <p className="pb-2">{review.comment}</p>
                             </div>
                           </div>
-                        </div>
-                        {/* end media */}
-                        <div className="media media-card border-bottom border-bottom-gray pb-4 mb-4">
-                          <div className="media-img mr-4 rounded-full">
-                            <img
-                              className="rounded-full lazy"
-                              src="/assets/images/img-loading.png"
-                              data-src="/assets/images/small-avatar-2.jpg"
-                              alt="User image"
-                            />
-                          </div>
-                          <div className="media-body">
-                            <div className="d-flex flex-wrap align-items-center justify-content-between pb-1">
-                              <h5>Jitesh Shaw</h5>
-                              <div className="review-stars">
-                                <span className="la la-star" />
-                                <span className="la la-star" />
-                                <span className="la la-star" />
-                                <span className="la la-star" />
-                                <span className="la la-star" />
-                              </div>
-                            </div>
-                            <span className="d-block lh-18 pb-2">
-                              1 months ago
-                            </span>
-                            <p className="pb-2">
-                              This is one of the best courses I have taken in
-                              Udemy. It is very complete, and it has made
-                              continue learning about Java and SQL databases as
-                              well.
-                            </p>
-                            <div className="helpful-action">
-                              <span className="d-block fs-13">
-                                Was this review helpful?
-                              </span>
-                              <button className="btn">Yes</button>
-                              <button className="btn">No</button>
-                              <span
-                                className="btn-text fs-14 cursor-pointer pl-1"
-                                data-toggle="modal"
-                                data-target="#reportModal"
-                              >
-                                Report
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        {/* end media */}
-                        <div className="media media-card border-bottom border-bottom-gray pb-4 mb-4">
-                          <div className="media-img mr-4 rounded-full">
-                            <img
-                              className="rounded-full lazy"
-                              src="/assets/images/img-loading.png"
-                              data-src="/assets/images/small-avatar-3.jpg"
-                              alt="User image"
-                            />
-                          </div>
-                          <div className="media-body">
-                            <div className="d-flex flex-wrap align-items-center justify-content-between pb-1">
-                              <h5>Miguel Sanches</h5>
-                              <div className="review-stars">
-                                <span className="la la-star" />
-                                <span className="la la-star" />
-                                <span className="la la-star" />
-                                <span className="la la-star" />
-                                <span className="la la-star" />
-                              </div>
-                            </div>
-                            <span className="d-block lh-18 pb-2">
-                              2 month ago
-                            </span>
-                            <p className="pb-2">
-                              This is one of the best courses I have taken in
-                              Udemy. It is very complete, and it has made
-                              continue learning about Java and SQL databases as
-                              well.
-                            </p>
-                            <div className="helpful-action">
-                              <span className="d-block fs-13">
-                                Was this review helpful?
-                              </span>
-                              <button className="btn">Yes</button>
-                              <button className="btn">No</button>
-                              <span
-                                className="btn-text fs-14 cursor-pointer pl-1"
-                                data-toggle="modal"
-                                data-target="#reportModal"
-                              >
-                                Report
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        {/* end media */}
+                        ))}
                       </div>
                       {/* end review-wrap */}
                       <div className="see-more-review-btn text-center">
@@ -651,89 +540,120 @@ const CourseDetails = ({ course, goals, lectures, sections }) => {
                       </div>
                     </div>
                     {/* end course-overview-card */}
-                    <div className="course-overview-card pt-4">
-                      <h3 className="fs-24 font-weight-semi-bold pb-4">
-                        Add a Review
-                      </h3>
-                      <div className="leave-rating-wrap pb-4">
-                        <div className="leave-rating leave--rating">
-                          <input type="radio" name="rate" id="star5" />
-                          <label htmlFor="star5" />
-                          <input type="radio" name="rate" id="star4" />
-                          <label htmlFor="star4" />
-                          <input type="radio" name="rate" id="star3" />
-                          <label htmlFor="star3" />
-                          <input type="radio" name="rate" id="star2" />
-                          <label htmlFor="star2" />
-                          <input type="radio" name="rate" id="star1" />
-                          <label htmlFor="star1" />
-                        </div>
-                        {/* end leave-rating */}
+
+                    {auth.user ? (
+                      <div className="course-overview-card pt-4">
+                        <form onSubmit={submitReview} className="row">
+                          <h3 className="fs-24 font-weight-semi-bold pb-4">
+                            Add a Review
+                          </h3>
+                          <div className="leave-rating-wrap pb-4">
+                            <div className="leave-rating leave--rating">
+                              <input
+                                checked={data.rating == 5}
+                                value={5}
+                                onChange={(e) =>
+                                  setData('rating', e.target.value)
+                                }
+                                type="radio"
+                                name="rate"
+                                id="star5"
+                              />
+                              <label htmlFor="star5" />
+                              <input
+                                checked={data.rating == 4}
+                                value={4}
+                                onChange={(e) =>
+                                  setData('rating', e.target.value)
+                                }
+                                type="radio"
+                                name="rate"
+                                id="star4"
+                              />
+                              <label htmlFor="star4" />
+                              <input
+                                checked={data.rating == 3}
+                                value={3}
+                                onChange={(e) =>
+                                  setData('rating', e.target.value)
+                                }
+                                type="radio"
+                                name="rate"
+                                id="star3"
+                              />
+                              <label htmlFor="star3" />
+                              <input
+                                checked={data.rating == 2}
+                                value={2}
+                                onChange={(e) =>
+                                  setData('rating', e.target.value)
+                                }
+                                type="radio"
+                                name="rate"
+                                id="star2"
+                              />
+                              <label htmlFor="star2" />
+                              <input
+                                checked={data.rating == 1}
+                                value={1}
+                                onChange={(e) =>
+                                  setData('rating', e.target.value)
+                                }
+                                type="radio"
+                                name="rate"
+                                id="star1"
+                              />
+                              <label htmlFor="star1" />
+                            </div>
+                            {errors.rating && (
+                              <CAlert color="danger">{errors.rating}</CAlert>
+                            )}
+                            {/* end leave-rating */}
+                          </div>
+                          <div className="input-box col-lg-12">
+                            <label className="label-text">Comment</label>
+                            <div className="form-group">
+                              <textarea
+                                className="form-control form--control pl-3"
+                                name="Comment"
+                                placeholder="Write Comment"
+                                rows={5}
+                                defaultValue={''}
+                                value={data.comment}
+                                onChange={(e) =>
+                                  setData('comment', e.target.value)
+                                }
+                              />
+                            </div>
+                            {errors.comment && (
+                              <CAlert color="danger">{errors.comment}</CAlert>
+                            )}
+                          </div>
+                          {/* end input-box */}
+                          <div className="btn-box col-lg-12">
+                            {/* end custom-control */}
+                            <button className="btn theme-btn" type="submit">
+                              Submit Review
+                            </button>
+                          </div>
+                          {/* end btn-box */}
+                        </form>
                       </div>
-                      <form method="post" className="row">
-                        <div className="input-box col-lg-6">
-                          <label className="label-text">Name</label>
-                          <div className="form-group">
-                            <input
-                              className="form-control form--control"
-                              type="text"
-                              name="name"
-                              placeholder="Your Name"
-                            />
-                            <span className="la la-user input-icon" />
-                          </div>
+                    ) : (
+                      <>
+                        <div className="section-block" />
+
+                        <div className="flex flex-col items-center justify-center mt-5">
+                          <p className="text-gray-700 text-3xl mb-2">
+                            Login to add a review.
+                            <Link href={route('login')} className="ml-2">
+                              Login
+                            </Link>
+                          </p>
                         </div>
-                        {/* end input-box */}
-                        <div className="input-box col-lg-6">
-                          <label className="label-text">Email</label>
-                          <div className="form-group">
-                            <input
-                              className="form-control form--control"
-                              type="email"
-                              name="email"
-                              placeholder="Email Address"
-                            />
-                            <span className="la la-envelope input-icon" />
-                          </div>
-                        </div>
-                        {/* end input-box */}
-                        <div className="input-box col-lg-12">
-                          <label className="label-text">Message</label>
-                          <div className="form-group">
-                            <textarea
-                              className="form-control form--control pl-3"
-                              name="message"
-                              placeholder="Write Message"
-                              rows={5}
-                              defaultValue={''}
-                            />
-                          </div>
-                        </div>
-                        {/* end input-box */}
-                        <div className="btn-box col-lg-12">
-                          <div className="custom-control custom-checkbox mb-3 fs-15">
-                            <input
-                              type="checkbox"
-                              className="custom-control-input"
-                              id="saveCheckbox"
-                              required
-                            />
-                            <label
-                              className="custom-control-label custom--control-label"
-                              htmlFor="saveCheckbox"
-                            >
-                              Save my name, and email in this browser for the
-                              next time I comment.
-                            </label>
-                          </div>
-                          {/* end custom-control */}
-                          <button className="btn theme-btn" type="submit">
-                            Submit Review
-                          </button>
-                        </div>
-                        {/* end btn-box */}
-                      </form>
-                    </div>
+                      </>
+                    )}
+
                     {/* end course-overview-card */}
                   </div>
                   {/* end course-details-content-wrap */}
