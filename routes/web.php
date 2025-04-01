@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseLectureController;
@@ -227,5 +228,8 @@ Route::post('/wishlist/{id}',[WishlistController::class, 'wishlistToggle'])->nam
 Route::post('/Review',[ReviewController::class, 'StoreReview'])->name('review.store');
 
 Route::get('/', [UserController::class, 'Index'])->name('index');
+
+Route::get('/chatbot', [ChatbotController::class, 'ViewChatbot'])->name('chatbot');
+Route::post('/chatbot/ask', [ChatbotController::class, 'AskChatbot'])->name('chatbot.ask');
 
 require __DIR__ . '/auth.php';
