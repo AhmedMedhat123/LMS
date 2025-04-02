@@ -115,11 +115,11 @@ const Header = () => {
                       <>
                         <li className="d-flex align-items-center pr-3 mr-3 border-right border-right-gray">
                           <i className="la la-sign-in mr-1" />
-                          <Link href="login"> Login</Link>
+                          <Link href={route('login')}> Login</Link>
                         </li>
                         <li className="d-flex align-items-center">
                           <i className="la la-user mr-1" />
-                          <Link href="register"> Register</Link>
+                          <Link href={route('register')}> Register</Link>
                         </li>
                       </>
                     )}
@@ -245,10 +245,6 @@ const Header = () => {
                     <nav className="main-menu">
                       <ul>
                         <li>
-                          <a href="#">Home </a>
-                        </li>
-
-                        <li>
                           <a href="#">
                             My courses <i className="la la-angle-down fs-12" />
                           </a>
@@ -317,6 +313,15 @@ const Header = () => {
                               </>
                             )}
                           </ul>
+                        </li>
+
+                        <li>
+                          <Link
+                            href={route('chatbot')}
+                            className="shop-cart-btn"
+                          >
+                            <i className="las la-robot text-xl" />
+                          </Link>
                         </li>
 
                         <li>

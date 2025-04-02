@@ -230,6 +230,6 @@ Route::post('/Review',[ReviewController::class, 'StoreReview'])->name('review.st
 Route::get('/', [UserController::class, 'Index'])->name('index');
 
 Route::get('/chatbot', [ChatbotController::class, 'ViewChatbot'])->name('chatbot');
-Route::post('/chatbot/ask', [ChatbotController::class, 'AskChatbot'])->name('chatbot.ask');
+Route::post('/chatbot', [ChatbotController::class, 'AskChatbot'])->name('chatbot.ask');
 
 require __DIR__ . '/auth.php';
