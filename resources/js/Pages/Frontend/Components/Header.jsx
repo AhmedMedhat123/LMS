@@ -77,7 +77,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="header-menu-area bg-white">
+      <header className="header-menu-area bg-white z-3">
         <div className="header-top pr-150px pl-150px border-bottom border-bottom-gray py-1">
           <div className="container-fluid">
             <div className="row align-items-center">

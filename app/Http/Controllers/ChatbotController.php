@@ -52,14 +52,11 @@ class ChatbotController extends Controller
             }
 
         } catch (\Exception $e) {
-            // Handle API errors
-            // $aiResponse = "Sorry, I couldn't process your request.";
-            $aiResponse = $e->getMessage();
+            $aiResponse = "Sorry, I couldn't process your request.";
+            // $aiResponse = $e->getMessage();
         }
 
-        return Inertia::render('Frontend/Chatbot', [
-            'aiResponse' => $aiResponse,
-        ]);
+        return response()->json(['aiResponse' => $aiResponse]);
     }
 
     private function processDatabaseQuery($userMessage)
@@ -161,21 +158,19 @@ class ChatbotController extends Controller
     }
 
     private function formatReviewList($reviews)
-{
-    if ($reviews->isEmpty()) {
-        return "❌ No reviews available for this course.";
+    {
+        if ($reviews->isEmpty()) {
+            return "❌ No reviews available for this course.";
+        }
+
+        $response = "### 📝 Course Reviews:\n\n";
+
+        foreach ($reviews as $index => $review) {
+            $response .= "**Review #" . ($index + 1) . "**\n";
+            $response .= "⭐ Rating: " . number_format($review->rating, 1) . "\n";
+            $response .= "📝 Review: " . $review->review_text . "\n\n";
+        }
+
+        return $response;
     }
-
-    $response = "### 📝 Course Reviews:\n\n";
-
-    foreach ($reviews as $index => $review) {
-        $response .= "**Review #" . ($index + 1) . "**\n";
-        $response .= "⭐ Rating: " . number_format($review->rating, 1) . "\n";
-        $response .= "📝 Review: " . $review->review_text . "\n\n";
-    }
-
-    return $response;
-}
-
-
 }

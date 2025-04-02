@@ -4,9 +4,12 @@ import Header from '@/Pages/Frontend/Components/Header';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Toaster, toast } from 'react-hot-toast';
 import { usePage } from '@inertiajs/react';
+import Chatbot from '@/Pages/Frontend/Chatbot';
+import MiniChatbot from '@/Pages/Frontend/MiniChatbot';
 
 const MainLayout = ({ children }) => {
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const { flash, allCategories } = usePage().props;
 
   useEffect(() => {
@@ -98,6 +101,31 @@ const MainLayout = ({ children }) => {
           <div onClick={scrollToTop} id="scroll-top">
             <i className="la la-arrow-up" title="Go top" />
           </div>
+
+          {/* Robot Icon (Opens Mini Chat) */}
+          <div
+            onClick={() => setIsOpen(!isOpen)}
+            className="fixed bottom-5 left-5 z-50 bg-[#fff] w-[40px] h-[40px] p-4 rounded-full shadow-xl cursor-pointer hover:bg-[#ec5252] flex justify-center items-center group transition-all duration-300 ease-in-out"
+            title="Chatbot"
+          >
+            <i className="las la-robot text-xl text-[#7f8897] group-hover:text-white transition-all duration-300 ease-in-out" />
+          </div>
+
+          {/* Mini Chat Window */}
+          {isOpen && (
+            <div className="fixed bottom-20 left-5 w-[35rem] h-[35rem] bg-white shadow-xl rounded-xl p-4 flex flex-col z-50">
+              <div className="flex justify-between items-center pb-2 border-b">
+                <h3 className="text-lg font-semibold">AI Chatbot</h3>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="text-gray-600 hover:text-red-500"
+                >
+                  <i className="la la-close text-2xl" />
+                </button>
+              </div>
+              <MiniChatbot />
+            </div>
+          )}
         </>
       )}
     </HelmetProvider>
