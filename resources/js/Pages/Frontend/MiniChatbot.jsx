@@ -43,6 +43,7 @@ const MiniChatbot = () => {
     'What are the highest-rated courses?',
     'What are the most expensive courses?',
     'How many courses are available?',
+    'What are the available categories',
   ];
 
   return (
