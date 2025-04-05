@@ -232,4 +232,6 @@ Route::get('/', [UserController::class, 'Index'])->name('index');
 Route::get('/chatbot', [ChatbotController::class, 'ViewChatbot'])->name('chatbot');
 Route::post('/chatbot', [ChatbotController::class, 'AskChatbot'])->name('chatbot.ask');
 
+Route::match(['get', 'post'],'/search/{name}', [CourseController::class, 'SearchCourse'])->name('course.search');
+
 require __DIR__ . '/auth.php';

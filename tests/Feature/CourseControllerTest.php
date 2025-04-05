@@ -315,4 +315,40 @@ class CourseControllerTest extends TestCase
             );
     }
 
+    public function test_displays_search_results_for_exact_match()
+    {
+        Course::factory()->create([
+            'course_title' => 'Laravel Beginner',
+            'course_name' => 'laravel-beginner',
+            'status' => 1,
+        ]);
+
+        $response = $this->post(route('course.search', ['name' => 'Laravel Beginner']));
+
+        $response->assertStatus(200);
+
+        $response->assertInertia(fn ($page) =>
+            $page->component('Frontend/SearchResult')
+                 ->where('searchContent', 'Laravel Beginner')
+                 ->has('courses.data', 1)
+                 ->where('courses.data.0.course_title', 'Laravel Beginner')
+        );
+    }
+
+    public function test_returns_empty_results_when_no_course_matches()
+    {
+
+
+        $response = $this->post(route('course.search', ['name' => 'Nonexistent Course']));
+
+        $response->assertStatus(200);
+
+        $response->assertInertia(fn ($page) =>
+            $page->component('Frontend/SearchResult')
+                 ->where('searchContent', 'Nonexistent Course')
+                 ->has('courses.data', 0)
+        );
+
+        // $response->assertSee(`Sorry, we couldn't find any results for "Nonexistent Course"`);
+    }
 }

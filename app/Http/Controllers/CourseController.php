@@ -288,4 +288,50 @@ class CourseController extends Controller
             'sections'=>$sections,
         ]);
     }
+
+    public function SearchCourse($name)
+    {
+        $query = $name;
+
+        // Trim the query to avoid extra spaces
+        $query = trim($query);
+
+        // query contains more than one word
+        $searchTerms = explode(' ', $query);
+
+        // Search for the exact match first
+        $courses = Course::with('reviews', 'instructor')
+                        ->where(function($query) use ($searchTerms) {
+                        $query->where('course_title', 'like', '%' . implode(' ', $searchTerms) . '%')
+                              ->orWhere('course_name', 'like', '%' . implode(' ', $searchTerms) . '%');
+                    })
+                    ->where('status', 1)
+                    ->paginate(9);
+
+        // If no results, break down the query into separate words and search again
+        if ($courses->isEmpty() && count($searchTerms) > 1) {
+            $courses = Course::with('reviews', 'instructor')
+                        ->where(function($query) use ($searchTerms) {
+                            foreach ($searchTerms as $term) {
+                                $query->orWhere('course_title', 'like', '%' . $term . '%')
+                                      ->orWhere('course_name', 'like', '%' . $term . '%');
+                            }
+                        })
+                        ->where('status', 1)
+                        ->paginate(9);
+        }
+
+        $courses->transform(function ($course) {
+            $course->averageReviews = $course->reviews()
+                ->where('status', 1)
+                ->avg('rating') ?? 0;
+            return $course;
+        });
+
+        return inertia('Frontend/SearchResult', [
+            'courses' => $courses,
+            'searchContent' => $query,
+        ]);
+    }
+
 }

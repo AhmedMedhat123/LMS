@@ -13,7 +13,9 @@ const Header = () => {
     mycourse,
     wishlists,
   } = usePage().props;
-  const { post, get } = useForm();
+  const { data, setData, post, get } = useForm({
+    searchContent: '',
+  });
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -73,6 +75,12 @@ const Header = () => {
         preserveScroll: true,
       }
     );
+  };
+
+  const searchCourse = (e) => {
+    e.preventDefault();
+    post(route('course.search', data.searchContent));
+    setSearchBarActive(false);
   };
 
   return (
@@ -146,16 +154,16 @@ const Header = () => {
                     </a>
                     <div className="user-btn-action flex">
                       {/* <form method="post">
-                                                <div className="search-toggle form-group mb-0">
-                                                    <input
-                                                        className="form-control form--control pl-3"
-                                                        type="text"
-                                                        name="search"
-                                                        placeholder="Search for anything"
-                                                    />
-                                                    <span className="la la-search search-icon p-1" />
-                                                </div>
-                                            </form> */}
+                        <div className="search-toggle form-group mb-0">
+                          <input
+                            className="form-control form--control pl-3"
+                            type="text"
+                            name="search"
+                            placeholder="Search for anything"
+                          />
+                          <span className="la la-search search-icon p-1" />
+                        </div>
+                      </form> */}
                       <div
                         onClick={() => setSearchBarActive(true)}
                         className="search-menu-toggle icon-element icon-element-sm shadow-sm mr-2"
@@ -231,15 +239,23 @@ const Header = () => {
                       </ul>
                     </div>
                     {/* end menu-category */}
-                    <form method="post">
+                    <form onSubmit={searchCourse}>
                       <div className="form-group mb-0">
                         <input
+                          value={data.searchContent}
+                          onChange={(e) =>
+                            setData('searchContent', e.target.value)
+                          }
                           className="form-control form--control pl-3"
                           type="text"
                           name="search"
                           placeholder="Search for anything"
+                          required
                         />
-                        <span className="la la-search search-icon" />
+                        <button
+                          type="submit"
+                          className="la la-search search-icon"
+                        />
                       </div>
                     </form>
                     <nav className="main-menu">
@@ -1021,15 +1037,18 @@ const Header = () => {
           className={`mobile-search-form ${searchBarActive ? 'active' : ''}`}
         >
           <div className="d-flex align-items-center">
-            <form method="post" className="flex-grow-1 mr-3">
+            <form onSubmit={searchCourse} className="flex-grow-1 mr-3">
               <div className="form-group mb-0">
                 <input
+                  value={data.searchContent}
+                  onChange={(e) => setData('searchContent', e.target.value)}
                   className="form-control form--control pl-3"
                   type="text"
                   name="search"
                   placeholder="Search for anything"
+                  required
                 />
-                <span className="la la-search search-icon" />
+                <button type="submit" className="la la-search search-icon" />
               </div>
             </form>
             <div
